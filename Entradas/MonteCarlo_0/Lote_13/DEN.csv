@@ -1,0 +1,28 @@
+Codigo;Min;Max;Descricao
+DEN001;1.0;3.0;Ciclos Latente Mosquito
+DEN002;1.0;3.0;Ciclos Latente Humano
+DEN003;7.0;10.0;Ciclos Infectante Humano
+DEN004;40.0;44.0;Ciclos Imunizado Humano
+DEN005;0.99;1.0;Probabilidade Infeccao Humana Sorotipo 1
+DEN006;0.99;1.0;Probabilidade Infeccao Humana Sorotipo 2
+DEN007;0.99;1.0;Probabilidade Infeccao Humana Sorotipo 3
+DEN008;0.99;1.0;Probabilidade Infeccao Humana Sorotipo 4
+DEN009;0.99;1.0;Probabilidade Infeccao Humana Sorotipo 5
+DEN010;0.01;0.02;Probabilidade Dengue Hemorragica com 1 Sorotipo Contraido
+DEN011;0.05;0.06;Probabilidade Dengue Hemorragica com 2 Sorotipos Contraidos
+DEN012;0.12;0.13;Probabilidade Dengue Hemorragica com 3 Sorotipos Contraidos
+DEN013;0.25;0.26;Probabilidade Dengue Hemorragica com 4 Sorotipos Contraidos
+DEN014;0.5;0.6;Probabilidade Dengue Hemorragica com 5 Sorotipos Contraidos
+DEN015;0.01;0.02;Probabilidade Morte Por Dengue Hemorragica
+DEN016;0.99;1.0;Probabilidade Infeccao Humano Recuperado Sorotipo 1
+DEN017;0.99;1.0;Probabilidade Infeccao Humano Recuperado Sorotipo 2
+DEN018;0.99;1.0;Probabilidade Infeccao Humano Recuperado Sorotipo 3
+DEN019;0.99;1.0;Probabilidade Infeccao Humano Recuperado Sorotipo 4
+DEN020;0.99;1.0;Probabilidade Infeccao Humano Recuperado Sorotipo 5
+DEN021;0.99;1.0;Probabilidade Infeccao Mosquito Sorotipo 1 5
+DEN022;0.99;1.0;Probabilidade Infeccao Mosquito Sorotipo 2 5
+DEN023;0.99;1.0;Probabilidade Infeccao Mosquito Sorotipo 3 5
+DEN024;0.99;1.0;Probabilidade Infeccao Mosquito Sorotipo 4 5
+DEN025;0.99;1.0;Probabilidade Infeccao Mosquito Sorotipo 5 5
+DEN026;0.5;1.0;Taxa de Sucesso da Infeccao Humana
+DEN027;0.5;1.0;Taxa de Sucesso da Infeccao do Mosquito

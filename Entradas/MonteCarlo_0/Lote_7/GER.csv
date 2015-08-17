@@ -1,0 +1,31 @@
+Codigo;Min;Max;Descricao
+GER001;10.0;10.0;Quantidade de Agentes Machos Saudaveis Fase 1
+GER002;0.0;0.0;Quantidade de Agentes Machos Saudaveis Fase 2
+GER003;0.0;0.0;Quantidade de Agentes Machos Saudaveis Fase 3
+GER004;10.0;10.0;Quantidade de Agentes Femeas Saudaveis Fase 1
+GER005;0.0;0.0;Quantidade de Agentes Femeas Saudaveis Fase 2
+GER006;0.0;0.0;Quantidade de Agentes Femeas Saudaveis Fase 3
+GER007;0.0;0.0;Quantidade de Agentes Machos com Wolbachia Fase 1
+GER008;0.0;0.0;Quantidade de Agentes Machos com Wolbachia Fase 2
+GER009;0.0;0.0;Quantidade de Agentes Machos com Wolbachia Fase 3
+GER010;0.0;0.0;Quantidade de Agentes Femeas com Wolbachia Fase 1
+GER011;0.0;0.0;Quantidade de Agentes Femeas com Wolbachia Fase 2
+GER012;0.0;0.0;Quantidade de Agentes Femeas com Wolbachia Fase 3
+GER013;0.0;0.0;Quantidade de Agentes Femeas Ativas com Dengue Sorotipo 1
+GER014;0.0;0.0;Quantidade de Agentes Femeas Ativas com Dengue Sorotipo 2
+GER015;0.0;0.0;Quantidade de Agentes Femeas Ativas com Dengue Sorotipo 3
+GER016;0.0;0.0;Quantidade de Agentes Femeas Ativas com Dengue Sorotipo 4
+GER017;0.0;0.0;Quantidade de Agentes Femeas Ativas com Dengue Sorotipo 5
+GER018;4.0;6.0;Ciclos de Gestacao
+GER019;5.0;5.0;AS21
+GER020;0.5;0.5;PS21
+GER021;0.7;0.7;H1
+GER022;0.5;0.5;PS31
+GER023;5.0;5.0;AI21
+GER024;0.5;0.5;PI21
+GER025;0.7;0.7;H2
+GER026;0.5;0.5;PI31
+GER027;2.0;2.0;Intervalo entre as Posturas Femea
+GER028;3.0;3.0;Intervalo entre Busca Alimento Femea
+GER029;0.3;0.5;Probabilidade da Femea Realizar Voo de Levy Antes da Postura
+GER030;0.3;0.5;Probabilidade da Femea Realizar Voo de Levy Antes da Procura Por Alimento

@@ -1,0 +1,31 @@
+Codigo;Min;Max;Descricao
+CNA001;0.001;0.003;Taxa Controle Natural Humanos
+CNA002;40.0;45.0;Idade Maxima Mosquito Saudavel
+CNA003;30.0;35.0;Idade Maxima Mosquito com Wolbachia
+CNA004;30.0;40.0;Idade Maxima Mosquito Femea com Dengue
+CNA005;15.0;15.0;Frequencia Controle Natural
+CNA006;0.55;0.65;Porcentagem Eliminacao Machos Ovos Saudaveis
+CNA007;0.55;0.65;Porcentagem Eliminacao Femeas Ovos Saudaveis
+CNA008;0.55;0.65;Porcentagem Eliminacao Machos Ovos com Wolbachia
+CNA009;0.55;0.65;Porcentagem Eliminacao Femeas Ovos com Wolbachia
+CNA010;0.55;0.65;Porcentagem Eliminacao Machos Alados Saudaveis
+CNA011;0.55;0.65;Porcentagem Eliminacao Femeas Aladas Saudaveis
+CNA012;0.55;0.65;Porcentagem Eliminacao Machos Alados com Wolbachia
+CNA013;0.55;0.65;Porcentagem Eliminacao Femeas Aladas com Wolbachia
+CNA014;0.55;0.65;Porcentagem Eliminacao Machos Larvas Saudaveis
+CNA015;0.55;0.65;Porcentagem Eliminacao Femeas Larvas Saudaveis
+CNA016;0.55;0.65;Porcentagem Eliminacao Machos Larvas com Wolbachia
+CNA017;0.55;0.65;Porcentagem Eliminacao Femeas Larvas com Wolbachia
+CNA018;0.55;0.65;Porcentagem Eliminacao Machos Pupas Saudaveis
+CNA019;0.55;0.65;Porcentagem Eliminacao Femeas Pupas Saudaveis
+CNA020;0.55;0.65;Porcentagem Eliminacao Machos Pupas com Wolbachia
+CNA021;0.55;0.65;Porcentagem Eliminacao Femeas Pupas com Wolbachia
+CNA022;15.0;15.0;Frequencia Controle Quimico Nao Alados
+CNA023;60.0;60.0;Efeito Residual Controle Quimico Larvas
+CNA024;60.0;60.0;Efeito Residual Controle Quimico Pupas
+CNA025;15.0;15.0;Frequencia Controle Mecanico Nao Alados
+CNA026;0.6;0.8;Porcentagem Eliminacao Controle Mecanico Ovos
+CNA027;0.6;0.8;Porcentagem Eliminacao Controle Mecanico Larvas
+CNA028;0.6;0.8;Porcentagem Eliminacao Controle Mecanico Pupas
+CNA029;15.0;15.0;Frequencia Controle Quimico Alados
+CNA030;0.35;0.45;Porcentagem Eliminacao Controle Quimico Alados

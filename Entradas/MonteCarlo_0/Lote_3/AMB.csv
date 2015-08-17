@@ -1,0 +1,5 @@
+Codigo;Min;Max;Descricao
+AMB001;22.0;22.0;Numero de Linhas Ambiente
+AMB001;18.0;18.0;Numero de Linhas Ambiente
+AMB003;10.0;10.0;Capacidade Maxima por Posicao Mosquitos
+AMB004;2.0;2.0;Capacidade Maxima por Posicao Humanos
