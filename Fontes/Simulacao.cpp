@@ -75,8 +75,8 @@ private:
         manipuladorMosquitos->transformacoes();
         manipuladorMosquitos->conclusaoCiclo();
         manipuladorMosquitos->controleNatural(cicloAtual);
-        manipuladorMosquitos->controleQuimico(cicloAtual);
         manipuladorMosquitos->controleMecanico(cicloAtual);
+        manipuladorMosquitos->controleQuimico(cicloAtual);
         manipuladorHumanos->conclusaoCiclo();
         manipuladorHumanos->controleNatural();
         saidas->gerarSaidas(cicloAtual);
