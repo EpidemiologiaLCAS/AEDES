@@ -7,3 +7,5 @@ MOV005;5.0;5.0;Tentativas Voo de Levy
 MOV006;2.0;2.0;Area de Percepcao Alimento
 MOV007;0.2;0.2;Porcentagem Movimentacao Noturna Mosquitos
 MOV008;1.0;1.0;Fator Amortecimento Procura Humano
+MOV009;10.0;10.0;Capacidade Maxima por Posicao Mosquitos
+MOV010;2.0;2.0;Capacidade Maxima por Posicao Humanos

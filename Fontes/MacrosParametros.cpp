@@ -2,12 +2,12 @@
 #define MACROSPARAMETROS
 
 #define QUANTIDADE_PARAMETROS_ACA 12
-#define QUANTIDADE_PARAMETROS_AMB 4
+#define QUANTIDADE_PARAMETROS_AMB 2
 #define QUANTIDADE_PARAMETROS_CNA 30
 #define QUANTIDADE_PARAMETROS_DEN 27
 #define QUANTIDADE_PARAMETROS_GER 30
 #define QUANTIDADE_PARAMETROS_INS 22
-#define QUANTIDADE_PARAMETROS_MOV 8
+#define QUANTIDADE_PARAMETROS_MOV 10
 #define QUANTIDADE_PARAMETROS_SIM 3
 #define QUANTIDADE_PARAMETROS_SMC 2
 #define QUANTIDADE_PARAMETROS_TRA 23
@@ -27,8 +27,6 @@
 
 #define NUMERO_LINHAS_AMBIENTE(idLote) (int) parametros->pAMB[idLote]->vetor[0].random()
 #define NUMERO_COLUNAS_AMBIENTE(idLote) (int) parametros->pAMB[idLote]->vetor[1].random()
-#define CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote) (int) parametros->pAMB[idLote]->vetor[2].random()
-#define CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote) (int) parametros->pAMB[idLote]->vetor[3].random()
 
 #define TAXA_CONTROLE_NATURAL_HUMANOS(idLote) (double) parametros->pCNA[idLote]->vetor[0].random()
 #define IDADE_MAXIMA_MOSQUITO_SAUDAVEL(idLote) (int) parametros->pCNA[idLote]->vetor[1].random()
@@ -151,6 +149,8 @@
 #define AREA_PERCEPCAO_ALIMENTO(idLote) (int) parametros->pMOV[idLote]->vetor[5].random()
 #define PORCENTAGEM_MOVIMENTACAO_NOTURNA_MOSQUITOS(idLote) (double) parametros->pMOV[idLote]->vetor[6].random()
 #define FATOR_AMORTECIMENTO_PROCURA_HUMANO(idLote) (int) parametros->pMOV[idLote]->vetor[7].random()
+#define CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote) (int) parametros->pAMB[idLote]->vetor[8].random()
+#define CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote) (int) parametros->pAMB[idLote]->vetor[9].random()
 
 #define NUMERO_CICLOS_SIMULACAO (int) parametros->pSIM->vetor[0].random()
 #define NUMERO_SUBCICLOS (int) parametros->pSIM->vetor[1].random()
