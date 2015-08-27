@@ -149,8 +149,8 @@
 #define AREA_PERCEPCAO_ALIMENTO(idLote) (int) parametros->pMOV[idLote]->vetor[5].random()
 #define PORCENTAGEM_MOVIMENTACAO_NOTURNA_MOSQUITOS(idLote) (double) parametros->pMOV[idLote]->vetor[6].random()
 #define FATOR_AMORTECIMENTO_PROCURA_HUMANO(idLote) (int) parametros->pMOV[idLote]->vetor[7].random()
-#define CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote) (int) parametros->pAMB[idLote]->vetor[8].random()
-#define CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote) (int) parametros->pAMB[idLote]->vetor[9].random()
+#define CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote) (int) parametros->pMOV[idLote]->vetor[8].random()
+#define CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote) (int) parametros->pMOV[idLote]->vetor[9].random()
 
 #define NUMERO_CICLOS_SIMULACAO (int) parametros->pSIM->vetor[0].random()
 #define NUMERO_SUBCICLOS (int) parametros->pSIM->vetor[1].random()
