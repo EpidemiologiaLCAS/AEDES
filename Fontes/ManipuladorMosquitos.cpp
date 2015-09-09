@@ -609,6 +609,17 @@ private:
                 }
             }
         }
+        if (ordemVizinhancaBusca == 1) {
+			FORCONEXAO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaVizinhancaMosquitos, con) {
+				if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos.tamanhoLista > 0) {
+					FOR2HUMANO(quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos, i) {
+						if (i->elementoLista->saude != 'r') {
+							lista.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+						}
+					}
+				}
+			}
+		}
         if (lista.tamanhoLista != 0) {
 			int aux = rand() % lista.tamanhoLista;
 			retorno = (lista.buscaPosicao(aux))->elementoLista;
@@ -747,10 +758,13 @@ private:
 				if (humano != NULL) {
 					if (raioVizinhancaBusca == 1) {
 						MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-						quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-						mosquito2->posicaoAtual.x = humano->posicaoAtual.x;
-						mosquito2->posicaoAtual.y = humano->posicaoAtual.y;
-						quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+						Posicao pos = humano->posicaoAtual;
+						int idDestino = humano->idLoteAtual;
+						quadra->lotes[mosquito2->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito2);
+						quadra->lotes[idDestino]->lote->matriz[pos.x][pos.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito2));
+						mosquito2->idLoteAtual = idDestino;
+						mosquito2->posicaoAtual.x = pos.x;
+						mosquito2->posicaoAtual.y = pos.y;
 						mosquito2->posicaoAlimento.x = mosquito2->posicaoAtual.x;
 						mosquito2->posicaoAlimento.y = mosquito2->posicaoAtual.y;
 						mosquito2->alimento = true;
