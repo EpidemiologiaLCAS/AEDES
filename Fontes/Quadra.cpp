@@ -7,6 +7,7 @@ using namespace std;
 #include "Posicao.cpp"
 #include "Lista.cpp"
 #include "Parametros.cpp"
+#include "CoordenadaGeo.cpp"
 
 class Quadra {
 public:
@@ -150,6 +151,36 @@ public:
 			arquivoControleMecanico.close();
 		} else {
 			 cout << "Arquivo ./Entradas/ControleMecanicoNaoAlados.csv nao foi aberto!" << endl;
+			 exit(1);
+		}
+	}
+	
+	void leituraCoordenadasGeo() {
+		char caracter = '-';
+		double x, y;
+		ifstream arquivoCoordenadas;
+		arquivoCoordenadas.open("./Entradas/CoordenadasQuadra445.csv");
+		if (arquivoCoordenadas.is_open()) {
+			string cabecalho;
+			getline(arquivoCoordenadas, cabecalho);
+			FORINT(lote, 0, quantLotes, 1) {
+				int linhasLote = lotes[lote]->lote->linhasMatriz;
+				int colunasLote = lotes[lote]->lote->colunasMatriz;
+				FORINT(i, 0, linhasLote, 1) {
+					FORINT(j, 0, colunasLote, 1) {
+						while (caracter != ';') {
+							arquivoCoordenadas >> caracter;
+						}
+						arquivoCoordenadas >> x >> caracter >> y;
+						lotes[lote]->lote->matriz[i][j].coordenadaGeo.x = x;
+						lotes[lote]->lote->matriz[i][j].coordenadaGeo.y = y;
+						caracter = '-';
+					}
+				}
+			}
+			arquivoCoordenadas.close();
+		} else {
+			 cout << "Arquivo ./Entradas/CoordenadasQuadra445.csv nao foi aberto!" << endl;
 			 exit(1);
 		}
 	}

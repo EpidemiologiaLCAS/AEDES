@@ -7,6 +7,7 @@
 #include "MosquitoFemea.cpp"
 #include "Humano.cpp"
 #include "Conexao.cpp"
+#include "CoordenadaGeo.cpp"
 
 class ElementoLote {
 public:
@@ -17,6 +18,7 @@ public:
     Lista<Humano*> listaHumanos;
     Lista<Conexao*> listaVizinhancaMosquitos;
     Lista<Conexao*> listaVizinhancaHumanos;
+    CoordenadaGeo coordenadaGeo;
 
     ElementoLote() {}
 

@@ -41,6 +41,7 @@ public:
 		quadra->definicaoControleQuimicoNaoAlados();
         quadra->definicaoControleQuimicoAlados();
 		quadra->definicaoControleMecanicoNaoAlados();
+		quadra->leituraCoordenadasGeo();
     }    
     
     ~Simulacao() {
