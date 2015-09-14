@@ -45,6 +45,11 @@ public:
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
     }
+    
+    void adicionarPosicaoRaioPercepcaoHumanos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+    }
 	
 	void criacaoConexoesHumanos() {
 		char caracter;
@@ -181,6 +186,29 @@ public:
 			arquivoCoordenadas.close();
 		} else {
 			 cout << "Arquivo ./Entradas/CoordenadasQuadra445.csv nao foi aberto!" << endl;
+			 exit(1);
+		}
+	}
+	
+	void criacaoRaiosPercepcaoHumanos() {
+		char caracter;
+		ifstream arquivoRaiosHumanos;
+		arquivoRaiosHumanos.open("./Entradas/RaiosPercepcaoHumano.csv");
+		if (arquivoRaiosHumanos.is_open()) {
+			string cabecalho;
+			getline(arquivoRaiosHumanos, cabecalho);
+			while (!arquivoRaiosHumanos.eof()) {
+				int idOrigem, quantConexaos, idDestino;
+				Posicao origem, destino;
+				arquivoRaiosHumanos >> origem.x >> caracter >> origem.y >> caracter >> idOrigem >> caracter >> quantConexaos >> caracter >> idDestino >> caracter;
+				FORINT(j, 0 , quantConexaos, 1) {
+					arquivoRaiosHumanos >> destino.x >> caracter >> destino.y >> caracter;
+					this->adicionarPosicaoRaioPercepcaoHumanos(origem, idOrigem, destino, idDestino);
+				}
+			}
+			arquivoRaiosHumanos.close();
+		} else {
+			 cout << "Arquivo ./Entradas/RaiosPercepcaoHumano.csv nao foi aberto!" << endl;
 			 exit(1);
 		}
 	}

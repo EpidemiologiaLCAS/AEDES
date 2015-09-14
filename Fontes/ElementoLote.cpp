@@ -18,6 +18,7 @@ public:
     Lista<Humano*> listaHumanos;
     Lista<Conexao*> listaVizinhancaMosquitos;
     Lista<Conexao*> listaVizinhancaHumanos;
+    Lista<Conexao*> listaAreaPercepcaoHumanos;
     CoordenadaGeo coordenadaGeo;
 
     ElementoLote() {}
@@ -25,6 +26,7 @@ public:
     ~ElementoLote() {
 		listaVizinhancaMosquitos.preDestrutor();
 		listaVizinhancaHumanos.preDestrutor();
+		listaAreaPercepcaoHumanos.preDestrutor();
 	}
 
     int quantidadeTotalMosquitosPosicao() {
