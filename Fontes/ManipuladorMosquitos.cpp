@@ -619,10 +619,29 @@ private:
 					}
 				}
 			}
+		} else {
+			FORCONEXAO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaAreaPercepcaoHumanos, con) {
+				if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos.tamanhoLista > 0) {
+					FOR2HUMANO(quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos, i) {
+						if (i->elementoLista->saude != 'r') {
+							lista.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+						}
+					}
+				}
+			}
 		}
         if (lista.tamanhoLista != 0) {
-			int aux = rand() % lista.tamanhoLista;
-			retorno = (lista.buscaPosicao(aux))->elementoLista;
+			double distanciaCalculada;
+			retorno = lista.cabecaLista->elementoLista;
+			CoordenadaGeo coordenadaGeoDestino = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].coordenadaGeo;
+			double menorDistancia = quadra->lotes[lista.cabecaLista->elementoLista->idLoteAtual]->lote->matriz[lista.cabecaLista->elementoLista->posicaoAtual.x][lista.cabecaLista->elementoLista->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+			FOR2HUMANO(lista, i) {
+				distanciaCalculada = quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+				if (distanciaCalculada < menorDistancia) {
+					retorno = i->elementoLista;
+					menorDistancia = distanciaCalculada;
+				}
+			}
 		}
 		return retorno;
     }
@@ -772,22 +791,28 @@ private:
 						infeccaoHumano(mosquito, humano);
 						return true;
 					} else {
-						variacaoX = humano->posicaoAtual.x - mosquito->posicaoAtual.x;
-						variacaoY = humano->posicaoAtual.y - mosquito->posicaoAtual.y;
-						quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-						if (variacaoX > 0) {
-							mosquito->posicaoAtual.x += 1;
+						double distanciaCalculada;
+						CoordenadaGeo coordenadaGeoDestino = quadra->lotes[humano->idLoteAtual]->lote->matriz[humano->posicaoAtual.x][humano->posicaoAtual.y].coordenadaGeo;
+						double menorDistancia = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+						int xEscolhido = mosquito->posicaoAtual.x;
+						int yEscolhido = mosquito->posicaoAtual.y;				
+						FORINT(aux1, mosquito->posicaoAtual.x - raioVizinhancaBusca, (mosquito->posicaoAtual.x + raioVizinhancaBusca) + 1, 1) {
+							FORINT(aux2, mosquito->posicaoAtual.y - raioVizinhancaBusca, (mosquito->posicaoAtual.y + raioVizinhancaBusca) + 1, 1) {
+								if (((aux1 >= 0) && (aux1 < quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz)) && ((aux2 >= 0) && (aux2 < quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz))) {
+									distanciaCalculada = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[aux1][aux2].coordenadaGeo.distancia(coordenadaGeoDestino);	
+									if (distanciaCalculada < menorDistancia) {
+										menorDistancia = distanciaCalculada;
+										xEscolhido = aux1;
+										yEscolhido = aux2;
+									}
+								}
+							}
 						}
-						if (variacaoX < 0) {
-							mosquito->posicaoAtual.x -= 1;
-						}
-						if (variacaoY > 0) {
-							mosquito->posicaoAtual.y += 1;
-						}
-						if (variacaoY < 0) {
-							mosquito->posicaoAtual.y -= 1;
-						}
-						quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+						MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
+						quadra->lotes[mosquito2->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito2);
+						quadra->lotes[mosquito2->idLoteAtual]->lote->matriz[xEscolhido][yEscolhido].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito2));
+						mosquito2->posicaoAtual.x = xEscolhido;
+						mosquito2->posicaoAtual.y = yEscolhido;
 					}
 				}
 				raioVizinhancaBusca++;
