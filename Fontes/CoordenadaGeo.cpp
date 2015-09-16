@@ -15,7 +15,8 @@ public:
     }
     
     double distancia(CoordenadaGeo d) {
-		return sqrt(pow(x - d.x, 2.0) + pow(y - d.y, 2.0));
+		// return sqrt(pow(x - d.x, 2.0) + pow(y - d.y, 2.0));
+		return abs((x - d.x) + (y - d.y));
 	}
     
     ~CoordenadaGeo() {}

@@ -22,6 +22,7 @@
 #define COLUNAS_SAIDAS_WOLBACHIA 12
 #define COLUNAS_SAIDAS_HUMANOS 13
 #define COLUNAS_SAIDAS_DENGUE 13
+#define QUANTIDADE_CRIADOUROS_POR_LOTE 10
 
 double randomizarPercentual() {
 	double max = pow(MAX_RAND, 2) + (MAX_RAND - 1);

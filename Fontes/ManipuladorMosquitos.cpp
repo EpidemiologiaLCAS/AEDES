@@ -522,49 +522,84 @@ private:
 			ElementoLista<int>* a2 = new ElementoLista<int>(i);
 			direcoes.insercaoLista(a2);
         }
-        while ((!moveu) && (direcoes.tamanhoLista != 0)) {
-			direcaoMovimentacao = direcoes.buscaPosicao(rand() % direcoes.tamanhoLista)->elementoLista;
-            switch (direcaoMovimentacao) {
-				case 0: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, -1, 0);
+        if (mosquito->sexo == 'm') {
+			while ((!moveu) && (direcoes.tamanhoLista != 0)) {
+				direcaoMovimentacao = direcoes.buscaPosicao(rand() % direcoes.tamanhoLista)->elementoLista;
+				switch (direcaoMovimentacao) {
+					case 0: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, -1, 0);
+					}
+						break;
+					case 1: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, 1, 0);
+					}
+						break;
+					case 2:
+						moveu = efetivacaoMovimentaMosquito(mosquito, 0, -1);
+						break;
+					case 3: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, 0, 1);
+					}
+						break;
+					case 4: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, -1, -1);
+					}
+						break;
+					case 5: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, -1, 1);
+					}
+						break;
+					case 6: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, 1, -1);
+					}
+						break;
+					case 7: {
+						moveu = efetivacaoMovimentaMosquito(mosquito, 1, 1);
+					}
+						break;
+					case 8: {
+						moveu = migrarLote(mosquito);
+					}
+						break;
 				}
-					break;
-				case 1: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, 1, 0);
+				if (moveu == false) {
+					direcoes.buscaRemocaoLista(direcaoMovimentacao);
 				}
-					break;
-				case 2:
-					moveu = efetivacaoMovimentaMosquito(mosquito, 0, -1);
-					break;
-				case 3: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, 0, 1);
+			}
+		} else {
+			Lista<Conexao> lista;
+			FORINT(i, mosquito->posicaoAtual.x - 1, mosquito->posicaoAtual.x + 1, 1) {
+				FORINT(j, mosquito->posicaoAtual.y - 1, mosquito->posicaoAtual.y + 1, 1) {
+					if ((i >= 0) && (j >= 0) && (i < quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz) && (j < quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz)) {
+						lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(i, j), mosquito->idLoteAtual)));
+					}
 				}
-					break;
-				case 4: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, -1, -1);
+			}
+			FORCONEXAO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaAreaPercepcaoCriadouros, con) {
+				if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].criadouro) {
+					lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(con->elementoLista->destino.x, con->elementoLista->destino.y), con->elementoLista->idLoteDestino)));
 				}
-					break;
-				case 5: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, -1, 1);
+			}
+			if (lista.tamanhoLista != 0) {
+				Conexao escolhido;
+				double distanciaCalculada;
+				escolhido = lista.cabecaLista->elementoLista;
+				CoordenadaGeo coordenadaGeoDestino = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].coordenadaGeo;
+				double menorDistancia = quadra->lotes[lista.cabecaLista->elementoLista.idLoteDestino]->lote->matriz[lista.cabecaLista->elementoLista.destino.x][lista.cabecaLista->elementoLista.destino.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+				FOR2CONEXAO(lista, i) {
+					distanciaCalculada = quadra->lotes[i->elementoLista.idLoteDestino]->lote->matriz[i->elementoLista.destino.x][i->elementoLista.destino.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+					if (distanciaCalculada < menorDistancia) {
+						menorDistancia = distanciaCalculada;
+						escolhido = i->elementoLista;
+					}
 				}
-					break;
-				case 6: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, 1, -1);
-				}
-					break;
-				case 7: {
-					moveu = efetivacaoMovimentaMosquito(mosquito, 1, 1);
-				}
-					break;
-				case 8: {
-					moveu = migrarLote(mosquito);
-				}
-					break;
-            }
-            if (moveu == false) {
-                direcoes.buscaRemocaoLista(direcaoMovimentacao);
-            }
-        }
+				quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
+				quadra->lotes[escolhido.idLoteDestino]->lote->matriz[escolhido.destino.x][escolhido.destino.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+				mosquito->idLoteAtual = escolhido.idLoteDestino;
+				mosquito->posicaoAtual.x = escolhido.destino.x;
+				mosquito->posicaoAtual.y = escolhido.destino.y;
+			}
+		}
     }
 
     bool efetivacaoMovimentaFemeaAlimentada(Mosquito* mosquito, int variacaoX, int variacaoY) {

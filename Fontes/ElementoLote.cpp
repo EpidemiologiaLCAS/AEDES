@@ -20,15 +20,20 @@ public:
     Lista<Conexao*> listaVizinhancaHumanos;
     Lista<Conexao*> listaAreaPercepcaoHumanos;
     Lista<Conexao*> listaAreaPercepcaoMosquitosMachos;
+    Lista<Conexao*> listaAreaPercepcaoCriadouros;
     CoordenadaGeo coordenadaGeo;
+    bool criadouro;
 
-    ElementoLote() {}
+    ElementoLote() {
+		criadouro = false;
+	}
 
     ~ElementoLote() {
 		listaVizinhancaMosquitos.preDestrutor();
 		listaVizinhancaHumanos.preDestrutor();
 		listaAreaPercepcaoHumanos.preDestrutor();
 		listaAreaPercepcaoMosquitosMachos.preDestrutor();
+		listaAreaPercepcaoCriadouros.preDestrutor();
 	}
 
     int quantidadeTotalMosquitosPosicao() {

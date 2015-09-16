@@ -43,7 +43,9 @@ public:
 		quadra->definicaoControleMecanicoNaoAlados();
 		quadra->criacaoRaiosPercepcaoHumanos();
 		quadra->criacaoRaiosPercepcaoMosquitosMachos();
+		quadra->criacaoRaiosPercepcaoCriadouros();
 		quadra->leituraCoordenadasGeo();
+		quadra->criacaoCriadouros();
     }    
     
     ~Simulacao() {

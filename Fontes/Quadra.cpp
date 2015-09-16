@@ -55,6 +55,11 @@ public:
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
     }
+    
+    void adicionarPosicaoRaioPercepcaoCriadouros(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoCriadouros.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoCriadouros.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+    }
 	
 	void criacaoConexoesHumanos() {
 		char caracter;
@@ -198,7 +203,7 @@ public:
 	void criacaoRaiosPercepcaoHumanos() {
 		char caracter;
 		ifstream arquivoRaiosHumanos;
-		arquivoRaiosHumanos.open("./Entradas/RaiosPercepcaoHumano.csv");
+		arquivoRaiosHumanos.open("./Entradas/RaiosPercepcaoHumanos.csv");
 		if (arquivoRaiosHumanos.is_open()) {
 			string cabecalho;
 			getline(arquivoRaiosHumanos, cabecalho);
@@ -213,7 +218,7 @@ public:
 			}
 			arquivoRaiosHumanos.close();
 		} else {
-			 cout << "Arquivo ./Entradas/RaiosPercepcaoHumano.csv nao foi aberto!" << endl;
+			 cout << "Arquivo ./Entradas/RaiosPercepcaoHumanos.csv nao foi aberto!" << endl;
 			 exit(1);
 		}
 	}
@@ -238,6 +243,39 @@ public:
 		} else {
 			 cout << "Arquivo ./Entradas/RaiosPercepcaoMosquitosMachos.csv nao foi aberto!" << endl;
 			 exit(1);
+		}
+	}
+	
+	void criacaoRaiosPercepcaoCriadouros() {
+		char caracter;
+		ifstream arquivoRaiosCriadouros;
+		arquivoRaiosCriadouros.open("./Entradas/RaiosPercepcaoCriadouros.csv");
+		if (arquivoRaiosCriadouros.is_open()) {
+			string cabecalho;
+			getline(arquivoRaiosCriadouros, cabecalho);
+			while (!arquivoRaiosCriadouros.eof()) {
+				int idOrigem, quantConexaos, idDestino;
+				Posicao origem, destino;
+				arquivoRaiosCriadouros >> origem.x >> caracter >> origem.y >> caracter >> idOrigem >> caracter >> quantConexaos >> caracter >> idDestino >> caracter;
+				FORINT(j, 0 , quantConexaos, 1) {
+					arquivoRaiosCriadouros >> destino.x >> caracter >> destino.y >> caracter;
+					this->adicionarPosicaoRaioPercepcaoCriadouros(origem, idOrigem, destino, idDestino);
+				}
+			}
+			arquivoRaiosCriadouros.close();
+		} else {
+			 cout << "Arquivo ./Entradas/RaiosPercepcaoCriadouros.csv nao foi aberto!" << endl;
+			 exit(1);
+		}
+	}
+	
+	void criacaoCriadouros() {
+		FORINT(i, 0, quantLotes, 1) {
+			FORINT(j, 0, QUANTIDADE_CRIADOUROS_POR_LOTE, 1) {
+				int x = rand() % lotes[i]->lote->linhasMatriz;
+				int y = rand() % lotes[i]->lote->colunasMatriz;
+				lotes[i]->lote->matriz[x][y].criadouro = true;
+			}
 		}
 	}
 
