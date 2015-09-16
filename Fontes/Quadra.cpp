@@ -50,6 +50,11 @@ public:
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
     }
+    
+    void adicionarPosicaoRaioPercepcaoMosquitosMachos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+    }
 	
 	void criacaoConexoesHumanos() {
 		char caracter;
@@ -209,6 +214,29 @@ public:
 			arquivoRaiosHumanos.close();
 		} else {
 			 cout << "Arquivo ./Entradas/RaiosPercepcaoHumano.csv nao foi aberto!" << endl;
+			 exit(1);
+		}
+	}
+	
+	void criacaoRaiosPercepcaoMosquitosMachos() {
+		char caracter;
+		ifstream arquivoRaiosMosquitosMachos;
+		arquivoRaiosMosquitosMachos.open("./Entradas/RaiosPercepcaoMosquitosMachos.csv");
+		if (arquivoRaiosMosquitosMachos.is_open()) {
+			string cabecalho;
+			getline(arquivoRaiosMosquitosMachos, cabecalho);
+			while (!arquivoRaiosMosquitosMachos.eof()) {
+				int idOrigem, quantConexaos, idDestino;
+				Posicao origem, destino;
+				arquivoRaiosMosquitosMachos >> origem.x >> caracter >> origem.y >> caracter >> idOrigem >> caracter >> quantConexaos >> caracter >> idDestino >> caracter;
+				FORINT(j, 0 , quantConexaos, 1) {
+					arquivoRaiosMosquitosMachos >> destino.x >> caracter >> destino.y >> caracter;
+					this->adicionarPosicaoRaioPercepcaoMosquitosMachos(origem, idOrigem, destino, idDestino);
+				}
+			}
+			arquivoRaiosMosquitosMachos.close();
+		} else {
+			 cout << "Arquivo ./Entradas/RaiosPercepcaoMosquitosMachos.csv nao foi aberto!" << endl;
 			 exit(1);
 		}
 	}

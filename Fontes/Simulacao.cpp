@@ -42,6 +42,7 @@ public:
         quadra->definicaoControleQuimicoAlados();
 		quadra->definicaoControleMecanicoNaoAlados();
 		quadra->criacaoRaiosPercepcaoHumanos();
+		quadra->criacaoRaiosPercepcaoMosquitosMachos();
 		quadra->leituraCoordenadasGeo();
     }    
     
