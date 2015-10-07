@@ -26,9 +26,7 @@ public:
         sorotipo = _sorotipo;
 		fase = _fase;
 		idade = _idade;
-		idLoteAtual = _idLoteAtual;
-		posicaoAtual.x = _x;
-		posicaoAtual.y = _y;      
+		setLoteAtualPosicaoAtual(_idLoteAtual, _x, _y);     
         vida = true;
         ciclosLatencia = 0;
         tipoAcasalamento = 'n';
@@ -36,9 +34,13 @@ public:
         ciclosGestacao = 0;
         contadorCiclosEntrePosturas = 0;
         tipoProle = 'n';  
-        posicaoAlimento.x = -1;
-        posicaoAlimento.y = -1;
+        setPosicaoAlimento(-1, -1);
         alimento = false;
+	}
+	
+	void setPosicaoAlimento(int x, int y) {
+		posicaoAlimento.x = x;
+		posicaoAlimento.y = y;
 	}
 
 	MosquitoFemea() {}

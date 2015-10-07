@@ -35,36 +35,30 @@ public:
     
     void insercaoMosquitos(int id, char sexo, char saudeWolbachia, char saudeDengue, int sorotipo, char fase, int idLote, int idade) {
         int lx, ly;
-        Mosquito* aux5 = NULL;
+        Mosquito* mosquito = NULL;
         do {
-           lx = rand() % quadra->lotes[idLote]->lote->linhasMatriz;
-           ly = rand() % quadra->lotes[idLote]->lote->colunasMatriz;
-        } while(quadra->lotes[idLote]->lote->matriz[lx][ly].quantidadeTotalMosquitosPosicao() >= CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote));
+           lx = rand() % LINHASLOTE(idLote);
+           ly = rand() % COLUNASLOTE(idLote); 
+        } while(POSICAOLOTE(idLote, lx, ly).quantidadeTotalMosquitosPosicao() >= CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote));
         if (sexo == 'm') {
-			aux5 = new MosquitoMacho(id, saudeWolbachia, fase, idade, idLote, lx, ly);
-			ElementoLista<Mosquito*>* a2 = new ElementoLista<Mosquito*>(aux5);
-			listaMosquitos->insercaoLista(a2);			
+			mosquito = new MosquitoMacho(id, saudeWolbachia, fase, idade, idLote, lx, ly);		
 		} else {
-			aux5 = new MosquitoFemea(id, saudeWolbachia, saudeDengue, sorotipo, fase, idade, idLote, lx, ly);
-			ElementoLista<Mosquito*>* a2 = new ElementoLista<Mosquito*>(aux5);
-			listaMosquitos->insercaoLista(a2);
+			mosquito = new MosquitoFemea(id, saudeWolbachia, saudeDengue, sorotipo, fase, idade, idLote, lx, ly);
 		}
+		listaMosquitos->insercaoLista(new ElementoLista<Mosquito*>(mosquito));
         switch (fase) {
            case 'o': {
-			   ElementoLista<Mosquito*>* a1 = new ElementoLista<Mosquito*>(aux5);
-			   quadra->lotes[idLote]->lote->matriz[lx][ly].listaOvos.insercaoLista(a1);
+			   LISTAOVOS(idLote, lx, ly).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
            }
            break;
            default: {
                 switch (sexo) {
 					case 'm': {
-						ElementoLista<Mosquito*>* a1 = new ElementoLista<Mosquito*>(aux5);
-						quadra->lotes[idLote]->lote->matriz[lx][ly].listaMosquitosMachos.insercaoLista(a1);
+						LISTAMACHOS(idLote, lx, ly).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 					}
 						break;
 					case 'f': {
-						ElementoLista<Mosquito*>* a1 = new ElementoLista<Mosquito*>(aux5);
-						quadra->lotes[idLote]->lote->matriz[lx][ly].listaMosquitosFemeas.insercaoLista(a1);
+						LISTAFEMEAS(idLote, lx, ly).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 					}
 						break;
                 }
@@ -168,9 +162,10 @@ public:
     }
 
     void movimentacaoDiurna() {
-        FORMOSQUITO(listaMosquitos, mosquito) {
-            if (((mosquito->elementoLista->fase == 'a') || (mosquito->elementoLista->fase == 'd')) && (mosquito->elementoLista->vida)) {
-                movimentacao(mosquito->elementoLista);
+        FORMOSQUITO(listaMosquitos, i) {
+			Mosquito* mosquito = i->elementoLista;
+            if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->vida)) {
+                movimentacao(mosquito);
             }
         }
     }
@@ -180,15 +175,17 @@ public:
 			int totalMosquitos = 0;
 			Lista<Mosquito*> lista;
 			FORMOSQUITO(listaMosquitos, i) {
-				if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd')) && (i->elementoLista->idLoteAtual == idLote))
+				Mosquito* mosquito = i->elementoLista;
+				if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->idLoteAtual == idLote))
 					++totalMosquitos;
 			}
 			int quantidadeMosquitosMovimentacao = totalMosquitos * PORCENTAGEM_MOVIMENTACAO_NOTURNA_MOSQUITOS(idLote);
 			while (quantidadeMosquitosMovimentacao != 0) {
 				FORMOSQUITO(listaMosquitos, i) {
-					if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd')) && (i->elementoLista->idLoteAtual == idLote)) {
+					Mosquito* mosquito = i->elementoLista;
+					if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->idLoteAtual == idLote)) {
 						if (randomizarPercentual() <= 0.5) {
-							lista.insercaoLista(new ElementoLista<Mosquito*>(i->elementoLista));
+							lista.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 							--quantidadeMosquitosMovimentacao;
 						}
 					}
@@ -197,20 +194,22 @@ public:
 				}
 			}
 			FOR2MOSQUITO(lista, i) {
-				if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd')) && (i->elementoLista->idLoteAtual == idLote))  {
-				   movimentacao(i->elementoLista);
+				Mosquito* mosquito = i->elementoLista;
+				if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->idLoteAtual == idLote))  {
+				   movimentacao(mosquito);
 				}
 			}
 		}
     }
 
     void voosLevy() {
-        FORMOSQUITO(listaMosquitos, mosquito) {
-			if (mosquito->elementoLista->sexo == 'f') {
-				MosquitoFemea* mosquito2 = (MosquitoFemea*) (mosquito->elementoLista);
-				if ((mosquito2->tipoAcasalamento != 'n') && (mosquito2->alimento == false) && (mosquito2->vida) && ((mosquito2->fase == 'a') || (mosquito2->fase == 'd'))) {
-					if (randomizarPercentual() <= PROBABILIDADE_VOO_LEVY_ANTES_PROCURA_ALIMENTO(mosquito2->idLoteAtual)) {
-						vooLevy(mosquito->elementoLista, 0);
+        FORMOSQUITO(listaMosquitos, i) {
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->sexo == 'f') {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
+				if ((mosquitoFemea->tipoAcasalamento != 'n') && (!mosquitoFemea->alimento) && (mosquitoFemea->vida) && ((mosquitoFemea->fase == 'a') || (mosquitoFemea->fase == 'd'))) {
+					if (randomizarPercentual() <= PROBABILIDADE_VOO_LEVY_ANTES_PROCURA_ALIMENTO(mosquitoFemea->idLoteAtual)) {
+						vooLevy(mosquito, CURTO);
 					}
 				}
 			}
@@ -219,28 +218,29 @@ public:
 
     void geracao() {
         FORMOSQUITO(listaMosquitos, i) {
-            if (i->elementoLista->sexo == 'f') {
-				MosquitoFemea* mosquito2 = (MosquitoFemea*) (i->elementoLista);
-				if (((mosquito2->fase == 'a') || (mosquito2->fase == 'd')) && (mosquito2->tipoAcasalamento != 'n')) {
-					if (mosquito2->ciclosGestacao == -1) {
-						if (mosquito2->contadorCiclosEntrePosturas != INTERVALO_ENTRE_POSTURAS_FEMEA(mosquito2->idLoteAtual)) {
-							mosquito2->contadorCiclosEntrePosturas++;
+			Mosquito* mosquito = i->elementoLista;
+            if (mosquito->sexo == 'f') {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
+				if (((mosquitoFemea->fase == 'a') || (mosquitoFemea->fase == 'd')) && (mosquitoFemea->tipoAcasalamento != 'n')) {
+					if (mosquitoFemea->ciclosGestacao == -1) {
+						if (mosquitoFemea->contadorCiclosEntrePosturas != INTERVALO_ENTRE_POSTURAS_FEMEA(mosquitoFemea->idLoteAtual)) {
+							mosquitoFemea->contadorCiclosEntrePosturas++;
 						} else {
-							mosquito2->ciclosGestacao = 0;
+							mosquitoFemea->ciclosGestacao = 0;
 						}
 					}
 					else {
-						if (mosquito2->ciclosGestacao < CICLOS_GESTACAO(mosquito2->idLoteAtual)) {
-							mosquito2->ciclosGestacao += 1;
+						if (mosquitoFemea->ciclosGestacao < CICLOS_GESTACAO(mosquitoFemea->idLoteAtual)) {
+							mosquitoFemea->ciclosGestacao++;
 						} else {
-							mosquito2->contadorCiclosEntrePosturas = 0;
-							mosquito2->ciclosGestacao = -1;
-							mosquito2->contadorPosturas++;
-							if ((mosquito2->tipoProle != 'e') || (mosquito2->alimento)) {
-								if (randomizarPercentual() <= PROBABILIDADE_VOO_LEVY_ANTES_POSTURA(mosquito2->idLoteAtual)) {
-									vooLevy(i->elementoLista, 1);
+							mosquitoFemea->contadorCiclosEntrePosturas = 0;
+							mosquitoFemea->ciclosGestacao = -1;
+							mosquitoFemea->contadorPosturas++;
+							if ((mosquitoFemea->tipoProle != 'e') || (mosquitoFemea->alimento)) {
+								if (randomizarPercentual() <= PROBABILIDADE_VOO_LEVY_ANTES_POSTURA(mosquitoFemea->idLoteAtual)) {
+									vooLevy(mosquito, LONGO);
 								}
-								geracao6Casos(i->elementoLista);
+								geracao6Casos(mosquito);
 							}
 						}
 					}	
@@ -272,15 +272,16 @@ public:
 
     void conclusaoCiclo() {
         FORMOSQUITO(listaMosquitos, i) {
-            i->elementoLista->idade += 1;
-            if (i->elementoLista->sexo == 'f') {
-				MosquitoFemea* mosquito2 = (MosquitoFemea*) (i->elementoLista);
-				if (mosquito2->ciclosLatencia == 0) {
-					if (mosquito2->saudeDengue == 'l') {
-						mosquito2->saudeDengue = 'i';
+			Mosquito* mosquito = i->elementoLista;
+            mosquito->idade++;
+            if (mosquito->sexo == 'f') {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
+				if (mosquitoFemea->ciclosLatencia == 0) {
+					if (mosquitoFemea->saudeDengue == 'l') {
+						mosquitoFemea->saudeDengue = 'i';
 					}
 				} else {
-					mosquito2->ciclosLatencia -= 1;
+					mosquitoFemea->ciclosLatencia--;
 				}
 			}
         }
@@ -290,69 +291,72 @@ private:
 
     void vooLevy(Mosquito* mosquito, int tipoVoo) {
         int px, py;
-        if (tipoVoo == 0) {
-            px = AMPLITUDE_VOO_LEVY_CURTO(mosquito->idLoteAtual);
-            py = AMPLITUDE_VOO_LEVY_CURTO(mosquito->idLoteAtual);
-        } else {
-            px = AMPLITUDE_VOO_LEVY_LONGO(mosquito->idLoteAtual);
-            py = AMPLITUDE_VOO_LEVY_LONGO(mosquito->idLoteAtual);
-        }
-        FORINT(c, 0, TENTATIVAS_VOO_LEVY(mosquito->idLoteAtual), 1) {
+        switch (tipoVoo) {
+			case CURTO: {
+				px = AMPLITUDE_VOO_LEVY_CURTO(mosquito->idLoteAtual);
+				py = AMPLITUDE_VOO_LEVY_CURTO(mosquito->idLoteAtual);
+			}
+			break;
+			case LONGO: {
+				px = AMPLITUDE_VOO_LEVY_LONGO(mosquito->idLoteAtual);
+				py = AMPLITUDE_VOO_LEVY_LONGO(mosquito->idLoteAtual);
+			}
+			break;
+		}
+        FORINT(i, 0, TENTATIVAS_VOO_LEVY(mosquito->idLoteAtual), 1) {
             if (randomizarPercentual() <= 0.5) {
                 px = -1 * px;
 			}
             if (randomizarPercentual() <= 0.5) {
                 py = -1 * py;
 			}
-            if ((((mosquito->posicaoAtual.x + px) < quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz) && ((mosquito->posicaoAtual.x + px) >= 0) && ((mosquito->posicaoAtual.y + py) < quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz) && ((mosquito->posicaoAtual.y + py) >= 0)) && ((quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x + px][mosquito->posicaoAtual.y + py].quantidadeTotalMosquitosPosicao()) < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(mosquito->idLoteAtual))) {
-                quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-                mosquito->posicaoAtual.x += px;
-                mosquito->posicaoAtual.y += py;
-                quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+			if (LIMITESLOTEP(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, px, py)) {
+				LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                mosquito->addPosicaoAtual(px, py);
+                LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
                 return;
             }
         }
     }
 
     void efetivacaoAcasalamento(Mosquito* macho, Mosquito* femea, double probabilidadeAcasalamento, char tipoAcasalamento, char prole) {
-        double probabilidade = randomizarPercentual();
-        if (probabilidade <= (TAXA_FECUNDIDADE(femea->idLoteAtual) * probabilidadeAcasalamento)) {
-			MosquitoFemea* femea2 = (MosquitoFemea*) femea;
-            femea2->tipoAcasalamento = tipoAcasalamento;
-            femea2->tipoProle = prole;
-            MosquitoMacho* macho2 = (MosquitoMacho*) macho;
-            macho2->contadorAcasalamentos++;
-            contadorAcasalamentosCiclo += 1;
-            contadorAcasalamentosTotal += 1;
+        if (randomizarPercentual() <= (TAXA_FECUNDIDADE(femea->idLoteAtual) * probabilidadeAcasalamento)) {
+			MosquitoFemea* mosquitoFemea = (MosquitoFemea*) femea;
+            mosquitoFemea->tipoAcasalamento = tipoAcasalamento;
+            mosquitoFemea->tipoProle = prole;
+            MosquitoMacho* mosquitoMacho = (MosquitoMacho*) macho;
+            mosquitoMacho->contadorAcasalamentos++;
+            contadorAcasalamentosCiclo++;
+            contadorAcasalamentosTotal++;
         }
     }
 
     void acasalamento(Mosquito* macho, Mosquito* femea) {
-		MosquitoMacho* macho2 = (MosquitoMacho*) macho;
-        switch (macho2->saudeWolbachia) {
+		MosquitoMacho* mosquitoMacho = (MosquitoMacho*) macho;
+        switch (mosquitoMacho->saudeWolbachia) {
 			case 's': {
 				switch (femea->saudeWolbachia) {
 					case 's': {
-						switch (macho2->contadorAcasalamentos) {
+						switch (mosquitoMacho->contadorAcasalamentos) {
 							case 0: {
 								efetivacaoAcasalamento(macho, femea, BETASS22(femea->idLoteAtual), 'a', 's');
 							}
 							break;
 							default: {
-								efetivacaoAcasalamento(macho, femea, pow(K1(femea->idLoteAtual), macho2->contadorAcasalamentos)*(BETASS23(femea->idLoteAtual)), 'a', 's');
+								efetivacaoAcasalamento(macho, femea, pow(K1(femea->idLoteAtual), mosquitoMacho->contadorAcasalamentos)*(BETASS23(femea->idLoteAtual)), 'a', 's');
 							}
 							break;
 						}
 					}
 					break;
 					case 'i': {
-						switch (macho2->contadorAcasalamentos) {
+						switch (mosquitoMacho->contadorAcasalamentos) {
 							case 0: {
 								efetivacaoAcasalamento(macho, femea, BETAIS22(femea->idLoteAtual), 'a', 'i');
 							}
 							break;
 							default: {
-								efetivacaoAcasalamento(macho, femea, pow(K1(femea->idLoteAtual), macho2->contadorAcasalamentos)*(BETAIS23(femea->idLoteAtual)), 'a', 'i');
+								efetivacaoAcasalamento(macho, femea, pow(K1(femea->idLoteAtual), mosquitoMacho->contadorAcasalamentos)*(BETAIS23(femea->idLoteAtual)), 'a', 'i');
 							}
 							break;
 						}
@@ -364,26 +368,26 @@ private:
 			case 'i': {
 				switch (femea->saudeWolbachia) {
 					case 's': {
-						switch (macho2->contadorAcasalamentos) {
+						switch (mosquitoMacho->contadorAcasalamentos) {
 							case 0: {
 								efetivacaoAcasalamento(macho, femea, BETASI22(femea->idLoteAtual), 'i', 'e');
 							}
 							break;
 							default: {
-								efetivacaoAcasalamento(macho, femea, pow(K2(femea->idLoteAtual), macho2->contadorAcasalamentos)*(BETASI23(femea->idLoteAtual)), 'i', 'e');
+								efetivacaoAcasalamento(macho, femea, pow(K2(femea->idLoteAtual), mosquitoMacho->contadorAcasalamentos)*(BETASI23(femea->idLoteAtual)), 'i', 'e');
 							}
 							break;
 						}
 					}
 					break;
 					case 'i': {
-						switch (macho2->contadorAcasalamentos) {
+						switch (mosquitoMacho->contadorAcasalamentos) {
 							case 0: {
 								efetivacaoAcasalamento(macho, femea, BETAII22(femea->idLoteAtual), 'i', 'i');
 							}
 							break;
 							default: {
-								efetivacaoAcasalamento(macho, femea, pow(K2(femea->idLoteAtual), macho2->contadorAcasalamentos)*(BETAII23(femea->idLoteAtual)), 'i', 'i');
+								efetivacaoAcasalamento(macho, femea, pow(K2(femea->idLoteAtual), mosquitoMacho->contadorAcasalamentos)*(BETAII23(femea->idLoteAtual)), 'i', 'i');
 							}
 							break;
 						}
@@ -394,68 +398,64 @@ private:
         }
     }
 
-    void procuraMachoAcasalamento(Mosquito* femea, Conexao escolhido) {
+    void procuraMachoAcasalamento(Mosquito* femea, Conexao posicaoEscolhida) {
 		Mosquito* macho = NULL;
-		MosquitoMacho* machoAux = NULL;
+		MosquitoMacho* mosquitoMacho = NULL;
 		int acasalamentos = 99;
-		FOR2MOSQUITO(quadra->lotes[escolhido.idLoteDestino]->lote->matriz[escolhido.destino.x][escolhido.destino.y].listaMosquitosMachos, i) {
-			machoAux = (MosquitoMacho*) i->elementoLista;
-			if (machoAux->contadorAcasalamentos < acasalamentos) {
+		FOR2MOSQUITO(LISTAMACHOS(posicaoEscolhida.idLoteDestino, posicaoEscolhida.destino.x, posicaoEscolhida.destino.y), i) {
+			mosquitoMacho = (MosquitoMacho*) i->elementoLista;
+			if (mosquitoMacho->contadorAcasalamentos < acasalamentos) {
 				macho = i->elementoLista;
-				acasalamentos = machoAux->contadorAcasalamentos;
+				acasalamentos = mosquitoMacho->contadorAcasalamentos;
 			}
 		}
 		if ((macho->posicaoAtual.x == femea->posicaoAtual.x) && (macho->posicaoAtual.y == femea->posicaoAtual.y) && (macho->idLoteAtual == femea->idLoteAtual)) {
 			acasalamento(macho, femea);
 		} else {
 			double distanciaCalculada;
-			CoordenadaGeo coordenadaGeoDestino = quadra->lotes[femea->idLoteAtual]->lote->matriz[femea->posicaoAtual.x][femea->posicaoAtual.y].coordenadaGeo;
-			double menorDistancia = quadra->lotes[macho->idLoteAtual]->lote->matriz[macho->posicaoAtual.x][macho->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+			CoordenadaGeo coordenadaGeoDestino = POSICAOLOTE(femea->idLoteAtual, femea->posicaoAtual.x, femea->posicaoAtual.y).coordenadaGeo;
+			double menorDistancia = POSICAOLOTE(macho->idLoteAtual, macho->posicaoAtual.x, macho->posicaoAtual.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 			int xEscolhido = femea->posicaoAtual.x;
 			int yEscolhido = femea->posicaoAtual.y;				
-			FORINT(aux1, femea->posicaoAtual.x - 1, femea->posicaoAtual.x + 1, 1) {
-				FORINT(aux2, femea->posicaoAtual.y - 1, femea->posicaoAtual.y + 1, 1) {
-					if (((aux1 >= 0) && (aux1 < quadra->lotes[femea->idLoteAtual]->lote->linhasMatriz)) && ((aux2 >= 0) && (aux2 < quadra->lotes[femea->idLoteAtual]->lote->colunasMatriz))) {
-						distanciaCalculada = quadra->lotes[femea->idLoteAtual]->lote->matriz[aux1][aux2].coordenadaGeo.distancia(coordenadaGeoDestino);	
-						if (distanciaCalculada < menorDistancia) {
-							menorDistancia = distanciaCalculada;
-							xEscolhido = aux1;
-							yEscolhido = aux2;
-						}
+			VIZINHANCAMOORE(i, j, femea->posicaoAtual.x, femea->posicaoAtual.y, 1) {
+				if (LIMITESLOTE(femea->idLoteAtual, i, j)) {
+					distanciaCalculada = POSICAOLOTE(femea->idLoteAtual, i, j).coordenadaGeo.distancia(coordenadaGeoDestino);	
+					if (distanciaCalculada < menorDistancia) {
+						menorDistancia = distanciaCalculada;
+						xEscolhido = i;
+						yEscolhido = j;
 					}
 				}
 			}
-			quadra->lotes[femea->idLoteAtual]->lote->matriz[femea->posicaoAtual.x][femea->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(femea);
-			quadra->lotes[femea->idLoteAtual]->lote->matriz[xEscolhido][yEscolhido].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(femea));
-			femea->posicaoAtual.x = xEscolhido;
-			femea->posicaoAtual.y = yEscolhido;
+			}
+			LISTAFEMEAS(femea->idLoteAtual, femea->posicaoAtual.x, femea->posicaoAtual.y).buscaRemocaoLista(femea);
+			femea->setPosicaoAtual(xEscolhido, yEscolhido);
+			LISTAFEMEAS(femea->idLoteAtual, femea->posicaoAtual.x, femea->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(femea));
 		}
     }
 
     void buscaMacho(Mosquito* femea) {
 		Lista<Conexao> lista;
-		FORINT(i, femea->posicaoAtual.x - RAIO_BUSCA_MACHO(femea->idLoteAtual), (femea->posicaoAtual.x + RAIO_BUSCA_MACHO(femea->idLoteAtual)) + 1, 1) {
-			FORINT(j, femea->posicaoAtual.y - RAIO_BUSCA_MACHO(femea->idLoteAtual), (femea->posicaoAtual.y + RAIO_BUSCA_MACHO(femea->idLoteAtual)) + 1, 1) {
-				if ((i >= 0) && (j >= 0) && (i < quadra->lotes[femea->idLoteAtual]->lote->linhasMatriz) && (j < quadra->lotes[femea->idLoteAtual]->lote->colunasMatriz) && (quadra->lotes[femea->idLoteAtual]->lote->matriz[i][j].listaMosquitosMachos.tamanhoLista > 0)) {
-					lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(i, j), femea->idLoteAtual)));
-				}
+		VIZINHANCAMOORE(i, j, femea->posicaoAtual.x, femea->posicaoAtual.y, RAIO_BUSCA_MACHO(femea->idLoteAtual)) {
+			if (LIMITESLOTE(femea->idLoteAtual, i, j) && (LISTAMACHOS(femea->idLoteAtual, i, j).tamanhoLista > 0)) {
+				lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(i, j), femea->idLoteAtual)));
 			}
 		}
-		FORCONEXAO(quadra->lotes[femea->idLoteAtual]->lote->matriz[femea->posicaoAtual.x][femea->posicaoAtual.y].listaAreaPercepcaoMosquitosMachos, con) {
-			if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos.tamanhoLista > 0) {
-				FOR2MOSQUITO(quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaMosquitosMachos, i) {
-					lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(con->elementoLista->destino.x, con->elementoLista->destino.y), con->elementoLista->idLoteDestino)));
-				}
+		}
+		FORCONEXAO(LISTAPERCEPCAOMACHOS(femea->idLoteAtual, femea->posicaoAtual.x, femea->posicaoAtual.y), i) {
+			Conexao* conexao = i->elementoLista;
+			if (LISTAMACHOS(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y).tamanhoLista > 0) {
+				lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(conexao->destino.x, conexao->destino.y), conexao->idLoteDestino)));
 			}
 		}
         if (lista.tamanhoLista != 0) {
 			Conexao escolhido;
 			double distanciaCalculada;
 			escolhido = lista.cabecaLista->elementoLista;
-			CoordenadaGeo coordenadaGeoDestino = quadra->lotes[femea->idLoteAtual]->lote->matriz[femea->posicaoAtual.x][femea->posicaoAtual.y].coordenadaGeo;
-			double menorDistancia = quadra->lotes[lista.cabecaLista->elementoLista.idLoteDestino]->lote->matriz[lista.cabecaLista->elementoLista.destino.x][lista.cabecaLista->elementoLista.destino.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+			CoordenadaGeo coordenadaGeoDestino = POSICAOLOTE(femea->idLoteAtual, femea->posicaoAtual.x, femea->posicaoAtual.y).coordenadaGeo;
+			double menorDistancia = POSICAOLOTE(lista.cabecaLista->elementoLista.idLoteDestino, lista.cabecaLista->elementoLista.destino.x, lista.cabecaLista->elementoLista.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 			FOR2CONEXAO(lista, i) {
-				distanciaCalculada = quadra->lotes[i->elementoLista.idLoteDestino]->lote->matriz[i->elementoLista.destino.x][i->elementoLista.destino.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+				distanciaCalculada = POSICAOLOTE(i->elementoLista.idLoteDestino, i->elementoLista.destino.x, i->elementoLista.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 				if (distanciaCalculada < menorDistancia) {
 					menorDistancia = distanciaCalculada;
 					escolhido = i->elementoLista;
@@ -466,50 +466,46 @@ private:
     }
    
     bool efetivacaoMovimentaMosquito(Mosquito* mosquito, int variacaoX, int variacaoY) {
-        if ((mosquito->posicaoAtual.x + variacaoX < 0) || (mosquito->posicaoAtual.y + variacaoY < 0) || (mosquito->posicaoAtual.x + variacaoX > (quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz - 1)) || (mosquito->posicaoAtual.y + variacaoY > (quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz - 1)) || ((quadra->lotes[mosquito->idLoteAtual]->lote->matriz[(mosquito->posicaoAtual.x + variacaoX)][mosquito->posicaoAtual.y + variacaoY].quantidadeTotalMosquitosPosicao()) >= CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(mosquito->idLoteAtual))) {
+		if (!LIMITESLOTEP(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, variacaoX, variacaoY)) {
             return false;
         } else {
             switch (mosquito->sexo) {
 				case 'm': {
-					quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(mosquito);
-					quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x + variacaoX][mosquito->posicaoAtual.y + variacaoY].listaMosquitosMachos.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+					LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+					LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x + variacaoX, mosquito->posicaoAtual.y + variacaoY).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 				}
 				break;
 				case 'f': {
-					quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-					quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x + variacaoX][mosquito->posicaoAtual.y + variacaoY].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+					LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+					LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x + variacaoX, mosquito->posicaoAtual.y + variacaoY).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 				}
 				break;
             }
-            mosquito->posicaoAtual.x += variacaoX;
-            mosquito->posicaoAtual.y += variacaoY;
+            mosquito->addPosicaoAtual(variacaoX, variacaoY);
         }
         return true;
     }
 
      bool migrarLote(Mosquito* mosquito) {
-        if (quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaVizinhancaMosquitos.tamanhoLista == 0) {
+        if (LISTAVIZINHANCAMOSQUITOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).tamanhoLista == 0) {
             return false;
         } else {
-			int r = rand() % quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaVizinhancaMosquitos.tamanhoLista;
-			ElementoLista<Conexao*>* dest = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaVizinhancaMosquitos.buscaPosicao(r);
-			Posicao pos = dest->elementoLista->destino;
-			int idDestino = dest->elementoLista->idLoteDestino;
+			int indiceEscolhido = rand() % LISTAVIZINHANCAMOSQUITOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).tamanhoLista;
+			ElementoLista<Conexao*>* destino = LISTAVIZINHANCAMOSQUITOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaPosicao(indiceEscolhido);
+			Posicao posicaoDestino = destino->elementoLista->destino;
+			int idLoteDestino = destino->elementoLista->idLoteDestino;
 			switch (mosquito->sexo) {
 				case 'm': {
-					quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(mosquito);
-					quadra->lotes[idDestino]->lote->matriz[pos.x][pos.y].listaMosquitosMachos.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+					LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+					LISTAMACHOS(idLoteDestino, posicaoDestino.x, posicaoDestino.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 				}
 				break;
 				case 'f': {
-					quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-					quadra->lotes[idDestino]->lote->matriz[pos.x][pos.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
-				}
+					LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+					LISTAFEMEAS(idLoteDestino, posicaoDestino.x, posicaoDestino.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));				}
 				break;
             }
-            mosquito->idLoteAtual = idDestino;
-            mosquito->posicaoAtual.x = pos.x;
-            mosquito->posicaoAtual.y = pos.y;
+            mosquito->setLoteAtualPosicaoAtual(idLoteDestino, posicaoDestino.x, posicaoDestino.y);
         }
         return true;
     }
@@ -519,8 +515,7 @@ private:
         int direcaoMovimentacao;
         Lista<int> direcoes;
         FORINT(i, 0, 9, 1) {
-			ElementoLista<int>* a2 = new ElementoLista<int>(i);
-			direcoes.insercaoLista(a2);
+			direcoes.insercaoLista(new ElementoLista<int>(i));
         }
         if (mosquito->sexo == 'm') {
 			while ((!moveu) && (direcoes.tamanhoLista != 0)) {
@@ -529,38 +524,38 @@ private:
 					case 0: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, -1, 0);
 					}
-						break;
+					break;
 					case 1: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, 1, 0);
 					}
-						break;
+					break;
 					case 2:
 						moveu = efetivacaoMovimentaMosquito(mosquito, 0, -1);
-						break;
+					break;
 					case 3: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, 0, 1);
 					}
-						break;
+					break;
 					case 4: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, -1, -1);
 					}
-						break;
+					break;
 					case 5: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, -1, 1);
 					}
-						break;
+					break;
 					case 6: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, 1, -1);
 					}
-						break;
+					break;
 					case 7: {
 						moveu = efetivacaoMovimentaMosquito(mosquito, 1, 1);
 					}
-						break;
+					break;
 					case 8: {
 						moveu = migrarLote(mosquito);
 					}
-						break;
+					break;
 				}
 				if (moveu == false) {
 					direcoes.buscaRemocaoLista(direcaoMovimentacao);
@@ -568,49 +563,47 @@ private:
 			}
 		} else {
 			Lista<Conexao> lista;
-			FORINT(i, mosquito->posicaoAtual.x - 1, mosquito->posicaoAtual.x + 1, 1) {
-				FORINT(j, mosquito->posicaoAtual.y - 1, mosquito->posicaoAtual.y + 1, 1) {
-					if ((i >= 0) && (j >= 0) && (i < quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz) && (j < quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz)) {
-						lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(i, j), mosquito->idLoteAtual)));
-					}
+			VIZINHANCAMOORE(i, j, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, 1) {
+				if (LIMITESLOTE(mosquito->idLoteAtual, i, j)) {
+					lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(i, j), mosquito->idLoteAtual)));
 				}
 			}
-			FORCONEXAO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaAreaPercepcaoCriadouros, con) {
-				if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].criadouro) {
-					lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(con->elementoLista->destino.x, con->elementoLista->destino.y), con->elementoLista->idLoteDestino)));
+			}
+			FORCONEXAO(LISTAPERCEPCAOCRIADOUROS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y), i) {
+				Conexao* conexao = i->elementoLista;
+				if (POSICAOLOTE(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y).criadouro) {
+					lista.insercaoLista(new ElementoLista<Conexao>(Conexao(Posicao(conexao->destino.x, conexao->destino.y), conexao->idLoteDestino)));
 				}
 			}
 			if (lista.tamanhoLista != 0) {
 				Conexao escolhido;
 				double distanciaCalculada;
 				escolhido = lista.cabecaLista->elementoLista;
-				CoordenadaGeo coordenadaGeoDestino = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].coordenadaGeo;
-				double menorDistancia = quadra->lotes[lista.cabecaLista->elementoLista.idLoteDestino]->lote->matriz[lista.cabecaLista->elementoLista.destino.x][lista.cabecaLista->elementoLista.destino.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+				CoordenadaGeo coordenadaGeoDestino = POSICAOLOTE(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).coordenadaGeo;
+				double menorDistancia = POSICAOLOTE(lista.cabecaLista->elementoLista.idLoteDestino, lista.cabecaLista->elementoLista.destino.x, lista.cabecaLista->elementoLista.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 				FOR2CONEXAO(lista, i) {
-					distanciaCalculada = quadra->lotes[i->elementoLista.idLoteDestino]->lote->matriz[i->elementoLista.destino.x][i->elementoLista.destino.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+					Conexao conexao = i->elementoLista;
+					distanciaCalculada = POSICAOLOTE(conexao.idLoteDestino, conexao.destino.x, conexao.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 					if (distanciaCalculada < menorDistancia) {
 						menorDistancia = distanciaCalculada;
-						escolhido = i->elementoLista;
+						escolhido = conexao;
 					}
 				}
-				quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-				quadra->lotes[escolhido.idLoteDestino]->lote->matriz[escolhido.destino.x][escolhido.destino.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
-				mosquito->idLoteAtual = escolhido.idLoteDestino;
-				mosquito->posicaoAtual.x = escolhido.destino.x;
-				mosquito->posicaoAtual.y = escolhido.destino.y;
+				LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->setLoteAtualPosicaoAtual(escolhido.idLoteDestino, escolhido.destino.x, escolhido.destino.y);
+				LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 			}
 		}
     }
 
     bool efetivacaoMovimentaFemeaAlimentada(Mosquito* mosquito, int variacaoX, int variacaoY) {
-		MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-        if ((mosquito2->posicaoAtual.x + variacaoX < 0) || (mosquito2->posicaoAtual.y + variacaoY < 0) || (mosquito2->posicaoAtual.x + variacaoX > (quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz - 1)) || (mosquito2->posicaoAtual.y + variacaoY > (quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz - 1)) || ((quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x + variacaoX][mosquito2->posicaoAtual.y + variacaoY].quantidadeTotalMosquitosPosicao()) >= CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(mosquito->idLoteAtual)) || ((mosquito2->posicaoAtual.x + variacaoX) > (mosquito2->posicaoAlimento.x + REGIAO_DE_POSTURA_X(mosquito->idLoteAtual))) || ((mosquito2->posicaoAtual.y + variacaoY) > (mosquito2->posicaoAlimento.y + REGIAO_DE_POSTURA_Y(mosquito->idLoteAtual))) || ((mosquito2->posicaoAtual.x + variacaoX) < (mosquito2->posicaoAlimento.x - REGIAO_DE_POSTURA_X(mosquito->idLoteAtual))) || ((mosquito2->posicaoAtual.y + variacaoY) < (mosquito2->posicaoAlimento.y - REGIAO_DE_POSTURA_Y(mosquito->idLoteAtual)))) {
+		MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
+		if (!LIMITESLOTEP(mosquitoFemea->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y, variacaoX, variacaoY)) {
             return false;
         } else {
-            quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
-            mosquito2->posicaoAtual.x += variacaoX;
-            mosquito2->posicaoAtual.y += variacaoY;
-            quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+			LISTAFEMEAS(mosquito->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y).buscaRemocaoLista(mosquito);
+            mosquitoFemea->addPosicaoAtual(variacaoX, variacaoY);
+            LISTAFEMEAS(mosquito->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
         }
         return true;
     }
@@ -620,8 +613,7 @@ private:
         int direcaoMovimentacao;
         Lista<int> direcoes;
         FORINT(i, 0, 9, 1) {
-			ElementoLista<int>* a2 = new ElementoLista<int>(i);
-			direcoes.insercaoLista(a2);
+			direcoes.insercaoLista(new ElementoLista<int>(i));
         }
         while ((!moveu) && (direcoes.tamanhoLista != 0)) {
 			direcaoMovimentacao = direcoes.buscaPosicao(rand() % direcoes.tamanhoLista)->elementoLista;
@@ -629,38 +621,38 @@ private:
 				case 0: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, -1, 0);
 				}
-					break;
+				break;
 				case 1: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, 1, 0);
 				}
-					break;
+				break;
 				case 2:
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, 0, -1);
-					break;
+				break;
 				case 3: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, 0, 1);
 				}
-					break;
+				break;
 				case 4: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, -1, -1);
 				}
-					break;
+				break;
 				case 5: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, -1, 1);
 				}
-					break;
+				break;
 				case 6: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, 1, -1);
 				}
-					break;
+				break;
 				case 7: {
 					moveu = efetivacaoMovimentaFemeaAlimentada(mosquito, 1, 1);
 				}
-					break;
+				break;
 				case 8: {
 					moveu = migrarLote(mosquito);
 				}
-					break;
+				break;
             }
             if (moveu == false) {
                 direcoes.buscaRemocaoLista(direcaoMovimentacao);
@@ -671,33 +663,37 @@ private:
     Humano* buscaHumano(Mosquito* mosquito, int ordemVizinhancaBusca) {
         Lista<Humano*> lista;
         Humano* retorno = NULL;
-        FORINT(aux1, mosquito->posicaoAtual.x - ordemVizinhancaBusca, (mosquito->posicaoAtual.x + ordemVizinhancaBusca) + 1, 1) {
-            FORINT(aux2, mosquito->posicaoAtual.y - ordemVizinhancaBusca, (mosquito->posicaoAtual.y + ordemVizinhancaBusca) + 1, 1) {
-                if (((aux1 >= 0) && (aux1 < quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz)) && ((aux2 >= 0) && (aux2 < quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz)) && (quadra->lotes[mosquito->idLoteAtual]->lote->matriz[aux1][aux2].listaHumanos.tamanhoLista > 0)) {
-					FOR2HUMANO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[aux1][aux2].listaHumanos, i) {
-						if (i->elementoLista->saude != 'r') {
-							lista.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
-						}
-					} 
-                }
-            }
+        VIZINHANCAMOORE(i, j, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, ordemVizinhancaBusca) {
+			if (LIMITESLOTE(mosquito->idLoteAtual, i, j) && (LISTAHUMANOS(mosquito->idLoteAtual, i, j).tamanhoLista > 0)) {
+				FOR2HUMANO(LISTAHUMANOS(mosquito->idLoteAtual, i, j), k) {
+					Humano* humano = k->elementoLista;
+					if (humano->saude != 'r') {
+						lista.insercaoLista(new ElementoLista<Humano*>(humano));
+					}
+				} 
+           }
+        } 
         }
         if (ordemVizinhancaBusca == 1) {
-			FORCONEXAO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaVizinhancaMosquitos, con) {
-				if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos.tamanhoLista > 0) {
-					FOR2HUMANO(quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos, i) {
-						if (i->elementoLista->saude != 'r') {
-							lista.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+			FORCONEXAO(LISTAVIZINHANCAMOSQUITOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y), i) {
+				Conexao* conexao = i->elementoLista;
+				if (LISTAHUMANOS(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y).tamanhoLista > 0) {
+					FOR2HUMANO(LISTAHUMANOS(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y), j) {
+						Humano* humano = j->elementoLista;
+						if (humano->saude != 'r') {
+							lista.insercaoLista(new ElementoLista<Humano*>(humano));
 						}
 					}
 				}
 			}
 		} else {
-			FORCONEXAO(quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaAreaPercepcaoHumanos, con) {
-				if (quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos.tamanhoLista > 0) {
-					FOR2HUMANO(quadra->lotes[con->elementoLista->idLoteDestino]->lote->matriz[con->elementoLista->destino.x][con->elementoLista->destino.y].listaHumanos, i) {
-						if (i->elementoLista->saude != 'r') {
-							lista.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+			FORCONEXAO(LISTAPERCEPCAOHUMANOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y), i) {
+				Conexao* conexao = i->elementoLista;
+				if (LISTAHUMANOS(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y).tamanhoLista > 0) {
+					FOR2HUMANO(LISTAHUMANOS(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y), j) {
+						Humano* humano = j->elementoLista;
+						if (humano->saude != 'r') {
+							lista.insercaoLista(new ElementoLista<Humano*>(humano));
 						}
 					}
 				}
@@ -706,10 +702,10 @@ private:
         if (lista.tamanhoLista != 0) {
 			double distanciaCalculada;
 			retorno = lista.cabecaLista->elementoLista;
-			CoordenadaGeo coordenadaGeoDestino = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].coordenadaGeo;
-			double menorDistancia = quadra->lotes[lista.cabecaLista->elementoLista->idLoteAtual]->lote->matriz[lista.cabecaLista->elementoLista->posicaoAtual.x][lista.cabecaLista->elementoLista->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+			CoordenadaGeo coordenadaGeoDestino = POSICAOLOTE(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).coordenadaGeo;
+			double menorDistancia = POSICAOLOTE(lista.cabecaLista->elementoLista->idLoteAtual, lista.cabecaLista->elementoLista->posicaoAtual.x, lista.cabecaLista->elementoLista->posicaoAtual.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 			FOR2HUMANO(lista, i) {
-				distanciaCalculada = quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+				distanciaCalculada = POSICAOLOTE(i->elementoLista->idLoteAtual, i->elementoLista->posicaoAtual.x, i->elementoLista->posicaoAtual.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 				if (distanciaCalculada < menorDistancia) {
 					retorno = i->elementoLista;
 					menorDistancia = distanciaCalculada;
@@ -720,8 +716,8 @@ private:
     }
 
     void infeccaoMosquito(Mosquito* mosquito, Humano* humano) {
-        MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-        if ((mosquito2->saudeDengue == 's') && (humano->saude == 'i')  && (mosquito2->saudeWolbachia == 's')) {
+        MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
+        if ((mosquitoFemea->saudeDengue == 's') && (humano->saude == 'i')  && (mosquitoFemea->saudeWolbachia == 's')) {
 			double probabilidade;
 			switch(humano->sorotipo) {
 				case 1: {
@@ -746,23 +742,21 @@ private:
 				break;
 			}
 			if (randomizarPercentual() <= (probabilidade * TAXA_SUCESSO_INFECCAO_MOSQUITO(humano->idLoteAtual))) {
-				mosquito2->sorotipo = humano->sorotipo;
-				mosquito2->saudeDengue = 'l';
-				mosquito2->ciclosLatencia = CICLOS_LATENTE_MOSQUITO(mosquito->idLoteAtual);
+				mosquitoFemea->sorotipo = humano->sorotipo;
+				mosquitoFemea->saudeDengue = 'l';
+				mosquitoFemea->ciclosLatencia = CICLOS_LATENTE_MOSQUITO(mosquito->idLoteAtual);
 			}
         }
     }
 
     void efetivacaoMorteDengueHemorragica(Humano* humano) {
-        double probabilidade = randomizarPercentual();
-        if (probabilidade <= PROBABILIDADE_MORTE(humano->idLoteAtual)) {
+        if (randomizarPercentual() <= PROBABILIDADE_MORTE(humano->idLoteAtual)) {
             humano->saude = 'r';
 		}
     }
 
     void efetivacaoEvolucaoDengueHemorragica(Humano* humano, double probabilidadeEvolucao) {
-        double probabilidade = randomizarPercentual();
-        if (probabilidade <= probabilidadeEvolucao) {
+        if (randomizarPercentual() <= probabilidadeEvolucao) {
             humano->saude = 'h';
             efetivacaoMorteDengueHemorragica(humano);
         }
@@ -772,25 +766,24 @@ private:
         switch (humano->listaSorotiposContraidos.tamanhoLista) {
 			case 1:
 				efetivacaoEvolucaoDengueHemorragica(humano, PROBABILIDADE_DENGUE_HEMORRAGICA_1_SOROTIPO_CONTRAIDO(humano->idLoteAtual));
-				break;
+			break;
 			case 2:
 				efetivacaoEvolucaoDengueHemorragica(humano, PROBABILIDADE_DENGUE_HEMORRAGICA_2_SOROTIPOS_CONTRAIDOS(humano->idLoteAtual));
-				break;
+			break;
 			case 3:
 				efetivacaoEvolucaoDengueHemorragica(humano, PROBABILIDADE_DENGUE_HEMORRAGICA_3_SOROTIPOS_CONTRAIDOS(humano->idLoteAtual));
-				break;
+			break;
 			case 4:
 				efetivacaoEvolucaoDengueHemorragica(humano, PROBABILIDADE_DENGUE_HEMORRAGICA_4_SOROTIPOS_CONTRAIDOS(humano->idLoteAtual));
-				break;
+			break;
 			case 5:
 				efetivacaoEvolucaoDengueHemorragica(humano, PROBABILIDADE_DENGUE_HEMORRAGICA_5_SOROTIPOS_CONTRAIDOS(humano->idLoteAtual));
-				break;
+			break;
         }
     }
 
     void efetivacaoInfeccaoHumana(Humano* humano, double probabilidadeInfeccaoHumana, int sorotipo) {
-        double probabilidade = randomizarPercentual();
-        if (probabilidade <= (probabilidadeInfeccaoHumana * TAXA_SUCESSO_INFECCAO_HUMANO(humano->idLoteAtual))) {
+        if (randomizarPercentual() <= (probabilidadeInfeccaoHumana * TAXA_SUCESSO_INFECCAO_HUMANO(humano->idLoteAtual))) {
             humano->saude = 'l';
             humano->contagemCiclosPeriodos = CICLOS_LATENTE_HUMANO(humano->idLoteAtual);
             humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
@@ -799,10 +792,10 @@ private:
     }
 
     void infeccaoHumano(Mosquito* mosquito, Humano* humano) {
-        MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-        if ((mosquito2->saudeDengue == 'i') && (humano->saude == 's') && (humano->listaSorotiposContraidos.buscaLista(mosquito2->sorotipo) == false)) {
+        MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
+        if ((mosquitoFemea->saudeDengue == 'i') && (humano->saude == 's') && (!humano->listaSorotiposContraidos.buscaLista(mosquitoFemea->sorotipo))) {
 			if (humano->listaSorotiposContraidos.tamanhoLista == 0) {
-				switch (mosquito2->sorotipo) {
+				switch (mosquitoFemea->sorotipo) {
 					case 1:
 						efetivacaoInfeccaoHumana(humano, PROBABILIDADE_INFECCAO_HUMANA_SOROTIPO_1(mosquito->idLoteAtual), 1);
 						break;
@@ -820,7 +813,7 @@ private:
 						break;
 				}
 			} else {
-				switch (mosquito2->sorotipo) {
+				switch (mosquitoFemea->sorotipo) {
 					case 1:
 						efetivacaoInfeccaoHumana(humano, PROBABILIDADE_INFECCAO_HUMANO_RECUPERADO_SOROTIPO_1(mosquito->idLoteAtual), 1);
 						break;
@@ -849,43 +842,38 @@ private:
 				Humano* humano = buscaHumano(mosquito, raioVizinhancaBusca);
 				if (humano != NULL) {
 					if (raioVizinhancaBusca == 1) {
-						MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-						Posicao pos = humano->posicaoAtual;
-						int idDestino = humano->idLoteAtual;
-						quadra->lotes[mosquito2->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito2);
-						quadra->lotes[idDestino]->lote->matriz[pos.x][pos.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito2));
-						mosquito2->idLoteAtual = idDestino;
-						mosquito2->posicaoAtual.x = pos.x;
-						mosquito2->posicaoAtual.y = pos.y;
-						mosquito2->posicaoAlimento.x = mosquito2->posicaoAtual.x;
-						mosquito2->posicaoAlimento.y = mosquito2->posicaoAtual.y;
-						mosquito2->alimento = true;
+						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
+						Posicao posicaoDestino = humano->posicaoAtual;
+						int idLoteDestino = humano->idLoteAtual;
+						LISTAFEMEAS(mosquitoFemea->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y).buscaRemocaoLista(mosquitoFemea);
+						mosquitoFemea->setLoteAtualPosicaoAtual(idLoteDestino, posicaoDestino.x, posicaoDestino.y);
+						LISTAFEMEAS(mosquitoFemea->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquitoFemea));
+						mosquitoFemea->setPosicaoAlimento(mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y);
+						mosquitoFemea->alimento = true;
 						infeccaoMosquito(mosquito, humano);
 						infeccaoHumano(mosquito, humano);
 						return true;
 					} else {
 						double distanciaCalculada;
-						CoordenadaGeo coordenadaGeoDestino = quadra->lotes[humano->idLoteAtual]->lote->matriz[humano->posicaoAtual.x][humano->posicaoAtual.y].coordenadaGeo;
-						double menorDistancia = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].coordenadaGeo.distancia(coordenadaGeoDestino);
+						CoordenadaGeo coordenadaGeoDestino = POSICAOLOTE(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).coordenadaGeo;
+						double menorDistancia = POSICAOLOTE(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 						int xEscolhido = mosquito->posicaoAtual.x;
-						int yEscolhido = mosquito->posicaoAtual.y;				
-						FORINT(aux1, mosquito->posicaoAtual.x - raioVizinhancaBusca, (mosquito->posicaoAtual.x + raioVizinhancaBusca) + 1, 1) {
-							FORINT(aux2, mosquito->posicaoAtual.y - raioVizinhancaBusca, (mosquito->posicaoAtual.y + raioVizinhancaBusca) + 1, 1) {
-								if (((aux1 >= 0) && (aux1 < quadra->lotes[mosquito->idLoteAtual]->lote->linhasMatriz)) && ((aux2 >= 0) && (aux2 < quadra->lotes[mosquito->idLoteAtual]->lote->colunasMatriz))) {
-									distanciaCalculada = quadra->lotes[mosquito->idLoteAtual]->lote->matriz[aux1][aux2].coordenadaGeo.distancia(coordenadaGeoDestino);	
-									if (distanciaCalculada < menorDistancia) {
-										menorDistancia = distanciaCalculada;
-										xEscolhido = aux1;
-										yEscolhido = aux2;
-									}
+						int yEscolhido = mosquito->posicaoAtual.y;	
+						VIZINHANCAMOORE(i, j, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, raioVizinhancaBusca) {		
+							if (LIMITESLOTE(mosquito->idLoteAtual, i, j)) {
+								distanciaCalculada = POSICAOLOTE(mosquito->idLoteAtual, i, j).coordenadaGeo.distancia(coordenadaGeoDestino);	
+								if (distanciaCalculada < menorDistancia) {
+									menorDistancia = distanciaCalculada;
+									xEscolhido = i;
+									yEscolhido = j;
 								}
 							}
 						}
-						MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-						quadra->lotes[mosquito2->idLoteAtual]->lote->matriz[mosquito2->posicaoAtual.x][mosquito2->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito2);
-						quadra->lotes[mosquito2->idLoteAtual]->lote->matriz[xEscolhido][yEscolhido].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito2));
-						mosquito2->posicaoAtual.x = xEscolhido;
-						mosquito2->posicaoAtual.y = yEscolhido;
+						}
+						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
+						LISTAFEMEAS(mosquitoFemea->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y).buscaRemocaoLista(mosquitoFemea);
+						mosquitoFemea->setPosicaoAtual(xEscolhido, yEscolhido);
+						LISTAFEMEAS(mosquitoFemea->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquitoFemea));
 					}
 				}
 				raioVizinhancaBusca++;
@@ -901,13 +889,13 @@ private:
 				movimentaMosquito(mosquito);
 				break;
 			case 'f': {
-				MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquito;
-				if (mosquito2->tipoAcasalamento == 'n') {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
+				if (mosquitoFemea->tipoAcasalamento == 'n') {
 					movimentaMosquito(mosquito);
 					buscaMacho(mosquito);
 				} else {
-					if ((mosquito2->contadorPosturas % INTERVALO_ENTRE_BUSCA_ALIMENTO_FEMEA(mosquito2->idLoteAtual)) == 0) {
-						mosquito2->alimento = false;
+					if ((mosquitoFemea->contadorPosturas % INTERVALO_ENTRE_BUSCA_ALIMENTO_FEMEA(mosquitoFemea->idLoteAtual)) == 0) {
+						mosquitoFemea->alimento = false;
 						if (movimentaFemeaGestante(mosquito)) {
 							movimentaFemeaAlimentada(mosquito);
 						} else {
@@ -924,32 +912,30 @@ private:
     }
 
     void insercaoOvos(Mosquito* mosquitoMae, int quantidade, double fracaoMachos, char saudeOvo) {
-        Mosquito* id2 = NULL;
+        Mosquito* mosquitoNovo = NULL;
         double quantidadeFemeas = 0, quantidadeMachos = 0;
         quantidadeMachos = (int) (fracaoMachos * quantidade);
         quantidadeFemeas = (int) (quantidade - quantidadeMachos);
         FORINT(indice, 0, quantidadeFemeas, 1) {
-            MosquitoFemea* a1 = new MosquitoFemea(contadorIDs, saudeOvo, 's', 0, 'o', 0, mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y);
-            ElementoLista<Mosquito*>* a2 = new ElementoLista<Mosquito*>(a1);
-            id2 = listaMosquitos->insercaoLista(a2);            
-            quadra->lotes[mosquitoMae->idLoteAtual]->lote->matriz[mosquitoMae->posicaoAtual.x][mosquitoMae->posicaoAtual.y].listaOvos.insercaoLista(new ElementoLista<Mosquito*>(id2));
+            MosquitoFemea* mosquitoFemea = new MosquitoFemea(contadorIDs, saudeOvo, 's', 0, 'o', 0, mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y);
+            mosquitoNovo = listaMosquitos->insercaoLista(new ElementoLista<Mosquito*>(mosquitoFemea));            
+            LISTAOVOS(mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquitoNovo));
             contadorIDs++;
         }
         FORINT(indice, 0, quantidadeMachos, 1) {
-            MosquitoMacho* a1 = new MosquitoMacho(contadorIDs, saudeOvo, 'o', 0, mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y);
-            ElementoLista<Mosquito*>* a2 = new ElementoLista<Mosquito*>(a1);
-            id2 = listaMosquitos->insercaoLista(a2);
-            quadra->lotes[mosquitoMae->idLoteAtual]->lote->matriz[mosquitoMae->posicaoAtual.x][mosquitoMae->posicaoAtual.y].listaOvos.insercaoLista(new ElementoLista<Mosquito*>(id2));
+            MosquitoMacho* mosquitoMacho = new MosquitoMacho(contadorIDs, saudeOvo, 'o', 0, mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y);
+            mosquitoNovo = listaMosquitos->insercaoLista(new ElementoLista<Mosquito*>(mosquitoMacho));
+            LISTAOVOS(mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquitoNovo));
             contadorIDs++;
         }
     }
 
     void geracao6Casos(Mosquito* mosquitoMae) {
-		MosquitoFemea* mosquito2 = (MosquitoFemea*) mosquitoMae;
-        switch (mosquito2->saudeWolbachia) {
+		MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquitoMae;
+        switch (mosquitoFemea->saudeWolbachia) {
 			case 's': {
-				if ((mosquito2->tipoProle == 's') && (mosquito2->tipoAcasalamento == 'a')) {
-					switch (mosquito2->fase) {
+				if ((mosquitoFemea->tipoProle == 's') && (mosquitoFemea->tipoAcasalamento == 'a')) {
+					switch (mosquitoFemea->fase) {
 						case 'a':
 							insercaoOvos(mosquitoMae, AS21(mosquitoMae->idLoteAtual), PS21(mosquitoMae->idLoteAtual), 's');
 							break;
@@ -961,8 +947,8 @@ private:
 			}
 			break;
 			case 'i': {
-				if (mosquito2->tipoProle == 'i') {
-					switch (mosquito2->fase) {
+				if (mosquitoFemea->tipoProle == 'i') {
+					switch (mosquitoFemea->fase) {
 						case 'a': {
 							insercaoOvos(mosquitoMae, AI21(mosquitoMae->idLoteAtual), PI21(mosquitoMae->idLoteAtual), 'i');
 						}
@@ -978,8 +964,8 @@ private:
         }
     }
 
-    void efetivacaoTransformacaoOvos(Lista<Mosquito*>* listaMosquitosNaoAlados, int transforma, int naoTransforma, char sexo) {
-        FORMOSQUITO(listaMosquitosNaoAlados, i) {
+    void efetivacaoTransformacaoOvos(Lista<Mosquito*>* listaOvos, int transforma, int naoTransforma, char sexo) {
+        FORMOSQUITO(listaOvos, i) {
             Mosquito* mosquito = i->elementoLista;
             if (randomizarPercentual() <= 0.5) {
                 if (transforma > 0) {
@@ -988,14 +974,14 @@ private:
                 } else {
                     if (naoTransforma > 0) {
                         mosquito->vida = false;
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
+                        LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                         naoTransforma--;
                     }
                 }
             } else {
                 if (naoTransforma > 0) {
                     mosquito->vida = false;
-                    quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
+                    LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                     naoTransforma--;
                 } else {
                     if (transforma > 0) {

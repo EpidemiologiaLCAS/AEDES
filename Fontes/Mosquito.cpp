@@ -17,6 +17,21 @@ public:
 
 	Mosquito() {}
 
+	void addPosicaoAtual(int px, int py) {
+		posicaoAtual.x += px;
+		posicaoAtual.y += py;
+	}
+	
+	void setPosicaoAtual(int x, int y) {
+		posicaoAtual.x = x;
+		posicaoAtual.y = y;
+	}
+	
+	void setLoteAtualPosicaoAtual(int idLote, int x, int y) {
+		idLoteAtual = idLote;
+		setPosicaoAtual(x, y);
+	}
+
 	~Mosquito() {}
     
 };
