@@ -32,24 +32,6 @@ public:
         posicaoInicial.y = _y;
     }
     
-    Humano(Humano* h) {
-        this->id = h->id;
-        this->saude = h->saude;
-        this->sorotipo = h->sorotipo;
-		ElementoLista<int>* i = h->listaSorotiposContraidos.cabecaLista;
-		while (i != NULL) {
-			this->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(i->elementoLista));
-			i = i->proximoLista;
-		}
-        this->contagemCiclosPeriodos = h->contagemCiclosPeriodos;
-        this->idLoteInicial = h->idLoteInicial;
-        this->idLoteAtual = -h->idLoteAtual;
-        this->posicaoAtual.x = h->posicaoAtual.x;
-        this->posicaoAtual.y = h->posicaoAtual.y;
-        this->posicaoInicial.x = h->posicaoInicial.x;
-        this->posicaoInicial.y = h->posicaoInicial.y;
-    }
-
     ~Humano() {}
 
 };
