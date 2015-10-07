@@ -30,70 +30,67 @@ public:
     void insercaoHumanos(int cicloAtual) {
 		FORINT(idLote, 0, quantLotes, 1) {
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_1(idLote)) {
-				insercao(1, QUANTIDADE_HUMANOS_1(idLote), idLote, 1);
+				insercao('i', 1, QUANTIDADE_HUMANOS_1(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_2(idLote)) {
-				insercao(2, QUANTIDADE_HUMANOS_2(idLote), idLote, 1);
+				insercao('i', 2, QUANTIDADE_HUMANOS_2(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_3(idLote)) {
-				insercao(3, QUANTIDADE_HUMANOS_3(idLote), idLote, 1);
+				insercao('i', 3, QUANTIDADE_HUMANOS_3(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_4(idLote)) {
-				insercao(4, QUANTIDADE_HUMANOS_4(idLote), idLote, 1);
+				insercao('i', 4, QUANTIDADE_HUMANOS_4(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_5(idLote)) {
-				insercao(5, QUANTIDADE_HUMANOS_5(idLote), idLote, 1);
+				insercao('i', 5, QUANTIDADE_HUMANOS_5(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_S(idLote)) {
-				insercao(0, QUANTIDADE_HUMANOS_S(idLote), idLote, 1);
+				insercao('s', 0, QUANTIDADE_HUMANOS_S(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_RECUPERADOS_1(idLote)) {
-				insercao(1, QUANTIDADE_HUMANOS_RECUPERADOS_1(idLote), idLote, 2);
+				insercao('r', 1, QUANTIDADE_HUMANOS_RECUPERADOS_1(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_RECUPERADOS_2(idLote)) {
-				insercao(2, QUANTIDADE_HUMANOS_RECUPERADOS_2(idLote), idLote, 2);
+				insercao('r', 2, QUANTIDADE_HUMANOS_RECUPERADOS_2(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_RECUPERADOS_3(idLote)) {
-				insercao(3, QUANTIDADE_HUMANOS_RECUPERADOS_3(idLote), idLote, 2);
+				insercao('r', 3, QUANTIDADE_HUMANOS_RECUPERADOS_3(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_RECUPERADOS_4(idLote)) {
-				insercao(4, QUANTIDADE_HUMANOS_RECUPERADOS_4(idLote), idLote, 2);
+				insercao('r', 4, QUANTIDADE_HUMANOS_RECUPERADOS_4(idLote), idLote);
 			}
 			if (cicloAtual == CICLO_DE_ENTRADA_HUMANOS_RECUPERADOS_5(idLote)) {
-				insercao(5, QUANTIDADE_HUMANOS_RECUPERADOS_5(idLote), idLote, 2);
+				insercao('r', 5, QUANTIDADE_HUMANOS_RECUPERADOS_5(idLote), idLote);
 			}			
 		}
     }
     
-    void movimentacao(int destino) {
+    void movimentacao(int tipoMovimentacao) {
         FORHUMANO(listaHumanos, i) {
-            switch (destino) {
-				case 0: {
-					quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.buscaRemocaoLista(i->elementoLista);
-					i->elementoLista->posicaoAtual.x = i->elementoLista->posicaoInicial.x;
-					i->elementoLista->posicaoAtual.y = i->elementoLista->posicaoInicial.y;
-					i->elementoLista->idLoteAtual = i->elementoLista->idLoteInicial;
-					quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+			Humano* humano = i->elementoLista;
+            switch (tipoMovimentacao) {
+				case CASA: {
+					LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).buscaRemocaoLista(humano);
+					humano->setLoteAtualPosicaoAtualLoteInicialPosicaoInicial();
+					LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(new ElementoLista<Humano*>(humano));
 				}
 				break;
-				case 1: {
+				case OUTRO: {
 					if (randomizarPercentual() <= 0.5) {
-						quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.buscaRemocaoLista(i->elementoLista);
+						LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).buscaRemocaoLista(humano);
 						do {
-							i->elementoLista->posicaoAtual.x = rand() % quadra->lotes[i->elementoLista->idLoteAtual]->lote->linhasMatriz;
-							i->elementoLista->posicaoAtual.y = rand() % quadra->lotes[i->elementoLista->idLoteAtual]->lote->colunasMatriz;
-						} while (quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(i->elementoLista->idLoteAtual));
-						quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+							humano->setPosicaoAtual(rand() % LINHASLOTE(humano->idLoteAtual), rand() % COLUNASLOTE(humano->idLoteAtual));
+						} while (LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(humano->idLoteAtual));
+						LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(new ElementoLista<Humano*>(humano));
 					} else {
-						if (quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaVizinhancaHumanos.tamanhoLista > 0) {
-							int r = rand() % quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaVizinhancaHumanos.tamanhoLista;
-							ElementoLista<Conexao*>* dest = quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaVizinhancaHumanos.buscaPosicao(r);
-							Posicao pos = dest->elementoLista->destino;
-							quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.buscaRemocaoLista(i->elementoLista);
-							i->elementoLista->posicaoAtual.x = pos.x;
-							i->elementoLista->posicaoAtual.y = pos.y;
-							i->elementoLista->idLoteAtual = dest->elementoLista->idLoteDestino;
-							quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaHumanos.insercaoLista(new ElementoLista<Humano*>(i->elementoLista));
+						if (LISTAVIZINHANCAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).tamanhoLista > 0) {
+							int indiceVizinhanca = rand() % LISTAVIZINHANCAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).tamanhoLista;
+							ElementoLista<Conexao*>* dest = LISTAVIZINHANCAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).buscaPosicao(indiceVizinhanca);
+							Posicao posicaoVizinhanca = dest->elementoLista->destino;
+							int idLoteVizinhanca = dest->elementoLista->idLoteDestino;
+							LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).buscaRemocaoLista(humano);
+							humano->setLoteAtualPosicaoAtual(idLoteVizinhanca, posicaoVizinhanca.x, posicaoVizinhanca.y);
+							LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(new ElementoLista<Humano*>(humano));
 						}
 					}
 				}
@@ -104,38 +101,40 @@ public:
 
     void conclusaoCiclo() {
 		FORHUMANO(listaHumanos, i) {
-			if (i->elementoLista->contagemCiclosPeriodos == 0) {
-				switch (i->elementoLista->saude) {
+			Humano* humano = i->elementoLista;
+			if (humano->contagemCiclosPeriodos == 0) {
+				switch (humano->saude) {
 					case 'l': {
-						i->elementoLista->saude = 'i';
-						i->elementoLista->contagemCiclosPeriodos = CICLOS_INFECTANTE_HUMANO(i->elementoLista->idLoteAtual);
+						humano->saude = 'i';
+						humano->contagemCiclosPeriodos = CICLOS_INFECTANTE_HUMANO(humano->idLoteAtual);
 					}
 					break;
 					case 'i': {
-						i->elementoLista->saude = 'm';
-						i->elementoLista->contagemCiclosPeriodos = CICLOS_IMUNIZADO_HUMANO(i->elementoLista->idLoteAtual);
+						humano->saude = 'm';
+						humano->contagemCiclosPeriodos = CICLOS_IMUNIZADO_HUMANO(humano->idLoteAtual);
 					}
 					break;
 					case 'm': {
-						i->elementoLista->saude = 's';
+						humano->saude = 's';
 					}
 					break;
 					case 'h': {
-						i->elementoLista->saude = 's';
+						humano->saude = 's';
 					}
 					break;
 				}
 			} else {
-				i->elementoLista->contagemCiclosPeriodos = (i->elementoLista->contagemCiclosPeriodos - 1);
+				humano->contagemCiclosPeriodos--;
 			}
 		}
     }
     
     void controleNatural() {
 		FORHUMANO(listaHumanos, i) {
-			if (i->elementoLista->saude != 'r') {
-				if (randomizarPercentual() <= TAXA_CONTROLE_NATURAL_HUMANOS(i->elementoLista->idLoteAtual)) {
-					i->elementoLista->saude = 'r';
+			Humano* humano = i->elementoLista;
+			if (humano->saude != 'r') {
+				if (randomizarPercentual() <= TAXA_CONTROLE_NATURAL_HUMANOS(humano->idLoteAtual)) {
+					humano->saude = 'r';
 				}
 			}
 		}
@@ -143,47 +142,23 @@ public:
 
 private:
 
-    void insercaoHumanoSaudavelOuInfectado(char saude, int sorotipo, int idLote) {
-		int posicaoX, posicaoY;
-		do {
-			posicaoX = rand() % quadra->lotes[idLote]->lote->linhasMatriz;
-			posicaoY = rand() % quadra->lotes[idLote]->lote->colunasMatriz;
-		} while (quadra->lotes[idLote]->lote->matriz[posicaoX][posicaoY].listaHumanos.tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote));
-		Humano* humano = new Humano(contadorIDs, saude, sorotipo, idLote, posicaoX, posicaoY);   
-		ElementoLista<Humano*>* a1 = new ElementoLista<Humano*>(humano);
-		listaHumanos->insercaoLista(a1);
-		quadra->lotes[idLote]->lote->matriz[posicaoX][posicaoY].listaHumanos.insercaoLista(new ElementoLista<Humano*>(humano));
-		contadorIDs++;
-		if (saude == 'i') {
-			humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
-			humano->contagemCiclosPeriodos = CICLOS_INFECTANTE_HUMANO(idLote);
-		}
-    }
-    
-    void insercaoHumanoRecuperado(int sorotipo, int idLote) {
-		int posicaoX, posicaoY;
-		do {
-			posicaoX = rand() % quadra->lotes[idLote]->lote->linhasMatriz;
-			posicaoY = rand() % quadra->lotes[idLote]->lote->colunasMatriz;
-		} while (quadra->lotes[idLote]->lote->matriz[posicaoX][posicaoY].listaHumanos.tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote));
-		Humano* humano = new Humano(contadorIDs, 's', 0, idLote, posicaoX, posicaoY);   
-		ElementoLista<Humano*>* a1 = new ElementoLista<Humano*>(humano);
-		listaHumanos->insercaoLista(a1);
-		quadra->lotes[idLote]->lote->matriz[posicaoX][posicaoY].listaHumanos.insercaoLista(new ElementoLista<Humano*>(humano));
-		contadorIDs++;
-		humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
-    }
-
-
-    void insercao(int sorotipo, int quantidade, int idLote, int tipo) {
-		if (tipo == 1) {
-			char saude = (sorotipo == 0 ? 's' : 'i');
-			FORINT(indice, 0, quantidade, 1) {
-				insercaoHumanoSaudavelOuInfectado(saude, sorotipo, idLote);
+    void insercao(char saude, int sorotipo, int quantidade, int idLote) {
+		FORINT(indice, 0, quantidade, 1) {
+			int posicaoX, posicaoY;
+			do {
+				posicaoX = rand() % LINHASLOTE(idLote);
+				posicaoY = rand() % COLUNASLOTE(idLote);
+			} while (LISTAHUMANOS(idLote, posicaoX, posicaoY).tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote));
+			Humano* humano = new Humano(contadorIDs, (saude == 'r' ? 's' : saude), (saude == 'r' ? 0 : sorotipo), idLote, posicaoX, posicaoY);   
+			listaHumanos->insercaoLista(new ElementoLista<Humano*>(humano));
+			LISTAHUMANOS(idLote, posicaoX, posicaoY).insercaoLista(new ElementoLista<Humano*>(humano));
+			contadorIDs++;
+			if (saude == 'i') {
+				humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
+				humano->contagemCiclosPeriodos = CICLOS_INFECTANTE_HUMANO(idLote);
 			}
-		} else {
-			FORINT(indice, 0, quantidade, 1) {
-				insercaoHumanoRecuperado(sorotipo, idLote);
+			if (saude == 'r') {
+				humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
 			}
 		}
     }

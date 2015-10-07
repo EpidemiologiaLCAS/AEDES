@@ -89,7 +89,7 @@ private:
     }
 
     void inicioPeriodo(int cicloAtual, int periodo) {
-        manipuladorHumanos->movimentacao(1);
+        manipuladorHumanos->movimentacao(OUTRO);
         switch (periodo) {
 			case 1: {
 				FORINT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
@@ -107,7 +107,7 @@ private:
 				FORINT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
 					inicioSubCiclo(cicloAtual, 3, subciclo);
 				}
-				manipuladorHumanos->movimentacao(0);
+				manipuladorHumanos->movimentacao(CASA);
 			}
 			break;
         }
