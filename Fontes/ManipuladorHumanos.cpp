@@ -72,7 +72,7 @@ public:
 				case CASA: {
 					LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).buscaRemocaoLista(humano);
 					humano->setLoteAtualPosicaoAtualLoteInicialPosicaoInicial();
-					LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(new ElementoLista<Humano*>(humano));
+					LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(humano);
 				}
 				break;
 				case OUTRO: {
@@ -81,7 +81,7 @@ public:
 						do {
 							humano->setPosicaoAtual(rand() % LINHASLOTE(humano->idLoteAtual), rand() % COLUNASLOTE(humano->idLoteAtual));
 						} while (LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(humano->idLoteAtual));
-						LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(new ElementoLista<Humano*>(humano));
+						LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(humano);
 					} else {
 						if (LISTAVIZINHANCAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).tamanhoLista > 0) {
 							int indiceVizinhanca = rand() % LISTAVIZINHANCAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).tamanhoLista;
@@ -90,7 +90,7 @@ public:
 							int idLoteVizinhanca = dest->elementoLista->idLoteDestino;
 							LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).buscaRemocaoLista(humano);
 							humano->setLoteAtualPosicaoAtual(idLoteVizinhanca, posicaoVizinhanca.x, posicaoVizinhanca.y);
-							LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(new ElementoLista<Humano*>(humano));
+							LISTAHUMANOS(humano->idLoteAtual, humano->posicaoAtual.x, humano->posicaoAtual.y).insercaoLista(humano);
 						}
 					}
 				}
@@ -150,15 +150,15 @@ private:
 				posicaoY = rand() % COLUNASLOTE(idLote);
 			} while (LISTAHUMANOS(idLote, posicaoX, posicaoY).tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote));
 			Humano* humano = new Humano(contadorIDs, (saude == 'r' ? 's' : saude), (saude == 'r' ? 0 : sorotipo), idLote, posicaoX, posicaoY);   
-			listaHumanos->insercaoLista(new ElementoLista<Humano*>(humano));
-			LISTAHUMANOS(idLote, posicaoX, posicaoY).insercaoLista(new ElementoLista<Humano*>(humano));
+			listaHumanos->insercaoLista(humano);
+			LISTAHUMANOS(idLote, posicaoX, posicaoY).insercaoLista(humano);
 			contadorIDs++;
 			if (saude == 'i') {
-				humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
+				humano->listaSorotiposContraidos.insercaoLista(sorotipo);
 				humano->contagemCiclosPeriodos = CICLOS_INFECTANTE_HUMANO(idLote);
 			}
 			if (saude == 'r') {
-				humano->listaSorotiposContraidos.insercaoLista(new ElementoLista<int>(sorotipo));
+				humano->listaSorotiposContraidos.insercaoLista(sorotipo);
 			}
 		}
     }

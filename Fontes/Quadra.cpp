@@ -37,28 +37,28 @@ public:
     }
     
     void adicionarConexaoInternaEntreLotesMosquitos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
-		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaMosquitos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
-		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaMosquitos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaMosquitos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaMosquitos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
     }
 
 	void adicionarConexaoInternaEntreLotesHumanos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
-		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
-		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaHumanos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaHumanos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
     }
     
     void adicionarPosicaoRaioPercepcaoHumanos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
-		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
-		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoHumanos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoHumanos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoHumanos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
     }
     
     void adicionarPosicaoRaioPercepcaoMosquitosMachos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
-		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
-		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
     }
     
     void adicionarPosicaoRaioPercepcaoCriadouros(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
-		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoCriadouros.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao2, _idLoteDestino)));
-		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoCriadouros.insercaoLista(new ElementoLista<Conexao*>(new Conexao(posicao1, _idLoteOrigem)));
+		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoCriadouros.insercaoLista(new Conexao(posicao2, _idLoteDestino));
+		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoCriadouros.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
     }
 	
 	void criacaoConexoesHumanos() {

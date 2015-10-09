@@ -35,8 +35,9 @@ public:
         tamanhoLista = 0;
     }
 
-    T insercaoLista(ElementoLista<T>* novoElemento) {
-        if (cabecaLista == NULL) {
+    T insercaoLista(T novo) {
+        ElementoLista<T>* novoElemento = new ElementoLista<T>(novo);
+		if (cabecaLista == NULL) {
             novoElemento->proximoLista = NULL;
             novoElemento->anteriorLista = NULL;
             cabecaLista = novoElemento;
