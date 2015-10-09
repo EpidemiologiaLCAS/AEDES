@@ -1,5 +1,5 @@
-#ifndef SAIDAS
-#define SAIDAS
+#ifndef _SAIDAS_
+#define _SAIDAS_
 
 class Saidas {
 public:

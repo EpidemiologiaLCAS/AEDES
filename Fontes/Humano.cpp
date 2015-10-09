@@ -1,5 +1,5 @@
-#ifndef HUMANO
-#define HUMANO
+#ifndef _HUMANO_
+#define _HUMANO_
 
 #include "Lista.cpp"
 #include "Posicao.cpp"

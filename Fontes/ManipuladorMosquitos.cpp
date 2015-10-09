@@ -1,5 +1,5 @@
-#ifndef MANIPULADORMOSQUITOS
-#define MANIPULADORMOSQUITOS
+#ifndef _MANIPULADORMOSQUITOS_
+#define _MANIPULADORMOSQUITOS_
 
 #include "Lista.cpp"
 #include "ElementoLista.cpp"
@@ -1055,15 +1055,15 @@ private:
                 } else {
                     if (naoTransforma > 0) {
                         mosquito->vida = false;
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
+						LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 						naoTransforma--;
                     }
                 }
             } else {
                 if (naoTransforma > 0) {
                     mosquito->vida = false;
-                    quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
-					naoTransforma--;
+					LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                    naoTransforma--;
                 } else {
                     if (transforma > 0) {
                         mosquito->fase = 'p';
@@ -1132,33 +1132,33 @@ private:
             if (randomizarPercentual() <= 0.5) {
                 if (transforma > 0) {
                     mosquito->fase = 'a';
-                    quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
+					LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                     if (sexo == 'm') {
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosMachos.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+						LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
                     } else {
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+                        LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
                     }
                      transforma--;
                 } else {
                     if (naoTransforma > 0) {
                         mosquito->vida = false;
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
-                        naoTransforma--;
+                        LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+						naoTransforma--;
                     }
                 }
             } else {
                 if (naoTransforma > 0) {
                     mosquito->vida = false;
-                    quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
-					naoTransforma--;
+                    LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                    naoTransforma--;
                 } else {
                     if (transforma > 0) {
                         mosquito->fase = 'a';
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaOvos.buscaRemocaoLista(mosquito);
+                        LISTAOVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 						if (sexo == 'm') {
-							quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosMachos.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+							LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 						} else {
-							quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.insercaoLista(new ElementoLista<Mosquito*>(mosquito));
+							LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(new ElementoLista<Mosquito*>(mosquito));
 						}
                         transforma--;
                     }
@@ -1227,9 +1227,9 @@ private:
             } else {
                 if (naoTransformados < naoEnviados) {
                     if (mosquito->sexo == 'm') {
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(mosquito);
+						LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                     } else {
-                        quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
+						LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                     }
                     mosquito->vida = false;
                     return 2;
@@ -1238,9 +1238,9 @@ private:
         } else {
             if (naoTransformados < naoEnviados) {
                 if (mosquito->sexo == 'm') {
-                    quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(mosquito);
+					LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                 } else {
-                    quadra->lotes[mosquito->idLoteAtual]->lote->matriz[mosquito->posicaoAtual.x][mosquito->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(mosquito);
+					LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
                 }
                 mosquito->vida = false;
                 return 2;
@@ -1259,18 +1259,19 @@ private:
         switch (sexo) {
 			case 'm': {
 				FORMOSQUITO(listaMosquitos, i) {
-					if (i->elementoLista->sexo == 'm') {
-						MosquitoMacho* macho2 = (MosquitoMacho*) (i->elementoLista);
-						if ((macho2->fase == 'a') && (macho2->contadorAcasalamentos > 0) && (macho2->vida)) {
-							if ((macho2->saudeWolbachia == 's') && (macho2->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_SAUDAVEIS(i->elementoLista->idLoteAtual))) {
-								if (efetivacaoTransformacaoAlados(i->elementoLista, enviadosSaudaveis, naoEnviadosSaudaveis, transformadosSaudaveis, naoTransformadosSaudaveis) == 1) {
+					Mosquito* mosquito = i->elementoLista;
+					if (mosquito->sexo == 'm') {
+						MosquitoMacho* mosquitoMacho = (MosquitoMacho*) (mosquito);
+						if ((mosquitoMacho->fase == 'a') && (mosquitoMacho->contadorAcasalamentos > 0) && (mosquitoMacho->vida)) {
+							if ((mosquitoMacho->saudeWolbachia == 's') && (mosquitoMacho->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_SAUDAVEIS(mosquito->idLoteAtual))) {
+								if (efetivacaoTransformacaoAlados(mosquito, enviadosSaudaveis, naoEnviadosSaudaveis, transformadosSaudaveis, naoTransformadosSaudaveis) == 1) {
 									transformadosSaudaveis++;
 								} else {
 									naoTransformadosSaudaveis++;
 								}
 							}
-							if ((macho2->saudeWolbachia == 'i') && (macho2->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_WOLBACHIA(i->elementoLista->idLoteAtual))) {
-								if (efetivacaoTransformacaoAlados(i->elementoLista, enviadosInfectados, naoEnviadosInfectados, transformadosInfectados, naoTransformadosInfectados) == 1) {
+							if ((mosquitoMacho->saudeWolbachia == 'i') && (mosquitoMacho->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_WOLBACHIA(mosquito->idLoteAtual))) {
+								if (efetivacaoTransformacaoAlados(mosquito, enviadosInfectados, naoEnviadosInfectados, transformadosInfectados, naoTransformadosInfectados) == 1) {
 									transformadosInfectados++;
 								} else {
 									naoTransformadosInfectados++;
@@ -1283,18 +1284,19 @@ private:
 			break;
 			case 'f': {
 				FORMOSQUITO(listaMosquitos, i) {
-					if (i->elementoLista->sexo == 'f') {
-						MosquitoFemea* femea2 = (MosquitoFemea*) (i->elementoLista);
-						if ((femea2->fase == 'a') && (femea2->vida) && (femea2->contadorPosturas > 0)) {
-							if ((femea2->saudeWolbachia == 's') && (femea2->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_SAUDAVEIS(i->elementoLista->idLoteAtual))) {
-								if (efetivacaoTransformacaoAlados(i->elementoLista, enviadosSaudaveis, naoEnviadosSaudaveis, transformadosSaudaveis, naoTransformadosSaudaveis) == 1) {
+					Mosquito* mosquito = i->elementoLista;
+					if (mosquito->sexo == 'f') {
+						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
+						if ((mosquitoFemea->fase == 'a') && (mosquitoFemea->vida) && (mosquitoFemea->contadorPosturas > 0)) {
+							if ((mosquitoFemea->saudeWolbachia == 's') && (mosquitoFemea->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_SAUDAVEIS(mosquito->idLoteAtual))) {
+								if (efetivacaoTransformacaoAlados(mosquito, enviadosSaudaveis, naoEnviadosSaudaveis, transformadosSaudaveis, naoTransformadosSaudaveis) == 1) {
 									transformadosSaudaveis++;
 								} else {
 									naoTransformadosSaudaveis++;
 								}
 							}
-							if ((femea2->saudeWolbachia == 'i') && (femea2->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_WOLBACHIA(i->elementoLista->idLoteAtual))) {
-								if (efetivacaoTransformacaoAlados(i->elementoLista, enviadosInfectados, naoEnviadosInfectados, transformadosInfectados, naoTransformadosInfectados) == 1) {
+							if ((mosquitoFemea->saudeWolbachia == 'i') && (mosquitoFemea->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_WOLBACHIA(mosquito->idLoteAtual))) {
+								if (efetivacaoTransformacaoAlados(mosquito, enviadosInfectados, naoEnviadosInfectados, transformadosInfectados, naoTransformadosInfectados) == 1) {
 									transformadosInfectados++;
 								} else {
 									naoTransformadosInfectados++;
@@ -1313,12 +1315,13 @@ private:
 			int naoTransformaSaudaveis, transformaSaudaveis, naoTransformaWolbachia, transformaWolbachia;
 			int contadorSaudaveis = 0, contadorWolbachia = 0;
 			FORMOSQUITO(listaMosquitos, i) {
-				if (i->elementoLista->sexo == 'm') {
-					MosquitoMacho* macho2 = (MosquitoMacho*) (i->elementoLista);
-					if ((macho2->fase == 'a') && (macho2->contadorAcasalamentos > 0) && (macho2->idLoteAtual == idLote) && (macho2->vida)) {
-						if ((macho2->saudeWolbachia == 's') && (macho2->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_SAUDAVEIS(idLote)))
+				Mosquito* mosquito = i->elementoLista;
+				if (mosquito->sexo == 'm') {
+					MosquitoMacho* mosquitoMacho = (MosquitoMacho*) (mosquito);
+					if ((mosquitoMacho->fase == 'a') && (mosquitoMacho->contadorAcasalamentos > 0) && (mosquitoMacho->idLoteAtual == idLote) && (mosquitoMacho->vida)) {
+						if ((mosquitoMacho->saudeWolbachia == 's') && (mosquitoMacho->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_SAUDAVEIS(idLote)))
 							contadorSaudaveis++;
-						if ((macho2->saudeWolbachia == 'i') && (macho2->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_WOLBACHIA(idLote)))
+						if ((mosquitoMacho->saudeWolbachia == 'i') && (mosquitoMacho->idade > CICLOS_CONVERSAO_MACHOS_ATIVOS_WOLBACHIA(idLote)))
 							contadorWolbachia++;
 					}
 				}
@@ -1332,12 +1335,13 @@ private:
 				contadorSaudaveis = 0, contadorWolbachia = 0;
 			}
 			FORMOSQUITO(listaMosquitos, i) {
-				if (i->elementoLista->sexo == 'f') {
-					MosquitoFemea* femea2 = (MosquitoFemea*) (i->elementoLista);
-					if ((femea2->fase == 'a') && (femea2->contadorPosturas > 0) && (femea2->idLoteAtual == idLote) && (femea2->vida)) {
-						if ((femea2->saudeWolbachia == 's') && (femea2->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_SAUDAVEIS(idLote)))
+				Mosquito* mosquito = i->elementoLista;
+				if (mosquito->sexo == 'f') {
+					MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
+					if ((mosquitoFemea->fase == 'a') && (mosquitoFemea->contadorPosturas > 0) && (mosquitoFemea->idLoteAtual == idLote) && (mosquitoFemea->vida)) {
+						if ((mosquitoFemea->saudeWolbachia == 's') && (mosquitoFemea->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_SAUDAVEIS(idLote)))
 							contadorSaudaveis++;
-						if ((femea2->saudeWolbachia == 'i') && (femea2->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_WOLBACHIA(idLote)))
+						if ((mosquitoFemea->saudeWolbachia == 'i') && (mosquitoFemea->idade > CICLOS_CONVERSAO_FEMEAS_ATIVAS_WOLBACHIA(idLote)))
 							contadorWolbachia++;
 					}
 				}
@@ -1371,8 +1375,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'o')  && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'o')  && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1382,9 +1387,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_OVOS_SAUDAVEIS(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'o')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'o')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1392,9 +1398,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'o')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'o')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1411,8 +1418,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'o') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'o') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1422,9 +1430,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_OVOS_COM_WOLBACHIA(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'o')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'o')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1432,9 +1441,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'o')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'o')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1451,8 +1461,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'l') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'l') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1462,9 +1473,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_LARVAS_SAUDAVEIS(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'l')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'l')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1472,9 +1484,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'l')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'l')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1491,8 +1504,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'l') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'l') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1502,9 +1516,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_LARVAS_COM_WOLBACHIA(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'l')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'l')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1512,9 +1527,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'l')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'l')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1531,8 +1547,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'p') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'p') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1542,9 +1559,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_PUPAS_SAUDAVEIS(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'p')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'p')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1552,9 +1570,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'p')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'p')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1571,8 +1590,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'p') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'p') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1582,9 +1602,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_PUPAS_COM_WOLBACHIA(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'p')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'p')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1592,9 +1613,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'p')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && (mosquito->fase == 'p')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1611,8 +1633,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd')) && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1622,9 +1645,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_ALADAS_SAUDAVEIS(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && ((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd'))) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == 'a') || (mosquito->fase == 'd'))) {
+				LISTAMACHOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1632,9 +1656,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idLoteAtual == idLote) && ((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd'))) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 's') && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == 'a') || (mosquito->fase == 'd'))) {
+				LISTAFEMEAS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1651,8 +1676,9 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd')) && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote)){
-				if (i->elementoLista->sexo == 'm')
+			Mosquito* mosquito = i->elementoLista;
+			if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote)){
+				if (mosquito->sexo == 'm')
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
@@ -1662,9 +1688,10 @@ private:
 		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_ALADAS_COM_WOLBACHIA(idLote);
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'm') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && ((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd'))) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'm') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == 'a') || (mosquito->fase == 'd'))) {
+				LISTAMACHOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeMachosRemovidos++;
 			}
@@ -1672,9 +1699,10 @@ private:
 				break;
 		}
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->sexo == 'f') && (i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idLoteAtual == idLote) && ((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd'))) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->sexo == 'f') && (mosquito->saudeWolbachia == 'i') && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == 'a') || (mosquito->fase == 'd'))) {
+				LISTAFEMEAS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeFemeasRemovidas++;
 			}
@@ -1690,18 +1718,19 @@ private:
     void remocaoMosquitosIdade() {
         Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
         FORMOSQUITO(listaMosquitos, i) {
-            if (i->elementoLista->vida == false) {
+			Mosquito* mosquito = i->elementoLista;
+            if (mosquito->vida == false) {
                 listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
                 continue;
             }
-            if (((i->elementoLista->saudeWolbachia == 's') && (i->elementoLista->idade > IDADE_MAXIMA_MOSQUITO_SAUDAVEL(i->elementoLista->idLoteAtual))) || ((i->elementoLista->saudeWolbachia == 'i') && (i->elementoLista->idade > IDADE_MAXIMA_MOSQUITO_WOLBACHIA(i->elementoLista->idLoteAtual))) || ((i->elementoLista->sexo == 'f') && (((MosquitoFemea*) (i->elementoLista))->saudeDengue != 's') && (i->elementoLista->idade > IDADE_MAXIMA_FEMEA_DENGUE(i->elementoLista->idLoteAtual)))) {
-                if (i->elementoLista->sexo == 'm') {
-                    quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(i->elementoLista);
-                    i->elementoLista->vida = false;
+            if (((mosquito->saudeWolbachia == 's') && (mosquito->idade > IDADE_MAXIMA_MOSQUITO_SAUDAVEL(mosquito->idLoteAtual))) || ((mosquito->saudeWolbachia == 'i') && (mosquito->idade > IDADE_MAXIMA_MOSQUITO_WOLBACHIA(mosquito->idLoteAtual))) || ((mosquito->sexo == 'f') && (((MosquitoFemea*) (mosquito))->saudeDengue != 's') && (mosquito->idade > IDADE_MAXIMA_FEMEA_DENGUE(mosquito->idLoteAtual)))) {
+                if (mosquito->sexo == 'm') {
+					LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                    mosquito->vida = false;
                     listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
                 } else {
-                    quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(i->elementoLista);
-                    i->elementoLista->vida = false;
+					LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                    mosquito->vida = false;
                     listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
                 }
             }
@@ -1716,16 +1745,18 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'o')  && (i->elementoLista->idLoteAtual == idLote)){
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'o')  && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
 			}
 		}
 		quantidade = quantidade * percentual;
 		int quantidadeRemovidos = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'o')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == 'o')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeRemovidos++;
 			}
@@ -1742,16 +1773,18 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'l')  && (i->elementoLista->idLoteAtual == idLote)){
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'l')  && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
 			}
 		}
 		quantidade = quantidade * percentual;
 		int quantidadeRemovidos = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'l')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == 'l')) {
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeRemovidos++;
 			}
@@ -1768,16 +1801,19 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->fase == 'p')  && (i->elementoLista->idLoteAtual == idLote)){
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->fase == 'p')  && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
 			}
 		}
 		quantidade = quantidade * percentual;
 		int quantidadeRemovidos = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->idLoteAtual == idLote) && (i->elementoLista->fase == 'p')) {
-				quadra->lotes[idLote]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaOvos.buscaRemocaoLista(i->elementoLista);
-				i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == 'p')) {
+				Mosquito* mosquito = i->elementoLista;
+				LISTAOVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
 				quantidadeRemovidos++;
 			}
@@ -1792,18 +1828,18 @@ private:
 	
 	void remocaoMosquitosControleQuimicoNaoAlados(int ciclo) {
 		FORINT(idLote, 0, quantLotes, 1) {
-			if ((quadra->lotes[idLote]->controleQuimicoLarvas != -1) && (quadra->lotes[idLote]->controleQuimicoPupas != -1)) {
-				if  (quadra->lotes[idLote]->controleQuimicoLarvas > 0) {
-					remocaoMosquitosControleQuimicoEMecanicoLarvas(idLote, quadra->lotes[idLote]->controleQuimicoLarvas);
-					quadra->lotes[idLote]->controleQuimicoLarvas -= (1.0 / EFEITO_RESIDUAL_CONTROLE_QUIMICO_LARVAS(idLote));
+			if ((LOTE(idLote)->controleQuimicoLarvas != -1) && (LOTE(idLote)->controleQuimicoPupas != -1)) {
+				if  (LOTE(idLote)->controleQuimicoLarvas > 0) {
+					remocaoMosquitosControleQuimicoEMecanicoLarvas(idLote, LOTE(idLote)->controleQuimicoLarvas);
+					LOTE(idLote)->controleQuimicoLarvas -= (1.0 / EFEITO_RESIDUAL_CONTROLE_QUIMICO_LARVAS(idLote));
 				}
-				if  (quadra->lotes[idLote]->controleQuimicoPupas > 0) {
-					remocaoMosquitosControleQuimicoEMecanicoPupas(idLote, quadra->lotes[idLote]->controleQuimicoPupas);
-					quadra->lotes[idLote]->controleQuimicoPupas -= (1.0 / EFEITO_RESIDUAL_CONTROLE_QUIMICO_PUPAS(idLote));
+				if  (LOTE(idLote)->controleQuimicoPupas > 0) {
+					remocaoMosquitosControleQuimicoEMecanicoPupas(idLote, LOTE(idLote)->controleQuimicoPupas);
+					LOTE(idLote)->controleQuimicoPupas -= (1.0 / EFEITO_RESIDUAL_CONTROLE_QUIMICO_PUPAS(idLote));
 				}
 				if ((FREQUENCIA_CONTROLE_QUIMICO_NAO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_QUIMICO_NAO_ALADOS(idLote)) == 0) && (ciclo != 0)) {
-					quadra->lotes[idLote]->controleQuimicoLarvas = 1.0;
-					quadra->lotes[idLote]->controleQuimicoPupas = 1.0;
+					LOTE(idLote)->controleQuimicoLarvas = 1.0;
+					LOTE(idLote)->controleQuimicoPupas = 1.0;
 				}
 			}
 		}
@@ -1811,7 +1847,7 @@ private:
 	
 	void remocaoMosquitosControleMecanicoNaoAlados(int ciclo) {
 		FORINT(idLote, 0, quantLotes, 1) {
-			if ((FREQUENCIA_CONTROLE_MECANICO_NAO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_MECANICO_NAO_ALADOS(idLote)) == 0) && (ciclo != 0) && (quadra->lotes[idLote]->controleMecanicoNaoAlados)) {
+			if ((FREQUENCIA_CONTROLE_MECANICO_NAO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_MECANICO_NAO_ALADOS(idLote)) == 0) && (ciclo != 0) && (LOTE(idLote)->controleMecanicoNaoAlados)) {
 				remocaoMosquitosControleQuimicoEMecanicoOvos(idLote, TAXA_CONTROLE_MECANICO_OVOS(idLote));
 				remocaoMosquitosControleQuimicoEMecanicoLarvas(idLote, TAXA_CONTROLE_MECANICO_LARVAS(idLote));
 				remocaoMosquitosControleQuimicoEMecanicoPupas(idLote, TAXA_CONTROLE_MECANICO_PUPAS(idLote));
@@ -1823,21 +1859,23 @@ private:
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd')) && (i->elementoLista->idLoteAtual == idLote)){
+			Mosquito* mosquito = i->elementoLista;
+			if (((mosquito->fase == 'a') || (mosquito->fase == 'd')) && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
 			}
 		}
 		quantidade = quantidade * percentual;
 		int quantidadeRemovidos = 0;
 		FORMOSQUITO(listaMosquitos, i) {
-			if ((i->elementoLista->idLoteAtual == idLote) && ((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd'))) {
-				if (i->elementoLista->sexo == 'm') {
-                    quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosMachos.buscaRemocaoLista(i->elementoLista);
-                    i->elementoLista->vida = false;
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->idLoteAtual == idLote) && ((mosquito->fase == 'a') || (mosquito->fase == 'd'))) {
+				if (mosquito->sexo == 'm') {
+					LISTAMACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                    mosquito->vida = false;
                     listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
                 } else {
-                    quadra->lotes[i->elementoLista->idLoteAtual]->lote->matriz[i->elementoLista->posicaoAtual.x][i->elementoLista->posicaoAtual.y].listaMosquitosFemeas.buscaRemocaoLista(i->elementoLista);
-                    i->elementoLista->vida = false;
+					LISTAFEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+                    mosquito->vida = false;
                     listaMosquitosMortos.insercaoLista(new ElementoLista<ElementoLista<Mosquito*>*>(i));
                 }
 				quantidadeRemovidos++;
@@ -1853,7 +1891,7 @@ private:
 
 	void remocaoMosquitosControleQuimicoAlados(int ciclo) {
 		FORINT(idLote, 0, quantLotes, 1) {
-			if ((FREQUENCIA_CONTROLE_QUIMICO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_QUIMICO_ALADOS(idLote)) == 0) && (ciclo != 0) && (quadra->lotes[idLote]->controleQuimicoAlados)) {
+			if ((FREQUENCIA_CONTROLE_QUIMICO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_QUIMICO_ALADOS(idLote)) == 0) && (ciclo != 0) && (LOTE(idLote)->controleQuimicoAlados)) {
 				remocaoMosquitosControleQuimicoAlados(idLote, TAXA_CONTROLE_QUIMICO_ALADOS(idLote));
 			}
 		}

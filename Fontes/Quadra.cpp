@@ -1,5 +1,5 @@
-#ifndef QUADRA
-#define QUADRA
+#ifndef _QUADRA_
+#define _QUADRA_
 
 using namespace std;
 

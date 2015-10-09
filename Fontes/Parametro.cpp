@@ -1,5 +1,5 @@
-#ifndef PARAMETRO
-#define PARAMETRO
+#ifndef _PARAMETRO_
+#define _PARAMETRO_
 
 class Parametro {
 public:

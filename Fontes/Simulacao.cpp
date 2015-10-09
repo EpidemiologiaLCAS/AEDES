@@ -1,5 +1,5 @@
-#ifndef SIMULACAO
-#define SIMULACAO
+#ifndef _SIMULACAO_
+#define _SIMULACAO_
 
 #include "Quadra.cpp"
 #include "ManipuladorMosquitos.cpp"

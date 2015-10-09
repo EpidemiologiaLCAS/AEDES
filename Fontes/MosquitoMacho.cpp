@@ -1,5 +1,5 @@
-#ifndef MOSQUITOMACHO
-#define MOSQUITOMACHO
+#ifndef _MOSQUITOMACHO_
+#define _MOSQUITOMACHO_
 
 #include "Mosquito.cpp"
 

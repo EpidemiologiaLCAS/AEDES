@@ -1,5 +1,5 @@
-#ifndef POSICAO
-#define POSICAO
+#ifndef _POSICAO_
+#define _POSICAO_
 
 class Posicao {
 public:

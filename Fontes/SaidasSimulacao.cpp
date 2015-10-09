@@ -1,5 +1,5 @@
-#ifndef SAIDASSIMULACAO
-#define SAIDASSIMULACAO
+#ifndef _SAIDASSIMULACAO_
+#define _SAIDASSIMULACAO_
 
 #include "Vetor.cpp"
 #include "Quadra.cpp"

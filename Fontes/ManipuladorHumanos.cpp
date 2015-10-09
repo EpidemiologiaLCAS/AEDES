@@ -1,5 +1,5 @@
-#ifndef MANIPULADORHUMANOS
-#define MANIPULADORHUMANOS
+#ifndef _MANIPULADORHUMANOS_
+#define _MANIPULADORHUMANOS_
 
 #include "Lista.cpp"
 #include "Humano.cpp"

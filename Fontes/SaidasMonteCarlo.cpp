@@ -1,5 +1,5 @@
-#ifndef SAIDASMONTECARLO
-#define SAIDASMONTECARLO
+#ifndef _SAIDASMONTECARLO_
+#define _SAIDASMONTECARLO_
 
 #include "Matriz.cpp"
 #include "Saidas.cpp"

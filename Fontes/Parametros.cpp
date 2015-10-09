@@ -1,5 +1,5 @@
-#ifndef PARAMETROS
-#define PARAMETROS
+#ifndef _PARAMETROS_
+#define _PARAMETROS_
 
 #include "Vetor.cpp"
 #include "Parametro.cpp"

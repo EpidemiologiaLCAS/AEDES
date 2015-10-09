@@ -1,5 +1,5 @@
-#ifndef VETOR
-#define VETOR
+#ifndef _VETOR_
+#define _VETOR_
 
 template <class T> class Vetor {
 public:

@@ -1,5 +1,5 @@
-#ifndef ELEMENTOLOTE
-#define ELEMENTOLOTE
+#ifndef _ELEMENTOLOTE_
+#define _ELEMENTOLOTE_
 
 #include "Lista.cpp"
 #include "ElementoLista.cpp"

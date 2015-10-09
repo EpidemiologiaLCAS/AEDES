@@ -1,5 +1,5 @@
-#ifndef CONEXAO
-#define CONEXAO
+#ifndef _CONEXAO_
+#define _CONEXAO_
 
 using namespace std;
 

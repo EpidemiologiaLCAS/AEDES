@@ -1,5 +1,5 @@
-#ifndef MATRIZ
-#define MATRIZ
+#ifndef _MATRIZ_
+#define _MATRIZ_
 
 template <class T> class Matriz {
 public:

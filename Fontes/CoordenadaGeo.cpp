@@ -1,5 +1,5 @@
-#ifndef COORDENADAGEO
-#define COORDENADAGEO
+#ifndef _COORDENADAGEO_
+#define _COORDENADAGEO_
 
 class CoordenadaGeo {
 public:

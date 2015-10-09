@@ -1,5 +1,5 @@
-#ifndef MACROSGERAIS
-#define MACROSGERAIS
+#ifndef _MACROSGERAIS_
+#define _MACROSGERAIS_
 
 #ifdef linux
 	#define SISTEMA "Linux"
@@ -41,18 +41,20 @@
 #define OUTRO 1
 #define CURTO 0
 #define LONGO 1
-#define LISTAHUMANOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaHumanos
-#define LISTAVIZINHANCAMOSQUITOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaVizinhancaMosquitos
-#define LISTAVIZINHANCAHUMANOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaVizinhancaHumanos
-#define LISTAPERCEPCAOMACHOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaAreaPercepcaoMosquitosMachos
-#define LISTAPERCEPCAOHUMANOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaAreaPercepcaoHumanos
-#define LISTAPERCEPCAOCRIADOUROS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaAreaPercepcaoCriadouros
-#define LINHASLOTE(idLote) quadra->lotes[idLote]->lote->linhasMatriz
-#define COLUNASLOTE(idLote) quadra->lotes[idLote]->lote->colunasMatriz
-#define POSICAOLOTE(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y]
-#define LISTAOVOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaOvos
-#define LISTAMACHOS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaMosquitosMachos
-#define LISTAFEMEAS(idLote, x, y) quadra->lotes[idLote]->lote->matriz[x][y].listaMosquitosFemeas
+
+#define LOTE(idLote) quadra->lotes[idLote]
+#define LISTAOVOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaOvos
+#define LISTAMACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosMachos
+#define LISTAFEMEAS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosFemeas
+#define LISTAHUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaHumanos
+#define LISTAVIZINHANCAMOSQUITOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaVizinhancaMosquitos
+#define LISTAVIZINHANCAHUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaVizinhancaHumanos
+#define LISTAPERCEPCAOMACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoMosquitosMachos
+#define LISTAPERCEPCAOHUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoHumanos
+#define LISTAPERCEPCAOCRIADOUROS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoCriadouros
+#define LINHASLOTE(idLote) LOTE(idLote)->lote->linhasMatriz
+#define COLUNASLOTE(idLote) LOTE(idLote)->lote->colunasMatriz
+#define POSICAOLOTE(idLote, x, y) LOTE(idLote)->lote->matriz[x][y]
 #define LIMITESLOTE(idLote, x, y) ((x < LINHASLOTE(idLote)) && (x >= 0) && (y < COLUNASLOTE(idLote)) && (y >= 0) && (POSICAOLOTE(idLote, x, y).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
 #define LIMITESLOTEP(idLote, x, y, px, py) (((x + px) < LINHASLOTE(idLote)) && ((x + px) >= 0) && ((y + py) < COLUNASLOTE(idLote)) && ((y + py) >= 0) && (POSICAOLOTE(idLote, x + px, y + py).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
 #define VIZINHANCAMOORE(var1, var2, x, y, ordem) FORINT(var1, x - ordem, x + ordem + 1, 1) { \

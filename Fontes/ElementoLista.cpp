@@ -1,5 +1,5 @@
-#ifndef ELEMENTOLISTA
-#define ELEMENTOLISTA
+#ifndef _ELEMENTOLISTA_
+#define _ELEMENTOLISTA_
 
 template <class T> class ElementoLista {
 public:

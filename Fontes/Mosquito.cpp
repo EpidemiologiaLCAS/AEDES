@@ -1,5 +1,5 @@
-#ifndef MOSQUITO
-#define MOSQUITO
+#ifndef _MOSQUITO_
+#define _MOSQUITO_
 
 #include "Posicao.cpp"
 

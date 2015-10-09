@@ -1,5 +1,5 @@
-#ifndef MONTECARLO
-#define MONTECARLO
+#ifndef _MONTECARLO_
+#define _MONTECARLO_
 
 #include "SaidasMonteCarlo.cpp"
 #include "Parametros.cpp"

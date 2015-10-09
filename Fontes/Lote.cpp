@@ -1,5 +1,5 @@
-#ifndef LOTE
-#define LOTE
+#ifndef _LOTE_
+#define _LOTE_
 
 using namespace std;
 

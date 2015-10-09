@@ -1,5 +1,5 @@
-#ifndef LISTA
-#define LISTA
+#ifndef _LISTA_
+#define _LISTA_
 
 #include "ElementoLista.cpp"
 
