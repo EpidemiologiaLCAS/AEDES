@@ -13,9 +13,9 @@ public:
 
     Conexao() {}
 
-    Conexao(Posicao _destino, int _idLoteDestino) {
-		destino = _destino;
-		idLoteDestino = _idLoteDestino;
+    Conexao(Posicao destino, int idLoteDestino) {
+		this->destino = destino;
+		this->idLoteDestino = idLoteDestino;
     }
 
     ~Conexao() {}

@@ -22,9 +22,9 @@ public:
     Vetor<Parametro>** pMOV;
     Vetor<Parametro>** pTRA;
 
-	Parametros(string _pastaEntrada, int _quantLotes) {
-        pastaEntrada = _pastaEntrada;
-        quantLotes = _quantLotes;
+	Parametros(string pastaEntrada, int quantLotes) {
+        this->pastaEntrada = pastaEntrada;
+        this->quantLotes = quantLotes;
         pSIM = lerParametros(QUANTIDADE_PARAMETROS_SIM, "SIM.csv");
         pSMC = lerParametros(QUANTIDADE_PARAMETROS_SMC, "SMC.csv");
         pACA = new Vetor<Parametro>*[quantLotes];
@@ -72,7 +72,7 @@ public:
     ~Parametros() {
 		delete(pSIM);
         delete(pSMC);
-        FORINT(i, 0, quantLotes, 1) {
+        FOR_INT(i, 0, quantLotes, 1) {
 			delete(pACA[i]);
 			delete(pAMB[i]);
 			delete(pCNA[i]);
@@ -105,13 +105,13 @@ public:
             string cabecalho;
             getline(streamEntrada, cabecalho);
             int i = 0;
-            FORINT(j, 0, numeroParametros, 1) {
+            FOR_INT(j, 0, numeroParametros, 1) {
                 string codigo;
                 double valorMinimo;
                 double valorMaximo;
                 string comentario;
                 char caracter;
-                FORINT(j, 0, 6, 1) {
+                FOR_INT(j, 0, 6, 1) {
 					streamEntrada >> caracter;
 					codigo += caracter;
 				}

@@ -8,15 +8,15 @@ public:
     ElementoLista<T>* proximoLista;
     ElementoLista<T>* anteriorLista;
 
-    ElementoLista(T _elementoLista) {
-        proximoLista = NULL;
-        anteriorLista = NULL;
-        elementoLista = _elementoLista;
+    ElementoLista(T elementoLista) {
+        this->proximoLista = NULL;
+        this->anteriorLista = NULL;
+        this->elementoLista = elementoLista;
     }
 
     ~ElementoLista() {
-        proximoLista = NULL;
-        anteriorLista = NULL;
+        this->proximoLista = NULL;
+        this->anteriorLista = NULL;
     }
 
 };

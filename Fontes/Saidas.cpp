@@ -18,8 +18,8 @@ public:
 
 	Saidas() {}
 	
-	void init(int _quantLotes) {
-		quantLotes = _quantLotes;
+	void init(int quantLotes) {
+		this->quantLotes = quantLotes;
 		zero();
 	}
 	
@@ -31,7 +31,7 @@ public:
 		quantidadesDengueLote = new stringstream[quantLotes]();
 		quantidadesWolbachiaLote = new stringstream[quantLotes]();
 		quantidadesHumanosLote = new stringstream[quantLotes]();
-		FORINT(i, 0, quantLotes, 1) {
+		FOR_INT(i, 0, quantLotes, 1) {
 			sdl[i].str(std::string());
 			quantidadesDengueLote[i].str(std::string());
 			quantidadesWolbachiaLote[i].str(std::string());

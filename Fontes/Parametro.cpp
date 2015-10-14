@@ -9,9 +9,9 @@ public:
 
     Parametro() {}
 
-    Parametro(double _valorMinimo, double _valorMaximo) {
-        valorMinimo = _valorMinimo;
-        valorMaximo = _valorMaximo;
+    Parametro(double valorMinimo, double valorMaximo) {
+        this->valorMinimo = valorMinimo;
+        this->valorMaximo = valorMaximo;
     }
     
 	~Parametro() {}

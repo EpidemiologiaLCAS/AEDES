@@ -23,19 +23,19 @@ public:
     Parametros* parametros;
     Quadra* quadra;
 
-    Simulacao(int _idMonteCarlo, int _idSimulacao, Parametros* _parametros, string pasta, Saidas* _saidaSimulacao, int _quantLotes) {
-        idMonteCarlo = _idMonteCarlo;
-        idSimulacao = _idSimulacao;
-        parametros = _parametros;
-        quantLotes = _quantLotes;
-        quadra = new Quadra(quantLotes, parametros);
-        FORINT(i, 0, quantLotes, 1) {
+    Simulacao(int idMonteCarlo, int idSimulacao, Parametros* parametros, string pastaSaida, Saidas* saidaSimulacao, int quantLotes) {
+        this->idMonteCarlo = idMonteCarlo;
+        this->idSimulacao = idSimulacao;
+        this->parametros = parametros;
+        this->quantLotes = quantLotes;
+        this->quadra = new Quadra(quantLotes, parametros);
+        FOR_INT(i, 0, quantLotes, 1) {
 			quadra->adicionarLote(i, NUMERO_LINHAS_AMBIENTE(i), NUMERO_COLUNAS_AMBIENTE(i));
 		}
-        manipuladorMosquitos = new ManipuladorMosquitos(parametros, quadra, quantLotes);
-        manipuladorHumanos = new ManipuladorHumanos(parametros, quadra, quantLotes);
-        pastaSaida = pasta;
-        saidas = new SaidasSimulacao(manipuladorMosquitos, manipuladorHumanos, quadra, pastaSaida, idMonteCarlo, idSimulacao, _saidaSimulacao, parametros, quantLotes);
+        this->manipuladorMosquitos = new ManipuladorMosquitos(parametros, quadra, quantLotes);
+        this->manipuladorHumanos = new ManipuladorHumanos(parametros, quadra, quantLotes);
+        this->pastaSaida = pastaSaida;
+        this->saidas = new SaidasSimulacao(manipuladorMosquitos, manipuladorHumanos, quadra, pastaSaida, idMonteCarlo, idSimulacao, saidaSimulacao, parametros, quantLotes);
 		quadra->criacaoConexoesHumanos();
 		quadra->criacaoConexoesMosquitos();
 		quadra->definicaoControleQuimicoNaoAlados();
@@ -58,7 +58,7 @@ public:
     bool inicioSimulacao() {
         int maxCiclos = NUMERO_CICLOS_SIMULACAO + 1;
 		saidas->gerarSaidas(0);
-		FORINT(cicloAtual, 1, maxCiclos, 1) {
+		FOR_INT(cicloAtual, 1, maxCiclos, 1) {
 			if (inicioCiclo(cicloAtual) == false) {
 				return false;
 			}
@@ -92,19 +92,19 @@ private:
         manipuladorHumanos->movimentacao(OUTRO);
         switch (periodo) {
 			case 1: {
-				FORINT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
+				FOR_INT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
 					inicioSubCiclo(cicloAtual, 1, subciclo);
 				}
 			}
 			break;
 			case 2: {
-				FORINT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
+				FOR_INT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
 					inicioSubCiclo(cicloAtual, 2, subciclo);
 				}
 			}
 			break;
 			case 3: {
-				FORINT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
+				FOR_INT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1) {
 					inicioSubCiclo(cicloAtual, 3, subciclo);
 				}
 				manipuladorHumanos->movimentacao(CASA);

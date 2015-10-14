@@ -20,23 +20,23 @@ public:
     Parametros* parametros;
     Matriz<int>* matrizSDLgeo;
 
-    SaidasSimulacao(ManipuladorMosquitos* _mosquitos, ManipuladorHumanos* _humanos, Quadra* _quadra, string _pastaSaida, int _idMonteCarlo, int _idSimulacao, Saidas* _saidasSimulacao, Parametros* _parametros, int _quantLotes) {
-        quadra = _quadra;
-        pastaSaida = _pastaSaida;
-        idMonteCarlo = _idMonteCarlo;
-        manipuladorMosquitos = _mosquitos;
-        manipuladorHumanos = _humanos;
-        quantLotes = _quantLotes;
-        idSimulacao = _idSimulacao;
-        saidasSimulacao = _saidasSimulacao;
-        parametros = _parametros;
-        FORINT(i, 0, quantLotes, 1) {
+    SaidasSimulacao(ManipuladorMosquitos* manipuladorMosquitos, ManipuladorHumanos* manipuladorHumanos, Quadra* quadra, string pastaSaida, int idMonteCarlo, int idSimulacao, Saidas* saidasSimulacao, Parametros* parametros, int quantLotes) {
+        this->quadra = quadra;
+        this->pastaSaida = pastaSaida;
+        this->idMonteCarlo = idMonteCarlo;
+        this->manipuladorMosquitos = manipuladorMosquitos;
+        this->manipuladorHumanos = manipuladorHumanos;
+        this->quantLotes = quantLotes;
+        this->idSimulacao = idSimulacao;
+        this->saidasSimulacao = saidasSimulacao;
+        this->parametros = parametros;
+        FOR_INT(i, 0, quantLotes, 1) {
 			saidasSimulacao->sdl[i] << quadra->lotes[i]->lote->linhasMatriz << ";" << quadra->lotes[i]->lote->colunasMatriz << ";" << NUMERO_CICLOS_SIMULACAO << endl;
 		}
 		saidasSimulacao->mosquitosMachos << "Ciclo;Periodo;Subciclo;ID;Sexo;SaudeWolbachia;Fase;Idade;IDLoteAtual;x;y;Acasalamentos;Vida" << endl;
 		saidasSimulacao->mosquitosFemeas << "Ciclo;Periodo;Subciclo;ID;Sexo;SaudeWolbachia;SaudeDengue;Sorotipo;Fase;Idade;IDLoteAtual;x;y;CiclosLatencia;CiclosGestacao;TipoAcasalamento;ContadorPosturas;ContadorCiclosEntrePosturas;TipoProle;alx;aly;alimento;vida" << endl;
 		numLinhas = 0;
-		FORINT(i, 0, quantLotes, 1) {
+		FOR_INT(i, 0, quantLotes, 1) {
 			numLinhas += (NUMERO_LINHAS_AMBIENTE(i) * NUMERO_COLUNAS_AMBIENTE(i));
 		}
 		matrizSDLgeo = new Matriz<int>(numLinhas, NUMERO_CICLOS_SIMULACAO + 1);
@@ -50,7 +50,7 @@ public:
         system(comando.c_str());
 		//salvar("MosquitosMachos.csv", &saidasSimulacao->mosquitosMachos);
 		//salvar("MosquitosFemeas.csv", &saidasSimulacao->mosquitosFemeas);
-		FORINT(i, 0, quantLotes, 1) {
+		FOR_INT(i, 0, quantLotes, 1) {
 			char aux[TAMANHO_STRINGS_AUXILIARES];
 			sprintf(aux, "%d", i);
 			string aux2 = string(aux);
@@ -86,8 +86,8 @@ public:
         if (!arquivo.is_open()) {
             cout << "SaidasSimulacao: Arquivo " << auxiliar << " nao foi aberto!" << endl;
         } else {
-			FORINT(i, 0, numLinhas, 1) {
-				FORINT(j, 0, NUMERO_CICLOS_SIMULACAO + 1, 1) {
+			FOR_INT(i, 0, numLinhas, 1) {
+				FOR_INT(j, 0, NUMERO_CICLOS_SIMULACAO + 1, 1) {
 					arquivo << matrizSDLgeo->matriz[i][j] << ";";
 				}
 				arquivo << endl;
@@ -115,7 +115,7 @@ public:
     }
     
 	void gerarSaidas(int cicloAtual) {
-        FORINT(i, 0, quantLotes, 1) {
+        FOR_INT(i, 0, quantLotes, 1) {
 			//saidaSDL(i);
 			saidaDengueLote(i, cicloAtual);
 			saidaWolbachiaLote(i, cicloAtual);
@@ -133,34 +133,35 @@ public:
     void saidaWolbachiaQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_WOLBACHIA - 1);
         vetorAuxiliar->zero(0);
-        FORMOSQUITO(manipuladorMosquitos->listaMosquitos, aux1) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
 			vetorAuxiliar->vetor[0] += 1;
-			if (aux1->elementoLista->fase == 'o') {
-				if (aux1->elementoLista->saudeWolbachia == 's')
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->fase == OVO) {
+				if (mosquito->saudeWolbachia == SAUDAVEL)
 					vetorAuxiliar->vetor[5] += 1;
 				else
 					vetorAuxiliar->vetor[6] += 1;
 			} 
-			if (aux1->elementoLista->fase == 'l') {
-				if (aux1->elementoLista->saudeWolbachia == 's')
+			if (mosquito->fase == LARVA) {
+				if (mosquito->saudeWolbachia == SAUDAVEL)
 					vetorAuxiliar->vetor[7] += 1;
 				else
 					vetorAuxiliar->vetor[8] += 1;
 			} 
-			if (aux1->elementoLista->fase == 'p') {
-				if (aux1->elementoLista->saudeWolbachia == 's')
+			if (mosquito->fase == PUPA) {
+				if (mosquito->saudeWolbachia == SAUDAVEL)
 					vetorAuxiliar->vetor[9] += 1;
 				else
 					vetorAuxiliar->vetor[10] += 1;
 			}  
-			if ((aux1->elementoLista->fase == 'a') || (aux1->elementoLista->fase == 'd')) {
-				if (aux1->elementoLista->sexo == 'm') {
-					if (aux1->elementoLista->saudeWolbachia == 's')
+			if ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) {
+				if (mosquito->sexo == MACHO) {
+					if (mosquito->saudeWolbachia == SAUDAVEL)
 						vetorAuxiliar->vetor[1] += 1;
 					else
 						vetorAuxiliar->vetor[2] += 1;
 				} else {
-					if (aux1->elementoLista->saudeWolbachia == 's')
+					if (mosquito->saudeWolbachia == SAUDAVEL)
 						vetorAuxiliar->vetor[3] += 1;
 					else
 						vetorAuxiliar->vetor[4] += 1;
@@ -174,31 +175,32 @@ public:
     void saidaHumanosQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_HUMANOS - 1);
         vetorAuxiliar->zero(0);
-        FORHUMANO(manipuladorHumanos->listaHumanos, aux2) {
+        FOR_HUMANO(manipuladorHumanos->listaHumanos, i) {
+			Humano* humano = i->elementoLista;
 			vetorAuxiliar->vetor[0] += 1;
-			switch (aux2->elementoLista->saude) {
-				case 's': {
-					if (aux2->elementoLista->listaSorotiposContraidos.tamanhoLista == 0) {
+			switch (humano->saude) {
+				case SUSCETIVEL: {
+					if (humano->listaSorotiposContraidos.tamanhoLista == 0) {
 						vetorAuxiliar->vetor[1] += 1;
 					} else {
 						vetorAuxiliar->vetor[11] += 1;
 					}
 				}
 					break;
-				case 'l':
+				case LATENTE:
 					vetorAuxiliar->vetor[2] += 1;
 					break;
-				case 'i': {
-					vetorAuxiliar->vetor[aux2->elementoLista->sorotipo + 2] += 1;
+				case INFECTADO: {
+					vetorAuxiliar->vetor[humano->sorotipo + 2] += 1;
 				}
 					break;
-				case 'm':
+				case IMUNIZADO:
 					vetorAuxiliar->vetor[8] += 1;
 					break;
-				case 'h':
+				case HEMORRAGICO:
 					vetorAuxiliar->vetor[9] += 1;
 					break;
-				case 'r':
+				case REMOVIDO:
 					vetorAuxiliar->vetor[10] += 1;
 					break;
 			}
@@ -210,21 +212,22 @@ public:
     void saidaDengueQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_DENGUE - 1);
         vetorAuxiliar->zero(0);
-        FORMOSQUITO(manipuladorMosquitos->listaMosquitos, aux1) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
 			vetorAuxiliar->vetor[0] += 1;
-			if (((aux1->elementoLista->fase == 'a') || (aux1->elementoLista->fase == 'd'))) {
-				if (aux1->elementoLista->sexo == 'f') {
-					MosquitoFemea* mosquito2 = (MosquitoFemea*) (aux1->elementoLista);
-					if (mosquito2->saudeDengue == 's') {
+			Mosquito* mosquito = i->elementoLista;
+			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
+				if (mosquito->sexo == FEMEA) {
+					MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (i);
+					if (mosquitoFemea->saudeDengue == SAUDAVEL) {
 						vetorAuxiliar->vetor[2] += 1;
 						continue;
 					}
-					if (mosquito2->saudeDengue == 'l') {
+					if (mosquitoFemea->saudeDengue == LATENTE) {
 						vetorAuxiliar->vetor[3] += 1;
 						continue;
 					}
-					if (mosquito2->saudeDengue == 'i') {
-						switch (mosquito2->sorotipo) {
+					if (mosquitoFemea->saudeDengue == INFECTADO) {
+						switch (mosquitoFemea->sorotipo) {
 							case 1:
 								vetorAuxiliar->vetor[4] += 1;
 								break;
@@ -247,13 +250,13 @@ public:
 					vetorAuxiliar->vetor[1] += 1;
 				}
 			} 
-			if (aux1->elementoLista->fase == 'o') {
+			if (mosquito->fase == OVO) {
 				vetorAuxiliar->vetor[9] += 1;
 			}
-			if (aux1->elementoLista->fase == 'l') {
+			if (mosquito->fase == LARVA) {
 				vetorAuxiliar->vetor[10] += 1;
 			}
-			if (aux1->elementoLista->fase == 'p') {
+			if (mosquito->fase == PUPA) {
 				vetorAuxiliar->vetor[11] += 1;
 			}
 		}
@@ -264,35 +267,36 @@ public:
     void saidaWolbachiaLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_WOLBACHIA - 1);
         vetorAuxiliar->zero(0);
-        FORMOSQUITO(manipuladorMosquitos->listaMosquitos, aux1) {
-			if (aux1->elementoLista->idLoteAtual == idLote) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->idLoteAtual == idLote) {
 				vetorAuxiliar->vetor[0] += 1;
-				if (aux1->elementoLista->fase == 'o') {
-					if (aux1->elementoLista->saudeWolbachia == 's')
+				if (mosquito->fase == OVO) {
+					if (mosquito->saudeWolbachia == SAUDAVEL)
 						vetorAuxiliar->vetor[5] += 1;
 					else
 						vetorAuxiliar->vetor[6] += 1;
 				} 
-				if (aux1->elementoLista->fase == 'l') {
-					if (aux1->elementoLista->saudeWolbachia == 's')
+				if (mosquito->fase == LARVA) {
+					if (mosquito->saudeWolbachia == SAUDAVEL)
 						vetorAuxiliar->vetor[7] += 1;
 					else
 						vetorAuxiliar->vetor[8] += 1;
 				} 
-				if (aux1->elementoLista->fase == 'p') {
-					if (aux1->elementoLista->saudeWolbachia == 's')
+				if (mosquito->fase == PUPA) {
+					if (mosquito->saudeWolbachia == SAUDAVEL)
 						vetorAuxiliar->vetor[9] += 1;
 					else
 						vetorAuxiliar->vetor[10] += 1;
 				}  
-				if ((aux1->elementoLista->fase == 'a') || (aux1->elementoLista->fase == 'd')) {
-					if (aux1->elementoLista->sexo == 'm') {
-						if (aux1->elementoLista->saudeWolbachia == 's')
+				if ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) {
+					if (mosquito->sexo == MACHO) {
+						if (mosquito->saudeWolbachia == SAUDAVEL)
 							vetorAuxiliar->vetor[1] += 1;
 						else
 							vetorAuxiliar->vetor[2] += 1;
 					} else {
-						if (aux1->elementoLista->saudeWolbachia == 's')
+						if (mosquito->saudeWolbachia == SAUDAVEL)
 							vetorAuxiliar->vetor[3] += 1;
 						else
 							vetorAuxiliar->vetor[4] += 1;
@@ -307,32 +311,33 @@ public:
     void saidaHumanosLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_HUMANOS - 1);
         vetorAuxiliar->zero(0);
-        FORHUMANO(manipuladorHumanos->listaHumanos, aux2) {
-			if (aux2->elementoLista->idLoteAtual == idLote) {
+        FOR_HUMANO(manipuladorHumanos->listaHumanos, i) {
+			Humano* humano = i->elementoLista;
+			if (humano->idLoteAtual == idLote) {
 				vetorAuxiliar->vetor[0] += 1;
-				switch (aux2->elementoLista->saude) {
-					case 's': {
-						if (aux2->elementoLista->listaSorotiposContraidos.tamanhoLista == 0) {
+				switch (humano->saude) {
+					case SUSCETIVEL: {
+						if (humano->listaSorotiposContraidos.tamanhoLista == 0) {
 							vetorAuxiliar->vetor[1] += 1;
 						} else {
 							vetorAuxiliar->vetor[11] += 1;
 						}
 					}	
 						break;
-					case 'l':
+					case LATENTE:
 						vetorAuxiliar->vetor[2] += 1;
 						break;
-					case 'i': {
-						vetorAuxiliar->vetor[aux2->elementoLista->sorotipo + 2] += 1;
+					case INFECTADO: {
+						vetorAuxiliar->vetor[humano->sorotipo + 2] += 1;
 					}
 						break;
-					case 'm':
+					case IMUNIZADO:
 						vetorAuxiliar->vetor[8] += 1;
 						break;
-					case 'h':
+					case HEMORRAGICO:
 						vetorAuxiliar->vetor[9] += 1;
 						break;
-					case 'r':
+					case REMOVIDO:
 						vetorAuxiliar->vetor[10] += 1;
 						break;
 				}
@@ -345,22 +350,24 @@ public:
     void saidaDengueLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_DENGUE - 1);
         vetorAuxiliar->zero(0);
-        FORMOSQUITO(manipuladorMosquitos->listaMosquitos, aux1) {
-			if (aux1->elementoLista->idLoteAtual == idLote) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->idLoteAtual == idLote) {
 				vetorAuxiliar->vetor[0] += 1;
-				if (((aux1->elementoLista->fase == 'a') || (aux1->elementoLista->fase == 'd'))) {
-					if (aux1->elementoLista->sexo == 'f') {
-						MosquitoFemea* mosquito2 = (MosquitoFemea*) (aux1->elementoLista);
-						if (mosquito2->saudeDengue == 's') {
+				Mosquito* mosquito = i->elementoLista;
+				if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
+					if (mosquito->sexo == FEMEA) {
+						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (i);
+						if (mosquitoFemea->saudeDengue == SAUDAVEL) {
 							vetorAuxiliar->vetor[2] += 1;
 							continue;
 						}
-						if (mosquito2->saudeDengue == 'l') {
+						if (mosquitoFemea->saudeDengue == LATENTE) {
 							vetorAuxiliar->vetor[3] += 1;
 							continue;
 						}
-						if (mosquito2->saudeDengue == 'i') {
-							switch (mosquito2->sorotipo) {
+						if (mosquitoFemea->saudeDengue == INFECTADO) {
+							switch (mosquitoFemea->sorotipo) {
 								case 1:
 									vetorAuxiliar->vetor[4] += 1;
 									break;
@@ -383,13 +390,13 @@ public:
 						vetorAuxiliar->vetor[1] += 1;
 					}
 				}
-				if (aux1->elementoLista->fase == 'o') {
+				if (mosquito->fase == OVO) {
 					vetorAuxiliar->vetor[9] += 1;
 				}
-				if (aux1->elementoLista->fase == 'l') {
+				if (mosquito->fase == LARVA) {
 					vetorAuxiliar->vetor[10] += 1;
 				}
-				if (aux1->elementoLista->fase == 'p') {
+				if (mosquito->fase == PUPA) {
 					vetorAuxiliar->vetor[11] += 1;
 				}
 			}
@@ -399,39 +406,39 @@ public:
     }
 
     int sdlHumanos(int idLote, int i, int j) {
-		if (quadra->lotes[idLote]->lote->matriz[i][j].humanoInfectante()) {
+		if (POSICAO_LOTE(idLote, i, j).humanoInfectante()) {
 			return 300;
 		}
-		if (quadra->lotes[idLote]->lote->matriz[i][j].humanoLatente()) {
+		if (POSICAO_LOTE(idLote, i, j).humanoLatente()) {
 			return 200;
 		}
-		if (quadra->lotes[idLote]->lote->matriz[i][j].humanoRecuperado()) {
+		if (POSICAO_LOTE(idLote, i, j).humanoRecuperado()) {
 			return 500;
 		}   
-		if (quadra->lotes[idLote]->lote->matriz[i][j].humanoImunizado()) {
+		if (POSICAO_LOTE(idLote, i, j).humanoImunizado()) {
 			return 400;
 		}
-		if (quadra->lotes[idLote]->lote->matriz[i][j].humanoSuscetivel()) {
+		if (POSICAO_LOTE(idLote, i, j).humanoSuscetivel()) {
 			return 100;
 		}
 		return 0;  
 	}
 	
 	int sdlMosquitos(int idLote, int i, int j) {
-		if (quadra->lotes[idLote]->lote->matriz[i][j].femeaInfectante()) {
+		if (POSICAO_LOTE(idLote, i, j).femeaInfectante()) {
 			return 30;
 		}
-		if (quadra->lotes[idLote]->lote->matriz[i][j].femeaLatente()) {
+		if (POSICAO_LOTE(idLote, i, j).femeaLatente()) {
 			return 20;
 		}
-		if (quadra->lotes[idLote]->lote->matriz[i][j].femeaSuscetivel()) {
+		if (POSICAO_LOTE(idLote, i, j).femeaSuscetivel()) {
 			return 10;
 		}
 		return 0;
 	}
 	
 	int sdlOvos(int idLote, int i, int j) {
-		if (quadra->lotes[idLote]->lote->matriz[i][j].ovos()) {
+		if (POSICAO_LOTE(idLote, i, j).ovos()) {
 			return 1;
 		}
 		return 0;
@@ -440,15 +447,15 @@ public:
     void saidaSDL(int idLote) {
         Matriz<int>* m = new Matriz<int>(quadra->lotes[idLote]->lote->linhasMatriz, quadra->lotes[idLote]->lote->colunasMatriz);
         m->zero(0);
-        FORINT(i, 0, quadra->lotes[idLote]->lote->linhasMatriz, 1) {
-            FORINT(j, 0, quadra->lotes[idLote]->lote->colunasMatriz, 1) {
+        FOR_INT(i, 0, LINHAS_LOTE(idLote), 1) {
+            FOR_INT(j, 0, COLUNAS_LOTE(idLote), 1) {
                 m->matriz[i][j] += sdlHumanos(idLote, i, j);
                 m->matriz[i][j] += sdlMosquitos(idLote, i, j);
                 m->matriz[i][j] += sdlOvos(idLote, i, j);
             }
         }
-		FORINT(aux2, 0, quadra->lotes[idLote]->lote->linhasMatriz, 1) {
-            FORINT(aux3, 0, quadra->lotes[idLote]->lote->colunasMatriz, 1) {
+		FOR_INT(aux2, 0, LINHAS_LOTE(idLote), 1) {
+            FOR_INT(aux3, 0, COLUNAS_LOTE(idLote), 1) {
                 saidasSimulacao->sdl[idLote] << m->matriz[aux2][aux3] << ";";
             }
             saidasSimulacao->sdl[idLote] << endl;
@@ -458,8 +465,8 @@ public:
     }
     
     void saidaSDLGeo(int idLote, int cicloAtual) {
-        FORINT(i, 0, quadra->lotes[idLote]->lote->linhasMatriz, 1) {
-            FORINT(j, 0, quadra->lotes[idLote]->lote->colunasMatriz, 1) {
+        FOR_INT(i, 0, LINHAS_LOTE(idLote), 1) {
+            FOR_INT(j, 0, COLUNAS_LOTE(idLote), 1) {
 				matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] = 0;
                 matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlHumanos(idLote, i, j);
                 matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlMosquitos(idLote, i, j);
@@ -470,13 +477,14 @@ public:
     }
 
     void saidaMosquitos(int ciclo, int periodo, int subciclo) {
-        FORMOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
-			if (((i->elementoLista->fase == 'a') || (i->elementoLista->fase == 'd'))) {
-				if (i->elementoLista->sexo == 'm') {
-					MosquitoMacho* macho = (MosquitoMacho*) (i->elementoLista);
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+			Mosquito* mosquito = i->elementoLista;
+			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
+				if (mosquito->sexo == MACHO) {
+					MosquitoMacho* macho = (MosquitoMacho*) (mosquito);
 					saidasSimulacao->mosquitosMachos << ciclo << ";" << periodo << ";" << subciclo << ";" << macho->id << ";" << macho->sexo << ";" << macho->saudeWolbachia << ";" << macho->fase << ";" << macho->idade << ";" << macho->idLoteAtual << ";" << macho->posicaoAtual.x << ";" << macho->posicaoAtual.y << ";" << macho->contadorAcasalamentos << ";" << macho->vida << endl;
 				} else {
-					MosquitoFemea* femea = (MosquitoFemea*) (i->elementoLista);
+					MosquitoFemea* femea = (MosquitoFemea*) (mosquito);
 					saidasSimulacao->mosquitosFemeas << ciclo << ";" << periodo << ";" << subciclo << ";" << femea->id << ";" << femea->sexo << ";" << femea->saudeWolbachia << ";" << femea->saudeDengue << ";" << femea->sorotipo << ";" << femea->fase << ";" << femea->idade << ";" << femea->idLoteAtual <<";" << femea->posicaoAtual.x << ";" << femea->posicaoAtual.y << ";" << femea->ciclosLatencia << ";" << femea->ciclosGestacao << ";" << femea->tipoAcasalamento << ";" << femea->contadorPosturas << ";" << femea->contadorCiclosEntrePosturas << ";" << femea->tipoProle << ";" << femea->posicaoAlimento.x << ";" << femea->posicaoAlimento.y << ";" << femea->alimento << ";" << femea->vida << endl;
 				}
 			}
@@ -486,10 +494,10 @@ public:
     void barraProgresso(double percentual) {
         int progresso = (percentual * TAMANHO_BARRA_PROGRESSO);
         cout << "Monte Carlo:" << setw(ESPACAMENTO_COUT) << idMonteCarlo << " Simulacao:" << setw(ESPACAMENTO_COUT) << idSimulacao << ": [";
-        FORINT(i, 0, progresso, 1) {
+        FOR_INT(i, 0, progresso, 1) {
             cout << "#";
         }
-        FORINT(i, progresso + 1, TAMANHO_BARRA_PROGRESSO, 1) {
+        FOR_INT(i, progresso + 1, TAMANHO_BARRA_PROGRESSO, 1) {
             cout << "-";
         }
         cout << "] " << (percentual * 100) << "%\r";

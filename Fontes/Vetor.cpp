@@ -7,13 +7,13 @@ public:
     T* vetor;
 	int tamanhoVetor;
 	
-	Vetor(int _tamanhoVetor) {
-        tamanhoVetor = _tamanhoVetor;
+	Vetor(int tamanhoVetor) {
+        this->tamanhoVetor = tamanhoVetor;
         vetor = new T[tamanhoVetor]();
     }
     
     void zero(T _zero) {
-		FORINT(i, 0, tamanhoVetor, 1) {
+		FOR_INT(i, 0, tamanhoVetor, 1) {
 			vetor[i] = _zero;
 		}
 	}

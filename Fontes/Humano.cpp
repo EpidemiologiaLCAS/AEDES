@@ -8,7 +8,7 @@ class Humano {
 public:
 
     int id;
-    int saude; // suscetivel (s), latente (l), infectante (i), imunizado (m), hemorragico (h), removido (r)
+    int saude; // suscetivel (s), latente (l), infectado (i), imunizado (m), hemorragico (h), removido (r)
     int sorotipo; // tipo (1 - 5) ou ausente (0)
     Lista<int> listaSorotiposContraidos;
     int contagemCiclosPeriodos;
@@ -19,13 +19,13 @@ public:
 
 	Humano() {}
 
-    Humano(int _id, int _saude, int _sorotipo, int _idLoteInicial, int _x, int _y) {
-        id = _id;
-        saude = _saude;
-        sorotipo = _sorotipo;
-        contagemCiclosPeriodos = 0;
-        setLoteAtualPosicaoAtual(_idLoteInicial, _x ,_y);
-        setLoteInicialPosicaoInicial(_idLoteInicial, _x ,_y);
+    Humano(int id, int saude, int sorotipo, int idLoteInicial, int x, int y) {
+        this->id = id;
+        this->saude = saude;
+        this->sorotipo = sorotipo;
+        this->contagemCiclosPeriodos = 0;
+        setLoteAtualPosicaoAtual(idLoteInicial, x ,y);
+        setLoteInicialPosicaoInicial(idLoteInicial, x ,y);
     }
     
     void setPosicaoAtual(int x, int y) {

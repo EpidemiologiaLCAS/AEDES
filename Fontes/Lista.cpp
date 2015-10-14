@@ -11,9 +11,9 @@ public:
     int tamanhoLista;
     
     Lista() {
-        cabecaLista = NULL;
-        caudaLista = NULL;
-        tamanhoLista = 0;
+        this->cabecaLista = NULL;
+        this->caudaLista = NULL;
+        this->tamanhoLista = 0;
     }
 	
 	void preDestrutor() {

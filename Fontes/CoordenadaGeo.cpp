@@ -9,13 +9,13 @@ public:
     
     CoordenadaGeo() {}
 
-    CoordenadaGeo(double _x, double _y) {
-        x = _x;
-        y = _y;
+    CoordenadaGeo(double x, double y) {
+        this->x = x;
+        this->y = y;
     }
     
-    double distancia(CoordenadaGeo d) {
-		return abs((x - d.x) + (y - d.y));
+    double distancia(CoordenadaGeo dest) {
+		return abs((this->x - dest.x) + (this->y - dest.y));
 	}
     
     ~CoordenadaGeo() {}

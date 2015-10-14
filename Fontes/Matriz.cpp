@@ -8,25 +8,25 @@ public:
     int linhasMatriz;
     int colunasMatriz;
 
-    Matriz(int _linhasMatriz, int _colunasMatriz) {
-        linhasMatriz = _linhasMatriz;
-        colunasMatriz = _colunasMatriz;
-        matriz = new T*[linhasMatriz]();
-        FORINT(i, 0, linhasMatriz, 1) {
+    Matriz(int linhasMatriz, int colunasMatriz) {
+        this->linhasMatriz = linhasMatriz;
+        this->colunasMatriz = colunasMatriz;
+        this->matriz = new T*[linhasMatriz]();
+        FOR_INT(i, 0, linhasMatriz, 1) {
             matriz[i] = new T[colunasMatriz]();
         }
     }
     
-    void zero(T _zero) {
-		FORINT(i, 0, linhasMatriz, 1) {
-			FORINT(j, 0, colunasMatriz, 1) {
-				matriz[i][j] = _zero;
+    void zero(T zero) {
+		FOR_INT(i, 0, linhasMatriz, 1) {
+			FOR_INT(j, 0, colunasMatriz, 1) {
+				matriz[i][j] = zero;
 			}
 		}
 	}
 
     ~Matriz() {
-        FORINT(i, 0, linhasMatriz, 1) {
+        FOR_INT(i, 0, linhasMatriz, 1) {
 			delete[] (matriz[i]);
         }
         delete[] (matriz);

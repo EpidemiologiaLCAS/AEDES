@@ -9,13 +9,13 @@ public:
     
     Posicao() {}
 
-    Posicao(int _x, int _y) {
-        x = _x;
-        y = _y;
+    Posicao(int x, int y) {
+        this->x = x;
+        this->y = y;
     }
     
-    bool operator==(Posicao P) {
-        if ((x = P.x) && (y = P.y)) {
+    bool operator==(Posicao pos) {
+        if ((x = pos.x) && (y = pos.y)) {
 			return true;
 		}
 		return false;

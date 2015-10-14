@@ -25,7 +25,7 @@ public:
     bool criadouro;
 
     ElementoLote() {
-		criadouro = false;
+		this->criadouro = false;
 	}
 
     ~ElementoLote() {
@@ -43,7 +43,8 @@ public:
     bool humanoSuscetivel() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
-			if ((i->elementoLista->saude == 's') && (i->elementoLista->listaSorotiposContraidos.tamanhoLista == 0)) {
+			Humano* humano = i->elementoLista;
+			if ((humano->saude == SUSCETIVEL) && (humano->listaSorotiposContraidos.tamanhoLista == 0)) {
 				return true;
 			}
 			i = i->proximoLista;
@@ -54,7 +55,8 @@ public:
 	bool humanoLatente() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
-			if (i->elementoLista->saude == 'l') {
+			Humano* humano = i->elementoLista;
+			if (humano->saude == LATENTE) {
 				return true;
 			}
 			i = i->proximoLista;
@@ -65,7 +67,8 @@ public:
 	bool humanoInfectante() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
-			if (i->elementoLista->saude == 'i') {
+			Humano* humano = i->elementoLista;
+			if (humano->saude == INFECTADO) {
 				return true;
 			}
 			i = i->proximoLista;
@@ -76,7 +79,8 @@ public:
 	bool humanoImunizado() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
-			if (i->elementoLista->saude == 'm') {
+			Humano* humano = i->elementoLista;
+			if (humano->saude == IMUNIZADO) {
 				return true;
 			}
 			i = i->proximoLista;
@@ -87,7 +91,8 @@ public:
 	bool humanoRecuperado() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
-			if ((i->elementoLista->saude == 's') && (i->elementoLista->listaSorotiposContraidos.tamanhoLista > 0)) {
+			Humano* humano = i->elementoLista;
+			if ((humano->saude == SUSCETIVEL) && (humano->listaSorotiposContraidos.tamanhoLista > 0)) {
 				return true;
 			}
 			i = i->proximoLista;
@@ -98,9 +103,10 @@ public:
 	bool femeaSuscetivel() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
-			if (i->elementoLista->sexo == 'f') {
-				MosquitoFemea* j = (MosquitoFemea*) i->elementoLista;
-				if (j->saudeDengue == 's') {
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->sexo == FEMEA) {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i;
+				if (mosquitoFemea->saudeDengue == SAUDAVEL) {
 					return true;
 				}
 			}
@@ -112,9 +118,10 @@ public:
 	bool femeaLatente() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
-			if (i->elementoLista->sexo == 'f') {
-				MosquitoFemea* j = (MosquitoFemea*) i->elementoLista;
-				if (j->saudeDengue == 'l') {
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->sexo == FEMEA) {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i;
+				if (mosquitoFemea->saudeDengue == LATENTE) {
 					return true;
 				}
 			}
@@ -126,9 +133,10 @@ public:
 	bool femeaInfectante() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
-			if (i->elementoLista->sexo == 'f') {
-				MosquitoFemea* j = (MosquitoFemea*) i->elementoLista;
-				if (j->saudeDengue == 'i') {
+			Mosquito* mosquito = i->elementoLista;
+			if (mosquito->sexo == FEMEA) {
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i;
+				if (mosquitoFemea->saudeDengue == INFECTADO) {
 					return true;
 				}
 			}

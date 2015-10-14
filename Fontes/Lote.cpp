@@ -18,13 +18,13 @@ public:
 
     Lote() {}
 
-    Lote(int _id, int linhasLote, int colunasLote) {
-        id = _id;
-        lote = new Matriz<ElementoLote>(linhasLote, colunasLote);
-        controleQuimicoLarvas = -1;
-        controleQuimicoPupas = -1;
-        controleMecanicoNaoAlados = false;
-        controleQuimicoAlados = false;
+    Lote(int id, int linhas, int colunas) {
+        this->id = id;
+        this->lote = new Matriz<ElementoLote>(linhas, colunas);
+        this->controleQuimicoLarvas = -1;
+        this->controleQuimicoPupas = -1;
+        this->controleMecanicoNaoAlados = false;
+        this->controleQuimicoAlados = false;
     }
 
     ~Lote() {

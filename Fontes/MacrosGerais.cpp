@@ -25,40 +25,57 @@
 #define COLUNAS_SAIDAS_DENGUE 13
 #define QUANTIDADE_CRIADOUROS_POR_LOTE 10
 
-#define FORINT(indice, valorInicio, valorFinal, incremento) for (int indice = valorInicio; indice < valorFinal; indice += incremento)
-#define FORHUMANO(lista, indice) for (ElementoLista<Humano*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FOR2HUMANO(lista, indice) for (ElementoLista<Humano*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FORPHUMANO(lista, indice) for (ElementoLista<ElementoLista<Humano*>*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FORP2HUMANO(lista, indice) for (ElementoLista<ElementoLista<Humano*>*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FORMOSQUITO(lista, indice) for (ElementoLista<Mosquito*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FOR2MOSQUITO(lista, indice) for (ElementoLista<Mosquito*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FORPMOSQUITO(lista, indice) for (ElementoLista<ElementoLista<Mosquito*>*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FORP2MOSQUITO(lista, indice) for (ElementoLista<ElementoLista<Mosquito*>*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FORCONEXAO(lista, indice) for (ElementoLista<Conexao*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
-#define FOR2CONEXAO(lista, indice) for (ElementoLista<Conexao>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FOR_INT(indice, valorInicio, valorFinal, incremento) for (int indice = valorInicio; indice < valorFinal; indice += incremento)
+#define FOR_HUMANO(lista, indice) for (ElementoLista<Humano*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FOR2_HUMANO(lista, indice) for (ElementoLista<Humano*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FORP_HUMANO(lista, indice) for (ElementoLista<ElementoLista<Humano*>*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FORP2_HUMANO(lista, indice) for (ElementoLista<ElementoLista<Humano*>*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FOR_MOSQUITO(lista, indice) for (ElementoLista<Mosquito*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FOR2_MOSQUITO(lista, indice) for (ElementoLista<Mosquito*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FORP_MOSQUITO(lista, indice) for (ElementoLista<ElementoLista<Mosquito*>*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FORP2_MOSQUITO(lista, indice) for (ElementoLista<ElementoLista<Mosquito*>*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FOR_CONEXAO(lista, indice) for (ElementoLista<Conexao*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
+#define FOR2_CONEXAO(lista, indice) for (ElementoLista<Conexao>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
 
 #define CASA 0
 #define OUTRO 1
 #define CURTO 0
 #define LONGO 1
+#define MACHO 'm'
+#define FEMEA 'f'
+#define SAUDAVEL 's'
+#define OVO 'o'
+#define LARVA 'l'
+#define PUPA 'p'
+#define ATIVO 'a'
+#define DECADENTE 'd'
+#define ESTERIL 'e'
+#define NENHUM 'n'
+#define SUSCETIVEL 's'
+#define LATENTE 'l'
+#define INFECTADO 'i'
+#define IMUNIZADO 'm'
+#define HEMORRAGICO 'h'
+#define REMOVIDO 'r'
+#define RECUPERADO 'r'
 
 #define LOTE(idLote) quadra->lotes[idLote]
-#define LISTAOVOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaOvos
-#define LISTAMACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosMachos
-#define LISTAFEMEAS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosFemeas
-#define LISTAHUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaHumanos
-#define LISTAVIZINHANCAMOSQUITOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaVizinhancaMosquitos
-#define LISTAVIZINHANCAHUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaVizinhancaHumanos
-#define LISTAPERCEPCAOMACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoMosquitosMachos
-#define LISTAPERCEPCAOHUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoHumanos
-#define LISTAPERCEPCAOCRIADOUROS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoCriadouros
-#define LINHASLOTE(idLote) LOTE(idLote)->lote->linhasMatriz
-#define COLUNASLOTE(idLote) LOTE(idLote)->lote->colunasMatriz
-#define POSICAOLOTE(idLote, x, y) LOTE(idLote)->lote->matriz[x][y]
-#define LIMITESLOTE(idLote, x, y) ((x < LINHASLOTE(idLote)) && (x >= 0) && (y < COLUNASLOTE(idLote)) && (y >= 0) && (POSICAOLOTE(idLote, x, y).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
-#define LIMITESLOTEP(idLote, x, y, px, py) (((x + px) < LINHASLOTE(idLote)) && ((x + px) >= 0) && ((y + py) < COLUNASLOTE(idLote)) && ((y + py) >= 0) && (POSICAOLOTE(idLote, x + px, y + py).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
-#define VIZINHANCAMOORE(var1, var2, x, y, ordem) FORINT(var1, x - ordem, x + ordem + 1, 1) { \
-												 FORINT(var2, y - ordem, y + ordem + 1, 1)
+#define LISTA_OVOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaOvos
+#define LISTA_MACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosMachos
+#define LISTA_FEMEAS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosFemeas
+#define LISTA_HUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaHumanos
+#define LISTA_VIZINHANCA_MOSQUITOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaVizinhancaMosquitos
+#define LISTA_VIZINHANCA_HUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaVizinhancaHumanos
+#define LISTA_PERCEPCAO_MACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoMosquitosMachos
+#define LISTA_PERCEPCAO_HUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoHumanos
+#define LISTA_PERCEPCAO_CRIADOUROS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaAreaPercepcaoCriadouros
+#define LINHAS_LOTE(idLote) LOTE(idLote)->lote->linhasMatriz
+#define COLUNAS_LOTE(idLote) LOTE(idLote)->lote->colunasMatriz
+#define POSICAO_LOTE(idLote, x, y) LOTE(idLote)->lote->matriz[x][y]
+#define LIMITES_LOTE(idLote, x, y) ((x < LINHAS_LOTE(idLote)) && (x >= 0) && (y < COLUNAS_LOTE(idLote)) && (y >= 0) && (POSICAO_LOTE(idLote, x, y).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
+#define LIMITES_LOTE_P(idLote, x, y, px, py) (((x + px) < LINHAS_LOTE(idLote)) && ((x + px) >= 0) && ((y + py) < COLUNAS_LOTE(idLote)) && ((y + py) >= 0) && (POSICAO_LOTE(idLote, x + px, y + py).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
+#define VIZINHANCA_MOORE(var1, var2, x, y, ordem) FOR_INT(var1, x - ordem, x + ordem + 1, 1) { \
+												 FOR_INT(var2, y - ordem, y + ordem + 1, 1)
 
 double randomizarPercentual() {
 	double num = MAX_RAND * (rand() % (MAX_RAND + 1)) + (rand() % MAX_RAND);

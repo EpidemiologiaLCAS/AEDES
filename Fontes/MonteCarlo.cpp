@@ -16,24 +16,24 @@ public:
     Parametros* parametros;
     Saidas* saidasSimulacoes;
     
-    MonteCarlo(int _idMonteCarlo, string _pastaSaida, int _quantLotes) {
-		quantLotes = _quantLotes;
-        idMonteCarlo = _idMonteCarlo;
-        pastaSaida = _pastaSaida;
+    MonteCarlo(int idMonteCarlo, string pastaSaida, int quantLotes) {
+		this->quantLotes = quantLotes;
+        this->idMonteCarlo = idMonteCarlo;
+        this->pastaSaida = pastaSaida;
         char aux2[TAMANHO_STRINGS_AUXILIARES];
-        sprintf(aux2, "%d", _idMonteCarlo);
+        sprintf(aux2, "%d", idMonteCarlo);
         pastaEntrada = "Entradas";
         pastaEntrada += SEPARADOR;
         pastaEntrada += "MonteCarlo_";
         string aux1 = string(aux2);
         pastaEntrada += aux1;
         pastaEntrada += SEPARADOR;
-        parametros = new Parametros(pastaEntrada, quantLotes);
-        saidasSimulacoes = new Saidas[QUANTIDADE_SIMULACOES]();
-        FORINT(i, 0, QUANTIDADE_SIMULACOES, 1) {
-			saidasSimulacoes[i].init(quantLotes);
+        this->parametros = new Parametros(pastaEntrada, quantLotes);
+        this->saidasSimulacoes = new Saidas[QUANTIDADE_SIMULACOES]();
+        FOR_INT(i, 0, QUANTIDADE_SIMULACOES, 1) {
+			this->saidasSimulacoes[i].init(quantLotes);
 		}
-        saidas = new SaidasMonteCarlo(idMonteCarlo, aux2, _pastaSaida, NUMERO_CICLOS_SIMULACAO + 1, QUANTIDADE_SIMULACOES, saidasSimulacoes, quantLotes);
+        this->saidas = new SaidasMonteCarlo(idMonteCarlo, aux2, pastaSaida, NUMERO_CICLOS_SIMULACAO + 1, QUANTIDADE_SIMULACOES, saidasSimulacoes, quantLotes);
     }
 
 	~MonteCarlo() {
@@ -45,7 +45,7 @@ public:
     void inicioMonteCarlo() {
         Simulacao* simulacao;
         int maxSimulacao = QUANTIDADE_SIMULACOES;
-        FORINT(indice, 0, maxSimulacao, 1) {
+        FOR_INT(indice, 0, maxSimulacao, 1) {
             bool simulacaoConcluida = false;
             int contadorTentativasSimulacao = 0;
             while (!simulacaoConcluida) {

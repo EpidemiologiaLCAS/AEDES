@@ -25,7 +25,7 @@ int main(int contadorArgumentos, char* argumentos[]) {
     int indiceFim = atoi(argumentos[2]);
     int quantLotes = atoi(argumentos[3]);
     MonteCarlo* simulacaoMonteCarlo;
-    FORINT(indice, indiceInicio, indiceFim, 1) {
+    FOR_INT(indice, indiceInicio, indiceFim, 1) {
         string pasta = "Saidas";
 		pasta += SEPARADOR;
 		pasta += "MonteCarlo_";

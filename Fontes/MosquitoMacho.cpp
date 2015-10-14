@@ -8,17 +8,17 @@ public:
 
 	int contadorAcasalamentos;
 
-	MosquitoMacho(int _id, char _saudeWolbachia, char _fase, char _idade, int _idLoteAtual, int _x, int _y) {
-		id = _id;
-		sexo = 'm';
-		saudeWolbachia = _saudeWolbachia;
-		fase = _fase;
-		idade = _idade;
-		idLoteAtual = _idLoteAtual;
-		posicaoAtual.x = _x;
-		posicaoAtual.y = _y;
-        vida = true;
-        contadorAcasalamentos = 0;
+	MosquitoMacho(int id, char saudeWolbachia, char fase, char idade, int idLoteAtual, int x, int y) {
+		this->id = id;
+		this->sexo = MACHO;
+		this->saudeWolbachia = saudeWolbachia;
+		this->fase = fase;
+		this->idade = idade;
+		this->idLoteAtual = idLoteAtual;
+		this->posicaoAtual.x = x;
+		this->posicaoAtual.y = y;
+        this->vida = true;
+        this->contadorAcasalamentos = 0;
 	}
 	
 	MosquitoMacho() {}
