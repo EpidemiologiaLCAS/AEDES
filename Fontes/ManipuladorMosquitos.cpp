@@ -250,9 +250,11 @@ public:
     }
 
     void transformacoes() {
-        transformacaoOvos();
-        transformacaoLarvas();
-        transformacaoPupas();
+		FOR_INT(idLote, 0, quantLotes, 1) {
+			transformacaoNaoAlados(OVO, LARVA, CICLOS_CONVERSAO_OVOS(idLote), BS12_OVOS(idLote), CS12_OVOS(idLote), BI12_OVOS(idLote), CI12_OVOS(idLote), idLote);
+			transformacaoNaoAlados(LARVA, PUPA, CICLOS_CONVERSAO_LARVAS(idLote), BS12_LARVAS(idLote), CS12_LARVAS(idLote), BI12_LARVAS(idLote), CI12_LARVAS(idLote), idLote);
+			transformacaoNaoAlados(PUPA, ATIVO, CICLOS_CONVERSAO_PUPAS(idLote), BS12_PUPAS(idLote), CS12_PUPAS(idLote), BI12_PUPAS(idLote), CI12_PUPAS(idLote), idLote);
+		}
         transformacaoAlados();
     }
 
@@ -963,13 +965,21 @@ private:
 			break;
         }
     }
-
-    void efetivacaoTransformacaoOvos(Lista<Mosquito*>* LISTA_OVOS, int transforma, int naoTransforma, char sexo) {
-        FOR_MOSQUITO(LISTA_OVOS, i) {
+    
+    void efetivacaoTransformacaoNaoAlados(Lista<Mosquito*>* lista, int transforma, int naoTransforma, char sexo, char fase) {
+        FOR_MOSQUITO(lista, i) {
             Mosquito* mosquito = i->elementoLista;
             if (randomizarPercentual() <= 0.5) {
                 if (transforma > 0) {
-                    mosquito->fase = LATENTE;
+                    if (fase == ATIVO) {
+						LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+						if (mosquito->sexo == MACHO) {
+							LISTA_MACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
+						} else {
+							LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
+						}
+					}
+					mosquito->fase = fase;
                     transforma--;
                 } else {
                     if (naoTransforma > 0) {
@@ -985,7 +995,15 @@ private:
                     naoTransforma--;
                 } else {
                     if (transforma > 0) {
-                        mosquito->fase = LATENTE;
+                        if (fase == ATIVO) {
+							LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+							if (mosquito->sexo == MACHO) {
+								LISTA_MACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
+							} else {
+								LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
+							}
+						}
+						mosquito->fase = fase;
                         transforma--;
                     }
                 }
@@ -993,232 +1011,56 @@ private:
         }
     }
 
-    void transformacaoOvos() {
-        FOR_INT(idLote, 0, quantLotes, 1) {
-			int contadorMachosSaudaveis = 0, contadorFemeasSaudaveis = 0, contadorMachosWolbachia = 0, contadorFemeasWolbachia = 0;
-			int contadorFemeasSaudaveisTransformacao = 0, contadorFemeasSaudaveisNaoTransformacao = 0, contadorMachosSaudaveisTransformacao = 0, contadorMachosSaudaveisNaoTransformacao = 0, contadorFemeasWolbachiaTransformacao = 0, contadorFemeasWolbachiaNaoTransformacao = 0, contadorMachosWolbachiaTransformacao = 0, contadorMachosWolbachiaNaoTransformacao = 0;
-			double totalFemeasSaudaveis = 0, totalMachosSaudaveis = 0, totalFemeasWolbachia = 0, totalMachosWolbachia = 0;
-			Lista<Mosquito*> LISTA_MACHOSSaudaveis;
-			Lista<Mosquito*> LISTA_MACHOSWolbachia;
-			Lista<Mosquito*> LISTA_FEMEASSaudaveis;
-			Lista<Mosquito*> LISTA_FEMEASWolbachia;
-			FOR_MOSQUITO(listaMosquitos, i) {
-				Mosquito* mosquito = i->elementoLista;
-				if ((mosquito->idade > CICLOS_CONVERSAO_OVOS(idLote)) && (mosquito->fase == OVO) && (mosquito->idLoteAtual == idLote) && (mosquito->vida)) {
-					if (mosquito->sexo == MACHO) {
-						if (mosquito->saudeWolbachia == SAUDAVEL) {
-							LISTA_MACHOSSaudaveis.insercaoLista(mosquito);
-							contadorMachosSaudaveis++;
-						} else {
-							LISTA_MACHOSWolbachia.insercaoLista(mosquito);
-							contadorMachosWolbachia++;
-						}
+    void transformacaoNaoAlados(char faseAtual, char faseSeguinte, int maxIdade, double bs, double cs, double bi, double ci, int idLote) {
+		int contadorMachosSaudaveis = 0, contadorFemeasSaudaveis = 0, contadorMachosWolbachia = 0, contadorFemeasWolbachia = 0;
+		int contadorFemeasSaudaveisTransformacao = 0, contadorFemeasSaudaveisNaoTransformacao = 0, contadorMachosSaudaveisTransformacao = 0, contadorMachosSaudaveisNaoTransformacao = 0, contadorFemeasWolbachiaTransformacao = 0, contadorFemeasWolbachiaNaoTransformacao = 0, contadorMachosWolbachiaTransformacao = 0, contadorMachosWolbachiaNaoTransformacao = 0;
+		double totalFemeasSaudaveis = 0, totalMachosSaudaveis = 0, totalFemeasWolbachia = 0, totalMachosWolbachia = 0;
+		Lista<Mosquito*> listaMachosSaudaveis;
+		Lista<Mosquito*> listaMachosWolbachia;
+		Lista<Mosquito*> listaFemeasSaudaveis;
+		Lista<Mosquito*> listaFemeasWolbachia;
+		FOR_MOSQUITO(listaMosquitos, i) {
+			Mosquito* mosquito = i->elementoLista;
+			if ((mosquito->idade > maxIdade) && (mosquito->fase == faseAtual) && (mosquito->idLoteAtual == idLote) && (mosquito->vida)) {
+				if (mosquito->sexo == MACHO) {
+					if (mosquito->saudeWolbachia == SAUDAVEL) {
+						listaMachosSaudaveis.insercaoLista(mosquito);
+						contadorMachosSaudaveis++;
 					} else {
-						if (mosquito->saudeWolbachia == SAUDAVEL) {
-							LISTA_FEMEASSaudaveis.insercaoLista(mosquito);
-							contadorFemeasSaudaveis++;
-						} else {
-							LISTA_FEMEASWolbachia.insercaoLista(mosquito);
-							contadorFemeasWolbachia++;
-						}
+						listaMachosWolbachia.insercaoLista(mosquito);
+						contadorMachosWolbachia++;
+					}
+				} else {
+					if (mosquito->saudeWolbachia == SAUDAVEL) {
+						listaFemeasSaudaveis.insercaoLista(mosquito);
+						contadorFemeasSaudaveis++;
+					} else {
+						listaFemeasWolbachia.insercaoLista(mosquito);
+						contadorFemeasWolbachia++;
 					}
 				}
 			}
-			if ((contadorMachosSaudaveis + contadorFemeasSaudaveis + contadorMachosWolbachia + contadorFemeasWolbachia) != 0) {
-				totalFemeasSaudaveis = contadorFemeasSaudaveis * BS12_OVOS(idLote);
-				totalMachosSaudaveis = contadorMachosSaudaveis * CS12_OVOS(idLote);
-				totalFemeasWolbachia = contadorFemeasWolbachia * BI12_OVOS(idLote);
-				totalMachosWolbachia = contadorMachosWolbachia * CI12_OVOS(idLote);
-				contadorFemeasSaudaveisNaoTransformacao = (int) totalFemeasSaudaveis;
-				contadorMachosSaudaveisNaoTransformacao = (int) totalMachosSaudaveis;
-				contadorFemeasWolbachiaNaoTransformacao = (int) totalFemeasWolbachia;
-				contadorMachosWolbachiaNaoTransformacao = (int) totalMachosWolbachia;
-				contadorFemeasSaudaveisTransformacao = contadorFemeasSaudaveis - contadorFemeasSaudaveisNaoTransformacao;
-				contadorMachosSaudaveisTransformacao = contadorMachosSaudaveis - contadorMachosSaudaveisNaoTransformacao;
-				contadorFemeasWolbachiaTransformacao = contadorFemeasWolbachia - contadorFemeasWolbachiaNaoTransformacao;
-				contadorMachosWolbachiaTransformacao = contadorMachosWolbachia - contadorMachosWolbachiaNaoTransformacao;
-				efetivacaoTransformacaoOvos(&LISTA_MACHOSSaudaveis, contadorMachosSaudaveisTransformacao, contadorMachosSaudaveisNaoTransformacao, MACHO);
-				efetivacaoTransformacaoOvos(&LISTA_MACHOSWolbachia, contadorMachosWolbachiaTransformacao, contadorMachosWolbachiaNaoTransformacao, MACHO);
-				efetivacaoTransformacaoOvos(&LISTA_FEMEASSaudaveis, contadorFemeasSaudaveisTransformacao, contadorFemeasSaudaveisNaoTransformacao, FEMEA);
-				efetivacaoTransformacaoOvos(&LISTA_FEMEASWolbachia, contadorFemeasWolbachiaTransformacao, contadorFemeasWolbachiaNaoTransformacao, FEMEA);
-			}
+		}
+		if ((contadorMachosSaudaveis + contadorFemeasSaudaveis + contadorMachosWolbachia + contadorFemeasWolbachia) != 0) {
+			totalFemeasSaudaveis = contadorFemeasSaudaveis * bs;
+			totalMachosSaudaveis = contadorMachosSaudaveis * cs;
+			totalFemeasWolbachia = contadorFemeasWolbachia * bi;
+			totalMachosWolbachia = contadorMachosWolbachia * ci;
+			contadorFemeasSaudaveisNaoTransformacao = (int) totalFemeasSaudaveis;
+			contadorMachosSaudaveisNaoTransformacao = (int) totalMachosSaudaveis;
+			contadorFemeasWolbachiaNaoTransformacao = (int) totalFemeasWolbachia;
+			contadorMachosWolbachiaNaoTransformacao = (int) totalMachosWolbachia;
+			contadorFemeasSaudaveisTransformacao = contadorFemeasSaudaveis - contadorFemeasSaudaveisNaoTransformacao;
+			contadorMachosSaudaveisTransformacao = contadorMachosSaudaveis - contadorMachosSaudaveisNaoTransformacao;
+			contadorFemeasWolbachiaTransformacao = contadorFemeasWolbachia - contadorFemeasWolbachiaNaoTransformacao;
+			contadorMachosWolbachiaTransformacao = contadorMachosWolbachia - contadorMachosWolbachiaNaoTransformacao;
+			efetivacaoTransformacaoNaoAlados(&listaMachosSaudaveis, contadorMachosSaudaveisTransformacao, contadorMachosSaudaveisNaoTransformacao, MACHO, faseSeguinte);
+			efetivacaoTransformacaoNaoAlados(&listaMachosWolbachia, contadorMachosWolbachiaTransformacao, contadorMachosWolbachiaNaoTransformacao, MACHO, faseSeguinte);
+			efetivacaoTransformacaoNaoAlados(&listaFemeasSaudaveis, contadorFemeasSaudaveisTransformacao, contadorFemeasSaudaveisNaoTransformacao, FEMEA, faseSeguinte);
+			efetivacaoTransformacaoNaoAlados(&listaFemeasWolbachia, contadorFemeasWolbachiaTransformacao, contadorFemeasWolbachiaNaoTransformacao, FEMEA, faseSeguinte);
 		}
     }
     
-    void efetivacaoTransformacaoLarvas(Lista<Mosquito*>* listaMosquitosNaoAlados, int transforma, int naoTransforma, char sexo) {
-        FOR_MOSQUITO(listaMosquitosNaoAlados, i) {
-            Mosquito* mosquito = i->elementoLista;
-            if (randomizarPercentual() <= 0.5) {
-                if (transforma > 0) {
-                    mosquito->fase = PUPA;
-                    transforma--;
-                } else {
-                    if (naoTransforma > 0) {
-                        mosquito->vida = false;
-						LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-						naoTransforma--;
-                    }
-                }
-            } else {
-                if (naoTransforma > 0) {
-                    mosquito->vida = false;
-					LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-                    naoTransforma--;
-                } else {
-                    if (transforma > 0) {
-                        mosquito->fase = PUPA;
-                        transforma--;
-                    }
-                }
-            }
-        }
-    }
-
-    void transformacaoLarvas() {
-        FOR_INT(idLote, 0, quantLotes, 1) {
-			int contadorMachosSaudaveis = 0, contadorFemeasSaudaveis = 0, contadorMachosWolbachia = 0, contadorFemeasWolbachia = 0;
-			int contadorFemeasSaudaveisTransformacao = 0, contadorFemeasSaudaveisNaoTransformacao = 0, contadorMachosSaudaveisTransformacao = 0, contadorMachosSaudaveisNaoTransformacao = 0, contadorFemeasWolbachiaTransformacao = 0, contadorFemeasWolbachiaNaoTransformacao = 0, contadorMachosWolbachiaTransformacao = 0, contadorMachosWolbachiaNaoTransformacao = 0;
-			double totalFemeasSaudaveis = 0, totalMachosSaudaveis = 0, totalFemeasWolbachia = 0, totalMachosWolbachia = 0;
-			Lista<Mosquito*> LISTA_MACHOSSaudaveis;
-			Lista<Mosquito*> LISTA_MACHOSWolbachia;
-			Lista<Mosquito*> LISTA_FEMEASSaudaveis;
-			Lista<Mosquito*> LISTA_FEMEASWolbachia;
-			FOR_MOSQUITO(listaMosquitos, i) {
-				Mosquito* mosquito = i->elementoLista;
-				if ((mosquito->idade > CICLOS_CONVERSAO_LARVAS(idLote)) && (mosquito->fase == LARVA) && (mosquito->idLoteAtual == idLote) && (mosquito->vida)) {
-					if (mosquito->sexo == MACHO) {
-						if (mosquito->saudeWolbachia == SAUDAVEL) {
-							LISTA_MACHOSSaudaveis.insercaoLista(mosquito);
-							contadorMachosSaudaveis++;
-						} else {
-							LISTA_MACHOSWolbachia.insercaoLista(mosquito);
-							contadorMachosWolbachia++;
-						}
-					} else {
-						if (mosquito->saudeWolbachia == SAUDAVEL) {
-							LISTA_FEMEASSaudaveis.insercaoLista(mosquito);
-							contadorFemeasSaudaveis++;
-						} else {
-							LISTA_FEMEASWolbachia.insercaoLista(mosquito);
-							contadorFemeasWolbachia++;
-						}
-					}
-				}
-			}
-			if ((contadorMachosSaudaveis + contadorFemeasSaudaveis + contadorMachosWolbachia + contadorFemeasWolbachia) != 0) {
-				totalFemeasSaudaveis = contadorFemeasSaudaveis * BS12_LARVAS(idLote);
-				totalMachosSaudaveis = contadorMachosSaudaveis * CS12_LARVAS(idLote);
-				totalFemeasWolbachia = contadorFemeasWolbachia * BI12_LARVAS(idLote);
-				totalMachosWolbachia = contadorMachosWolbachia * CI12_LARVAS(idLote);
-				contadorFemeasSaudaveisNaoTransformacao = (int) totalFemeasSaudaveis;
-				contadorMachosSaudaveisNaoTransformacao = (int) totalMachosSaudaveis;
-				contadorFemeasWolbachiaNaoTransformacao = (int) totalFemeasWolbachia;
-				contadorMachosWolbachiaNaoTransformacao = (int) totalMachosWolbachia;
-				contadorFemeasSaudaveisTransformacao = contadorFemeasSaudaveis - contadorFemeasSaudaveisNaoTransformacao;
-				contadorMachosSaudaveisTransformacao = contadorMachosSaudaveis - contadorMachosSaudaveisNaoTransformacao;
-				contadorFemeasWolbachiaTransformacao = contadorFemeasWolbachia - contadorFemeasWolbachiaNaoTransformacao;
-				contadorMachosWolbachiaTransformacao = contadorMachosWolbachia - contadorMachosWolbachiaNaoTransformacao;
-				efetivacaoTransformacaoLarvas(&LISTA_MACHOSSaudaveis, contadorMachosSaudaveisTransformacao, contadorMachosSaudaveisNaoTransformacao, MACHO);
-				efetivacaoTransformacaoLarvas(&LISTA_MACHOSWolbachia, contadorMachosWolbachiaTransformacao, contadorMachosWolbachiaNaoTransformacao, MACHO);
-				efetivacaoTransformacaoLarvas(&LISTA_FEMEASSaudaveis, contadorFemeasSaudaveisTransformacao, contadorFemeasSaudaveisNaoTransformacao, FEMEA);
-				efetivacaoTransformacaoLarvas(&LISTA_FEMEASWolbachia, contadorFemeasWolbachiaTransformacao, contadorFemeasWolbachiaNaoTransformacao, FEMEA);
-			}
-		}
-    }
-    
-    void efetivacaoTransformacaoPupas(Lista<Mosquito*>* listaMosquitosNaoAlados, int transforma, int naoTransforma, char sexo) {
-        FOR_MOSQUITO(listaMosquitosNaoAlados, i) {
-            Mosquito* mosquito = i->elementoLista;
-            if (randomizarPercentual() <= 0.5) {
-                if (transforma > 0) {
-                    mosquito->fase = ATIVO;
-					LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-                    if (sexo == MACHO) {
-						LISTA_MACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
-                    } else {
-                        LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
-                    }
-                     transforma--;
-                } else {
-                    if (naoTransforma > 0) {
-                        mosquito->vida = false;
-                        LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-						naoTransforma--;
-                    }
-                }
-            } else {
-                if (naoTransforma > 0) {
-                    mosquito->vida = false;
-                    LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-                    naoTransforma--;
-                } else {
-                    if (transforma > 0) {
-                        mosquito->fase = ATIVO;
-                        LISTA_OVOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-						if (sexo == MACHO) {
-							LISTA_MACHOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
-						} else {
-							LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
-						}
-                        transforma--;
-                    }
-                }
-            }
-        }
-    }
-
-    void transformacaoPupas() {
-        FOR_INT(idLote, 0, quantLotes, 1) {
-			int contadorMachosSaudaveis = 0, contadorFemeasSaudaveis = 0, contadorMachosWolbachia = 0, contadorFemeasWolbachia = 0;
-			int contadorFemeasSaudaveisTransformacao = 0, contadorFemeasSaudaveisNaoTransformacao = 0, contadorMachosSaudaveisTransformacao = 0, contadorMachosSaudaveisNaoTransformacao = 0, contadorFemeasWolbachiaTransformacao = 0, contadorFemeasWolbachiaNaoTransformacao = 0, contadorMachosWolbachiaTransformacao = 0, contadorMachosWolbachiaNaoTransformacao = 0;
-			double totalFemeasSaudaveis = 0, totalMachosSaudaveis = 0, totalFemeasWolbachia = 0, totalMachosWolbachia = 0;
-			Lista<Mosquito*> LISTA_MACHOSSaudaveis;
-			Lista<Mosquito*> LISTA_MACHOSWolbachia;
-			Lista<Mosquito*> LISTA_FEMEASSaudaveis;
-			Lista<Mosquito*> LISTA_FEMEASWolbachia;
-			FOR_MOSQUITO(listaMosquitos, i) {
-				Mosquito* mosquito = i->elementoLista;
-				if ((mosquito->idade > CICLOS_CONVERSAO_PUPAS(idLote)) && (mosquito->fase == PUPA) && (mosquito->idLoteAtual == idLote) && (mosquito->vida)) {
-					if (mosquito->sexo == MACHO) {
-						if (mosquito->saudeWolbachia == SAUDAVEL) {
-							LISTA_MACHOSSaudaveis.insercaoLista(mosquito);
-							contadorMachosSaudaveis++;
-						} else {
-							LISTA_MACHOSWolbachia.insercaoLista(mosquito);
-							contadorMachosWolbachia++;
-						}
-					} else {
-						if (mosquito->saudeWolbachia == SAUDAVEL) {
-							LISTA_FEMEASSaudaveis.insercaoLista(mosquito);
-							contadorFemeasSaudaveis++;
-						} else {
-							LISTA_FEMEASWolbachia.insercaoLista(mosquito);
-							contadorFemeasWolbachia++;
-						}
-					}
-				}
-			}
-			if ((contadorMachosSaudaveis + contadorFemeasSaudaveis + contadorMachosWolbachia + contadorFemeasWolbachia) != 0) {
-				totalFemeasSaudaveis = contadorFemeasSaudaveis * BS12_PUPAS(idLote);
-				totalMachosSaudaveis = contadorMachosSaudaveis * CS12_PUPAS(idLote);
-				totalFemeasWolbachia = contadorFemeasWolbachia * BI12_PUPAS(idLote);
-				totalMachosWolbachia = contadorMachosWolbachia * CI12_PUPAS(idLote);
-				contadorFemeasSaudaveisNaoTransformacao = (int) totalFemeasSaudaveis;
-				contadorMachosSaudaveisNaoTransformacao = (int) totalMachosSaudaveis;
-				contadorFemeasWolbachiaNaoTransformacao = (int) totalFemeasWolbachia;
-				contadorMachosWolbachiaNaoTransformacao = (int) totalMachosWolbachia;
-				contadorFemeasSaudaveisTransformacao = contadorFemeasSaudaveis - contadorFemeasSaudaveisNaoTransformacao;
-				contadorMachosSaudaveisTransformacao = contadorMachosSaudaveis - contadorMachosSaudaveisNaoTransformacao;
-				contadorFemeasWolbachiaTransformacao = contadorFemeasWolbachia - contadorFemeasWolbachiaNaoTransformacao;
-				contadorMachosWolbachiaTransformacao = contadorMachosWolbachia - contadorMachosWolbachiaNaoTransformacao;
-				efetivacaoTransformacaoPupas(&LISTA_MACHOSSaudaveis, contadorMachosSaudaveisTransformacao, contadorMachosSaudaveisNaoTransformacao, MACHO);
-				efetivacaoTransformacaoPupas(&LISTA_MACHOSWolbachia, contadorMachosWolbachiaTransformacao, contadorMachosWolbachiaNaoTransformacao, MACHO);
-				efetivacaoTransformacaoPupas(&LISTA_FEMEASSaudaveis, contadorFemeasSaudaveisTransformacao, contadorFemeasSaudaveisNaoTransformacao, FEMEA);
-				efetivacaoTransformacaoPupas(&LISTA_FEMEASWolbachia, contadorFemeasWolbachiaTransformacao, contadorFemeasWolbachiaNaoTransformacao, FEMEA);
-			}
-		}
-    }
-
     int efetivacaoTransformacaoAlados(Mosquito* mosquito, int enviados, int naoEnviados, int transformados, int naoTransformados) {
         if (randomizarPercentual() <= 0.5) {
             if (transformados < enviados) {
@@ -1359,36 +1201,36 @@ private:
     void remocaoMosquitosControleNatural(int ciclo) {
 		FOR_INT(idLote, 0, quantLotes, 1) {
 			if ((FREQUENCIA_CONTROLE_NATURAL(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_NATURAL(idLote)) == 0) && (ciclo != 0)) {
-				remocaoMosquitosControleNaturalOvosSaudaveis(idLote);
-				remocaoMosquitosControleNaturalOvosWolbachia(idLote);
-				remocaoMosquitosControleNaturalLarvasSaudaveis(idLote);
-				remocaoMosquitosControleNaturalLarvasWolbachia(idLote);
-				remocaoMosquitosControleNaturalPupasSaudaveis(idLote);
-				remocaoMosquitosControleNaturalPupasWolbachia(idLote);
-				remocaoMosquitosControleNaturalAtivosSaudaveis(idLote);
-				remocaoMosquitosControleNaturalAtivosWolbachia(idLote);
+				remocaoMosquitosControleNaturalNaoAlados(idLote, OVO, SAUDAVEL, PORCENTAGEM_ELIMINACAO_MACHOS_OVOS_SAUDAVEIS(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_OVOS_SAUDAVEIS(idLote));
+				remocaoMosquitosControleNaturalNaoAlados(idLote, OVO, INFECTADO, PORCENTAGEM_ELIMINACAO_MACHOS_OVOS_COM_WOLBACHIA(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_OVOS_COM_WOLBACHIA(idLote));
+				remocaoMosquitosControleNaturalNaoAlados(idLote, LARVA, SAUDAVEL, PORCENTAGEM_ELIMINACAO_MACHOS_LARVAS_SAUDAVEIS(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_LARVAS_SAUDAVEIS(idLote));
+				remocaoMosquitosControleNaturalNaoAlados(idLote, LARVA, INFECTADO, PORCENTAGEM_ELIMINACAO_MACHOS_LARVAS_COM_WOLBACHIA(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_LARVAS_COM_WOLBACHIA(idLote));
+				remocaoMosquitosControleNaturalNaoAlados(idLote, PUPA, SAUDAVEL, PORCENTAGEM_ELIMINACAO_MACHOS_PUPAS_SAUDAVEIS(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_PUPAS_SAUDAVEIS(idLote));
+				remocaoMosquitosControleNaturalNaoAlados(idLote, PUPA, INFECTADO, PORCENTAGEM_ELIMINACAO_MACHOS_PUPAS_COM_WOLBACHIA(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_PUPAS_COM_WOLBACHIA(idLote));
+				remocaoMosquitosControleNaturalAlados(idLote, SAUDAVEL, PORCENTAGEM_ELIMINACAO_MACHOS_ALADOS_SAUDAVEIS(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_ALADAS_SAUDAVEIS(idLote));
+				remocaoMosquitosControleNaturalAlados(idLote, INFECTADO, PORCENTAGEM_ELIMINACAO_MACHOS_ALADOS_COM_WOLBACHIA(idLote), PORCENTAGEM_ELIMINACAO_FEMEAS_ALADAS_COM_WOLBACHIA(idLote));
 			}
 		}
 	}
-
-    void remocaoMosquitosControleNaturalOvosSaudaveis(int idLote) {
+	
+	void remocaoMosquitosControleNaturalNaoAlados(int idLote, char fase, char saude, double porcentagemMachos, double porcentagemFemeas) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == OVO)  && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote)){
+			if ((mosquito->fase == fase)  && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote)){
 				if (mosquito->sexo == MACHO)
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
 			}
 		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_OVOS_SAUDAVEIS(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_OVOS_SAUDAVEIS(idLote);
+		quantidadeMachos = quantidadeMachos * porcentagemMachos;
+		quantidadeFemeas = quantidadeFemeas * porcentagemFemeas;
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == OVO)) {
+			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == fase)) {
 				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(i);
@@ -1399,7 +1241,7 @@ private:
 		}
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == OVO)) {
+			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == fase)) {
 				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(i);
@@ -1414,239 +1256,24 @@ private:
 		}
     }
     
-    void remocaoMosquitosControleNaturalOvosWolbachia(int idLote) {
+    void remocaoMosquitosControleNaturalAlados(int idLote, char saude, double porcentagemMachos, double porcentagemFemeas) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == OVO) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote)){
+			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote)){
 				if (mosquito->sexo == MACHO)
 					quantidadeMachos++;
 				else
 					quantidadeFemeas++;
 			}
 		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_OVOS_COM_WOLBACHIA(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_OVOS_COM_WOLBACHIA(idLote);
+		quantidadeMachos = quantidadeMachos * porcentagemMachos;
+		quantidadeFemeas = quantidadeFemeas * porcentagemFemeas;
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == OVO)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeMachosRemovidos++;
-			}
-			if (quantidadeMachosRemovidos == quantidadeMachos)
-				break;
-		}
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == OVO)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeFemeasRemovidas++;
-			}
-			if (quantidadeFemeasRemovidas == quantidadeFemeas)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleNaturalLarvasSaudaveis(int idLote) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == LARVA) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote)){
-				if (mosquito->sexo == MACHO)
-					quantidadeMachos++;
-				else
-					quantidadeFemeas++;
-			}
-		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_LARVAS_SAUDAVEIS(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_LARVAS_SAUDAVEIS(idLote);
-		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == LARVA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeMachosRemovidos++;
-			}
-			if (quantidadeMachosRemovidos == quantidadeMachos)
-				break;
-		}
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == LARVA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeFemeasRemovidas++;
-			}
-			if (quantidadeFemeasRemovidas == quantidadeFemeas)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleNaturalLarvasWolbachia(int idLote) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == LARVA) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote)){
-				if (mosquito->sexo == MACHO)
-					quantidadeMachos++;
-				else
-					quantidadeFemeas++;
-			}
-		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_LARVAS_COM_WOLBACHIA(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_LARVAS_COM_WOLBACHIA(idLote);
-		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == LARVA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeMachosRemovidos++;
-			}
-			if (quantidadeMachosRemovidos == quantidadeMachos)
-				break;
-		}
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == LARVA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeFemeasRemovidas++;
-			}
-			if (quantidadeFemeasRemovidas == quantidadeFemeas)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleNaturalPupasSaudaveis(int idLote) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == PUPA) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote)){
-				if (mosquito->sexo == MACHO)
-					quantidadeMachos++;
-				else
-					quantidadeFemeas++;
-			}
-		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_PUPAS_SAUDAVEIS(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_PUPAS_SAUDAVEIS(idLote);
-		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == PUPA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeMachosRemovidos++;
-			}
-			if (quantidadeMachosRemovidos == quantidadeMachos)
-				break;
-		}
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == PUPA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeFemeasRemovidas++;
-			}
-			if (quantidadeFemeasRemovidas == quantidadeFemeas)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleNaturalPupasWolbachia(int idLote) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == PUPA) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote)){
-				if (mosquito->sexo == MACHO)
-					quantidadeMachos++;
-				else
-					quantidadeFemeas++;
-			}
-		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_PUPAS_COM_WOLBACHIA(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_PUPAS_COM_WOLBACHIA(idLote);
-		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == PUPA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeMachosRemovidos++;
-			}
-			if (quantidadeMachosRemovidos == quantidadeMachos)
-				break;
-		}
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == PUPA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeFemeasRemovidas++;
-			}
-			if (quantidadeFemeasRemovidas == quantidadeFemeas)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleNaturalAtivosSaudaveis(int idLote) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote)){
-				if (mosquito->sexo == MACHO)
-					quantidadeMachos++;
-				else
-					quantidadeFemeas++;
-			}
-		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_ALADOS_SAUDAVEIS(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_ALADAS_SAUDAVEIS(idLote);
-		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
+			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				LISTA_MACHOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(i);
@@ -1657,50 +1284,7 @@ private:
 		}
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == SAUDAVEL) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
-				LISTA_FEMEAS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeFemeasRemovidas++;
-			}
-			if (quantidadeFemeasRemovidas == quantidadeFemeas)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleNaturalAtivosWolbachia(int idLote) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote)){
-				if (mosquito->sexo == MACHO)
-					quantidadeMachos++;
-				else
-					quantidadeFemeas++;
-			}
-		}
-		quantidadeMachos = quantidadeMachos * PORCENTAGEM_ELIMINACAO_MACHOS_ALADOS_COM_WOLBACHIA(idLote);
-		quantidadeFemeas = quantidadeFemeas * PORCENTAGEM_ELIMINACAO_FEMEAS_ALADAS_COM_WOLBACHIA(idLote);
-		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
-				LISTA_MACHOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeMachosRemovidos++;
-			}
-			if (quantidadeMachosRemovidos == quantidadeMachos)
-				break;
-		}
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == INFECTADO) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
+			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				LISTA_FEMEAS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 				mosquito->vida = false;
 				listaMosquitosMortos.insercaoLista(i);
@@ -1740,41 +1324,13 @@ private:
             listaMosquitos->remocaoLista(i->elementoLista);
         }
     }
-
-	void remocaoMosquitosControleQuimicoEMecanicoOvos(int idLote, double percentual) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidade = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == OVO)  && (mosquito->idLoteAtual == idLote)){
-				quantidade++;
-			}
-		}
-		quantidade = quantidade * percentual;
-		int quantidadeRemovidos = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == OVO)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeRemovidos++;
-			}
-			if (quantidadeRemovidos == quantidade)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
     
-    void remocaoMosquitosControleQuimicoEMecanicoLarvas(int idLote, double percentual) {
+    void remocaoMosquitosControleQuimicoEMecanicoNaoAlados(int idLote, double percentual, char fase) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == LARVA)  && (mosquito->idLoteAtual == idLote)){
+			if ((mosquito->fase == fase)  && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
 			}
 		}
@@ -1782,35 +1338,7 @@ private:
 		int quantidadeRemovidos = 0;
 		FOR_MOSQUITO(listaMosquitos, i) {
 			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == LARVA)) {
-				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->vida = false;
-				listaMosquitosMortos.insercaoLista(i);
-				quantidadeRemovidos++;
-			}
-			if (quantidadeRemovidos == quantidade)
-				break;
-		}
-		FORP2_MOSQUITO(listaMosquitosMortos, i) {
-			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
-		}
-    }
-    
-    void remocaoMosquitosControleQuimicoEMecanicoPupas(int idLote, double percentual) {
-		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-		int quantidade = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->fase == PUPA)  && (mosquito->idLoteAtual == idLote)){
-				quantidade++;
-			}
-		}
-		quantidade = quantidade * percentual;
-		int quantidadeRemovidos = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
-			Mosquito* mosquito = i->elementoLista;
-			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == PUPA)) {
+			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == fase)) {
 				Mosquito* mosquito = i->elementoLista;
 				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
 				mosquito->vida = false;
@@ -1830,11 +1358,11 @@ private:
 		FOR_INT(idLote, 0, quantLotes, 1) {
 			if ((LOTE(idLote)->controleQuimicoLarvas != -1) && (LOTE(idLote)->controleQuimicoPupas != -1)) {
 				if  (LOTE(idLote)->controleQuimicoLarvas > 0) {
-					remocaoMosquitosControleQuimicoEMecanicoLarvas(idLote, LOTE(idLote)->controleQuimicoLarvas);
+					remocaoMosquitosControleQuimicoEMecanicoNaoAlados(idLote, LOTE(idLote)->controleQuimicoLarvas, LARVA);
 					LOTE(idLote)->controleQuimicoLarvas -= (1.0 / EFEITO_RESIDUAL_CONTROLE_QUIMICO_LARVAS(idLote));
 				}
 				if  (LOTE(idLote)->controleQuimicoPupas > 0) {
-					remocaoMosquitosControleQuimicoEMecanicoPupas(idLote, LOTE(idLote)->controleQuimicoPupas);
+					remocaoMosquitosControleQuimicoEMecanicoNaoAlados(idLote, LOTE(idLote)->controleQuimicoPupas, PUPA);
 					LOTE(idLote)->controleQuimicoPupas -= (1.0 / EFEITO_RESIDUAL_CONTROLE_QUIMICO_PUPAS(idLote));
 				}
 				if ((FREQUENCIA_CONTROLE_QUIMICO_NAO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_QUIMICO_NAO_ALADOS(idLote)) == 0) && (ciclo != 0)) {
@@ -1848,9 +1376,9 @@ private:
 	void remocaoMosquitosControleMecanicoNaoAlados(int ciclo) {
 		FOR_INT(idLote, 0, quantLotes, 1) {
 			if ((FREQUENCIA_CONTROLE_MECANICO_NAO_ALADOS(idLote) > 0) && ((ciclo % FREQUENCIA_CONTROLE_MECANICO_NAO_ALADOS(idLote)) == 0) && (ciclo != 0) && (LOTE(idLote)->controleMecanicoNaoAlados)) {
-				remocaoMosquitosControleQuimicoEMecanicoOvos(idLote, TAXA_CONTROLE_MECANICO_OVOS(idLote));
-				remocaoMosquitosControleQuimicoEMecanicoLarvas(idLote, TAXA_CONTROLE_MECANICO_LARVAS(idLote));
-				remocaoMosquitosControleQuimicoEMecanicoPupas(idLote, TAXA_CONTROLE_MECANICO_PUPAS(idLote));
+				remocaoMosquitosControleQuimicoEMecanicoNaoAlados(idLote, TAXA_CONTROLE_MECANICO_OVOS(idLote), OVO);
+				remocaoMosquitosControleQuimicoEMecanicoNaoAlados(idLote, TAXA_CONTROLE_MECANICO_LARVAS(idLote), LARVA);
+				remocaoMosquitosControleQuimicoEMecanicoNaoAlados(idLote, TAXA_CONTROLE_MECANICO_PUPAS(idLote), PUPA);
 			}
 		}
 	}
