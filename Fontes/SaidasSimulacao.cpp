@@ -175,7 +175,7 @@ public:
     void saidaHumanosQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_HUMANOS - 1);
         vetorAuxiliar->zero(0);
-        FOR_HUMANO(manipuladorHumanos->listaHumanos, i) {
+        FOR_HUMANO(manipuladorHumanos->listaHumanos->lista, i) {
 			Humano* humano = i->elementoLista;
 			vetorAuxiliar->vetor[0] += 1;
 			switch (humano->saude) {
@@ -311,7 +311,7 @@ public:
     void saidaHumanosLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_HUMANOS - 1);
         vetorAuxiliar->zero(0);
-        FOR_HUMANO(manipuladorHumanos->listaHumanos, i) {
+        FOR_HUMANO(manipuladorHumanos->listaHumanos->lista, i) {
 			Humano* humano = i->elementoLista;
 			if (humano->idLoteAtual == idLote) {
 				vetorAuxiliar->vetor[0] += 1;

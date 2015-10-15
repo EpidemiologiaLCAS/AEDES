@@ -5,11 +5,12 @@
 #include "Humano.cpp"
 #include "Parametros.cpp"
 #include "Quadra.cpp"
+#include "ListaHumanos.cpp"
 
 class ManipuladorHumanos {
 public:
 
-    Lista<Humano*>* listaHumanos;
+    ListaHumanos* listaHumanos;
     int contadorIDs, quantLotes;
     Parametros* parametros;
     Quadra* quadra;
@@ -19,11 +20,10 @@ public:
         this->quantLotes = quantLotes;
         this->quadra = quadra;
         this->parametros = parametros;
-        this->listaHumanos = new Lista<Humano*>();
+        this->listaHumanos = new ListaHumanos();
     }
 
     ~ManipuladorHumanos() {
-		listaHumanos->preDestrutor();
 		delete(listaHumanos);
 	}
 
@@ -66,7 +66,7 @@ public:
     }
     
     void movimentacao(int tipoMovimentacao) {
-        FOR_HUMANO(listaHumanos, i) {
+        FOR_HUMANO(listaHumanos->lista, i) {
 			Humano* humano = i->elementoLista;
             switch (tipoMovimentacao) {
 				case CASA: {
@@ -100,7 +100,7 @@ public:
     }
 
     void conclusaoCiclo() {
-		FOR_HUMANO(listaHumanos, i) {
+		FOR_HUMANO(listaHumanos->lista, i) {
 			Humano* humano = i->elementoLista;
 			if (humano->contagemCiclosPeriodos == 0) {
 				switch (humano->saude) {
@@ -130,7 +130,7 @@ public:
     }
     
     void controleNatural() {
-		FOR_HUMANO(listaHumanos, i) {
+		FOR_HUMANO(listaHumanos->lista, i) {
 			Humano* humano = i->elementoLista;
 			if (humano->saude != REMOVIDO) {
 				if (randomizarPercentual() <= TAXA_CONTROLE_NATURAL_HUMANOS(humano->idLoteAtual)) {
@@ -150,7 +150,7 @@ private:
 				posicaoY = rand() % COLUNAS_LOTE(idLote);
 			} while (LISTA_HUMANOS(idLote, posicaoX, posicaoY).tamanhoLista >= CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote));
 			Humano* humano = new Humano(contadorIDs, (saude == RECUPERADO ? SUSCETIVEL : saude), (saude == RECUPERADO ? 0 : sorotipo), idLote, posicaoX, posicaoY);   
-			listaHumanos->insercaoLista(humano);
+			listaHumanos->lista->insercaoLista(humano);
 			LISTA_HUMANOS(idLote, posicaoX, posicaoY).insercaoLista(humano);
 			contadorIDs++;
 			if (saude == INFECTADO) {
