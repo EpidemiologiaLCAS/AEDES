@@ -133,7 +133,7 @@ public:
     void saidaWolbachiaQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_WOLBACHIA - 1);
         vetorAuxiliar->zero(0);
-        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i) {
 			vetorAuxiliar->vetor[0] += 1;
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->fase == OVO) {
@@ -212,7 +212,7 @@ public:
     void saidaDengueQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_DENGUE - 1);
         vetorAuxiliar->zero(0);
-        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i) {
 			vetorAuxiliar->vetor[0] += 1;
 			Mosquito* mosquito = i->elementoLista;
 			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
@@ -267,7 +267,7 @@ public:
     void saidaWolbachiaLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_WOLBACHIA - 1);
         vetorAuxiliar->zero(0);
-        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->idLoteAtual == idLote) {
 				vetorAuxiliar->vetor[0] += 1;
@@ -350,7 +350,7 @@ public:
     void saidaDengueLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_DENGUE - 1);
         vetorAuxiliar->zero(0);
-        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->idLoteAtual == idLote) {
 				vetorAuxiliar->vetor[0] += 1;
@@ -477,7 +477,7 @@ public:
     }
 
     void saidaMosquitos(int ciclo, int periodo, int subciclo) {
-        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos, i) {
+        FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				if (mosquito->sexo == MACHO) {
