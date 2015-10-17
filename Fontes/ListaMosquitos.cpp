@@ -4,18 +4,18 @@
 #include "Lista.cpp"
 #include "Mosquito.cpp"
 
-class ListaMosquitos : public Lista<Mosquito> {
+class ListaMosquitos: public Lista<Mosquito> {
 public:
 
-    Lista<Mosquito*>* lista;
-   
-    ListaMosquitos() {
+	Lista<Mosquito*>* lista;
+
+	ListaMosquitos() {
 		this->lista = new Lista<Mosquito*>();
-    }
-    
-    ~ListaMosquitos() {
+	}
+
+	~ListaMosquitos() {
 		lista->preDestrutor();
-		delete(lista);
+		delete (lista);
 	}
 
 };

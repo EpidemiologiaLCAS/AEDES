@@ -4,25 +4,27 @@
 class Parametro {
 public:
 
-    double valorMinimo;
-    double valorMaximo;
+	double valorMinimo;
+	double valorMaximo;
 
-    Parametro() {}
+	Parametro() {
+	}
 
-    Parametro(double valorMinimo, double valorMaximo) {
-        this->valorMinimo = valorMinimo;
-        this->valorMaximo = valorMaximo;
-    }
-    
-	~Parametro() {}
+	Parametro(double valorMinimo, double valorMaximo) {
+		this->valorMinimo = valorMinimo;
+		this->valorMaximo = valorMaximo;
+	}
 
-    void mostrar() {
-        cout << "MIN: " << valorMinimo << "\tMAX: " << valorMaximo << endl;
-    }
+	~Parametro() {
+	}
 
-    double random() {
+	void mostrar() {
+		cout << "MIN: " << valorMinimo << "\tMAX: " << valorMaximo << endl;
+	}
+
+	double random() {
 		return randomizarEntreFaixa(valorMinimo, valorMaximo);
-    }
+	}
 
 };
 

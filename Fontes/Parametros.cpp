@@ -9,33 +9,33 @@ class Parametros {
 public:
 
 	int quantLotes;
-    string pastaEntrada;
-    Vetor<Parametro>* pSIM;
-    Vetor<Parametro>* pSMC;
-    
-    Vetor<Parametro>** pACA;
-    Vetor<Parametro>** pAMB;
-    Vetor<Parametro>** pCNA;
-    Vetor<Parametro>** pDEN;
-    Vetor<Parametro>** pGER;
-    Vetor<Parametro>** pINS;
-    Vetor<Parametro>** pMOV;
-    Vetor<Parametro>** pTRA;
+	string pastaEntrada;
+	Vetor<Parametro>* pSIM;
+	Vetor<Parametro>* pSMC;
+
+	Vetor<Parametro>** pACA;
+	Vetor<Parametro>** pAMB;
+	Vetor<Parametro>** pCNA;
+	Vetor<Parametro>** pDEN;
+	Vetor<Parametro>** pGER;
+	Vetor<Parametro>** pINS;
+	Vetor<Parametro>** pMOV;
+	Vetor<Parametro>** pTRA;
 
 	Parametros(string pastaEntrada, int quantLotes) {
-        this->pastaEntrada = pastaEntrada;
-        this->quantLotes = quantLotes;
-        pSIM = lerParametros(QUANTIDADE_PARAMETROS_SIM, "SIM.csv");
-        pSMC = lerParametros(QUANTIDADE_PARAMETROS_SMC, "SMC.csv");
-        pACA = new Vetor<Parametro>*[quantLotes];
-        pAMB = new Vetor<Parametro>*[quantLotes];
-        pCNA = new Vetor<Parametro>*[quantLotes];
-        pDEN = new Vetor<Parametro>*[quantLotes];
-        pGER = new Vetor<Parametro>*[quantLotes];
-        pINS = new Vetor<Parametro>*[quantLotes];
-        pMOV = new Vetor<Parametro>*[quantLotes];
-        pTRA = new Vetor<Parametro>*[quantLotes];
-        for (int i = 0; i < quantLotes; ++i) {
+		this->pastaEntrada = pastaEntrada;
+		this->quantLotes = quantLotes;
+		pSIM = lerParametros(QUANTIDADE_PARAMETROS_SIM, "SIM.csv");
+		pSMC = lerParametros(QUANTIDADE_PARAMETROS_SMC, "SMC.csv");
+		pACA = new Vetor<Parametro>*[quantLotes];
+		pAMB = new Vetor<Parametro>*[quantLotes];
+		pCNA = new Vetor<Parametro>*[quantLotes];
+		pDEN = new Vetor<Parametro>*[quantLotes];
+		pGER = new Vetor<Parametro>*[quantLotes];
+		pINS = new Vetor<Parametro>*[quantLotes];
+		pMOV = new Vetor<Parametro>*[quantLotes];
+		pTRA = new Vetor<Parametro>*[quantLotes];
+		for (int i = 0; i < quantLotes; ++i) {
 			string aux1 = "Lote_";
 			char aux2[TAMANHO_STRINGS_AUXILIARES];
 			sprintf(aux2, "%d", i);
@@ -67,67 +67,70 @@ public:
 			aux4 += "TRA.csv";
 			pTRA[i] = lerParametros(QUANTIDADE_PARAMETROS_TRA, aux4);
 		}
-    }
-    
-    ~Parametros() {
-		delete(pSIM);
-        delete(pSMC);
-        FOR_INT(i, 0, quantLotes, 1) {
-			delete(pACA[i]);
-			delete(pAMB[i]);
-			delete(pCNA[i]);
-			delete(pDEN[i]);
-			delete(pGER[i]);
-			delete(pINS[i]);
-			delete(pMOV[i]);
-			delete(pTRA[i]);
-		}
-		delete[](pACA);
-		delete[](pAMB);
-		delete[](pCNA);
-		delete[](pDEN);
-		delete[](pGER);
-		delete[](pINS);
-		delete[](pMOV);
-		delete[](pTRA);
-    }
+	}
 
-    Vetor<Parametro>* lerParametros(int numeroParametros, string sufixo) {
-        Vetor<Parametro>* vetorParametros = new Vetor<Parametro>(numeroParametros);
-        string aux1 = pastaEntrada;
-        aux1 += sufixo.c_str();
-        ifstream arquivoEntrada;
-        arquivoEntrada.open(aux1.c_str());
-        if (arquivoEntrada.is_open()) {
+	~Parametros() {
+		delete (pSIM);
+		delete (pSMC);
+		FOR_INT(i, 0, quantLotes, 1)
+		{
+			delete (pACA[i]);
+			delete (pAMB[i]);
+			delete (pCNA[i]);
+			delete (pDEN[i]);
+			delete (pGER[i]);
+			delete (pINS[i]);
+			delete (pMOV[i]);
+			delete (pTRA[i]);
+		}
+		delete[] (pACA);
+		delete[] (pAMB);
+		delete[] (pCNA);
+		delete[] (pDEN);
+		delete[] (pGER);
+		delete[] (pINS);
+		delete[] (pMOV);
+		delete[] (pTRA);
+	}
+
+	Vetor<Parametro>* lerParametros(int numeroParametros, string sufixo) {
+		Vetor < Parametro > *vetorParametros = new Vetor<Parametro>(numeroParametros);
+		string aux1 = pastaEntrada;
+		aux1 += sufixo.c_str();
+		ifstream arquivoEntrada;
+		arquivoEntrada.open(aux1.c_str());
+		if (arquivoEntrada.is_open()) {
 			stringstream streamEntrada;
 			streamEntrada << string(static_cast<stringstream const&>(stringstream() << arquivoEntrada.rdbuf()).str());
-            arquivoEntrada.close();
-            string cabecalho;
-            getline(streamEntrada, cabecalho);
-            int i = 0;
-            FOR_INT(j, 0, numeroParametros, 1) {
-                string codigo;
-                double valorMinimo;
-                double valorMaximo;
-                string comentario;
-                char caracter;
-                FOR_INT(j, 0, 6, 1) {
+			arquivoEntrada.close();
+			string cabecalho;
+			getline(streamEntrada, cabecalho);
+			int i = 0;
+			FOR_INT(j, 0, numeroParametros, 1)
+			{
+				string codigo;
+				double valorMinimo;
+				double valorMaximo;
+				string comentario;
+				char caracter;
+				FOR_INT(j, 0, 6, 1)
+				{
 					streamEntrada >> caracter;
 					codigo += caracter;
 				}
-                streamEntrada >> caracter >> valorMinimo >> caracter >> valorMaximo;
-                if (valorMinimo > valorMaximo) {
+				streamEntrada >> caracter >> valorMinimo >> caracter >> valorMaximo;
+				if (valorMinimo > valorMaximo) {
 					cout << "Erro: valor minimo maior que valor maximo no parametro: " << sufixo[0] << sufixo[1] << sufixo[2] << " " << i << endl;
 				}
-                getline(streamEntrada, comentario);
-                vetorParametros->vetor[i] = Parametro(valorMinimo, valorMaximo);
-                i++;
-            }
-        } else {
-            cout << "Arquivo " << aux1 << " nao foi aberto!" << endl;
-        }
-        return vetorParametros;
-    }
+				getline(streamEntrada, comentario);
+				vetorParametros->vetor[i] = Parametro(valorMinimo, valorMaximo);
+				i++;
+			}
+		} else {
+			cout << "Arquivo " << aux1 << " nao foi aberto!" << endl;
+		}
+		return vetorParametros;
+	}
 
 };
 

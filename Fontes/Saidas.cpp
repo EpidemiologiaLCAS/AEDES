@@ -6,23 +6,24 @@ public:
 
 	bool validade;
 	int quantLotes;
-    stringstream mosquitosMachos;
-    stringstream mosquitosFemeas;
-    stringstream* sdl;
-    stringstream* quantidadesDengueLote;
-    stringstream* quantidadesWolbachiaLote;
-    stringstream* quantidadesHumanosLote;
-    stringstream quantidadesDengueQuadra;
-    stringstream quantidadesWolbachiaQuadra;
-    stringstream quantidadesHumanosQuadra;
+	stringstream mosquitosMachos;
+	stringstream mosquitosFemeas;
+	stringstream* sdl;
+	stringstream* quantidadesDengueLote;
+	stringstream* quantidadesWolbachiaLote;
+	stringstream* quantidadesHumanosLote;
+	stringstream quantidadesDengueQuadra;
+	stringstream quantidadesWolbachiaQuadra;
+	stringstream quantidadesHumanosQuadra;
 
-	Saidas() {}
-	
+	Saidas() {
+	}
+
 	void init(int quantLotes) {
 		this->quantLotes = quantLotes;
 		zero();
 	}
-	
+
 	void zero() {
 		validade = false;
 		mosquitosMachos.str(std::string());
@@ -31,7 +32,8 @@ public:
 		quantidadesDengueLote = new stringstream[quantLotes]();
 		quantidadesWolbachiaLote = new stringstream[quantLotes]();
 		quantidadesHumanosLote = new stringstream[quantLotes]();
-		FOR_INT(i, 0, quantLotes, 1) {
+		FOR_INT(i, 0, quantLotes, 1)
+		{
 			sdl[i].str(std::string());
 			quantidadesDengueLote[i].str(std::string());
 			quantidadesWolbachiaLote[i].str(std::string());
@@ -41,12 +43,12 @@ public:
 		quantidadesWolbachiaQuadra.str(std::string());
 		quantidadesHumanosQuadra.str(std::string());
 	}
-	
+
 	~Saidas() {
-		delete[](sdl);
-		delete[](quantidadesDengueLote);
-		delete[](quantidadesWolbachiaLote);
-		delete[](quantidadesHumanosLote);
+		delete[] (sdl);
+		delete[] (quantidadesDengueLote);
+		delete[] (quantidadesWolbachiaLote);
+		delete[] (quantidadesHumanosLote);
 	}
 
 };

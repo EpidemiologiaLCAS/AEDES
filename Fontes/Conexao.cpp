@@ -8,17 +8,19 @@ using namespace std;
 class Conexao {
 public:
 
-    Posicao destino;
+	Posicao destino;
 	int idLoteDestino;
 
-    Conexao() {}
+	Conexao() {
+	}
 
-    Conexao(Posicao destino, int idLoteDestino) {
+	Conexao(Posicao destino, int idLoteDestino) {
 		this->destino = destino;
 		this->idLoteDestino = idLoteDestino;
-    }
+	}
 
-    ~Conexao() {}
+	~Conexao() {
+	}
 
 };
 

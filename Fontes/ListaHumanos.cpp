@@ -4,18 +4,18 @@
 #include "Lista.cpp"
 #include "Humano.cpp"
 
-class ListaHumanos : public Lista<Humano> {
+class ListaHumanos: public Lista<Humano> {
 public:
 
-    Lista<Humano*>* lista;
-   
-    ListaHumanos() {
+	Lista<Humano*>* lista;
+
+	ListaHumanos() {
 		this->lista = new Lista<Humano*>();
-    }
-    
-    ~ListaHumanos() {
+	}
+
+	~ListaHumanos() {
 		lista->preDestrutor();
-		delete(lista);
+		delete (lista);
 	}
 
 };

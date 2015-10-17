@@ -12,23 +12,23 @@
 class ElementoLote {
 public:
 
-    Lista<Mosquito*> listaMosquitosMachos;
-    Lista<Mosquito*> listaMosquitosFemeas;
-    Lista<Mosquito*> listaOvos;
-    Lista<Humano*> listaHumanos;
-    Lista<Conexao*> listaVizinhancaMosquitos;
-    Lista<Conexao*> listaVizinhancaHumanos;
-    Lista<Conexao*> listaAreaPercepcaoHumanos;
-    Lista<Conexao*> listaAreaPercepcaoMosquitosMachos;
-    Lista<Conexao*> listaAreaPercepcaoCriadouros;
-    CoordenadaGeo coordenadaGeo;
-    bool criadouro;
+	Lista<Mosquito*> listaMosquitosMachos;
+	Lista<Mosquito*> listaMosquitosFemeas;
+	Lista<Mosquito*> listaOvos;
+	Lista<Humano*> listaHumanos;
+	Lista<Conexao*> listaVizinhancaMosquitos;
+	Lista<Conexao*> listaVizinhancaHumanos;
+	Lista<Conexao*> listaAreaPercepcaoHumanos;
+	Lista<Conexao*> listaAreaPercepcaoMosquitosMachos;
+	Lista<Conexao*> listaAreaPercepcaoCriadouros;
+	CoordenadaGeo coordenadaGeo;
+	bool criadouro;
 
-    ElementoLote() {
+	ElementoLote() {
 		this->criadouro = false;
 	}
 
-    ~ElementoLote() {
+	~ElementoLote() {
 		listaVizinhancaMosquitos.preDestrutor();
 		listaVizinhancaHumanos.preDestrutor();
 		listaAreaPercepcaoHumanos.preDestrutor();
@@ -36,11 +36,11 @@ public:
 		listaAreaPercepcaoCriadouros.preDestrutor();
 	}
 
-    int quantidadeTotalMosquitosPosicao() {
-        return (listaMosquitosMachos.tamanhoLista + listaMosquitosFemeas.tamanhoLista);
-    }
-    
-    bool humanoSuscetivel() {
+	int quantidadeTotalMosquitosPosicao() {
+		return (listaMosquitosMachos.tamanhoLista + listaMosquitosFemeas.tamanhoLista);
+	}
+
+	bool humanoSuscetivel() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
 			Humano* humano = i->elementoLista;
@@ -51,7 +51,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool humanoLatente() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -63,7 +63,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool humanoInfectante() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -75,7 +75,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool humanoImunizado() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -87,7 +87,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool humanoRecuperado() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -99,7 +99,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool femeaSuscetivel() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
@@ -114,7 +114,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool femeaLatente() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
@@ -129,7 +129,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool femeaInfectante() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
@@ -144,7 +144,7 @@ public:
 		}
 		return false;
 	}
-	
+
 	bool ovos() {
 		if (listaOvos.tamanhoLista > 0) {
 			return true;

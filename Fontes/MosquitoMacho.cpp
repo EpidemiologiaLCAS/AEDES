@@ -3,7 +3,7 @@
 
 #include "Mosquito.cpp"
 
-class MosquitoMacho : public Mosquito {
+class MosquitoMacho: public Mosquito {
 public:
 
 	int contadorAcasalamentos;
@@ -17,13 +17,15 @@ public:
 		this->idLoteAtual = idLoteAtual;
 		this->posicaoAtual.x = x;
 		this->posicaoAtual.y = y;
-        this->vida = true;
-        this->contadorAcasalamentos = 0;
+		this->vida = true;
+		this->contadorAcasalamentos = 0;
 	}
-	
-	MosquitoMacho() {}
-	
-	~MosquitoMacho() {}
+
+	MosquitoMacho() {
+	}
+
+	~MosquitoMacho() {
+	}
 
 };
 
