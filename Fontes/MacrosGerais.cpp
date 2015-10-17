@@ -74,8 +74,6 @@
 #define POSICAO_LOTE(idLote, x, y) LOTE(idLote)->lote->matriz[x][y]
 #define LIMITES_LOTE(idLote, x, y) ((x < LINHAS_LOTE(idLote)) && (x >= 0) && (y < COLUNAS_LOTE(idLote)) && (y >= 0) && (POSICAO_LOTE(idLote, x, y).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
 #define LIMITES_LOTE_P(idLote, x, y, px, py) (((x + px) < LINHAS_LOTE(idLote)) && ((x + px) >= 0) && ((y + py) < COLUNAS_LOTE(idLote)) && ((y + py) >= 0) && (POSICAO_LOTE(idLote, x + px, y + py).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
-#define VIZINHANCA_MOORE(var1, var2, x, y, ordem) FOR_INT(var1, x - ordem, x + ordem + 1, 1) { \
-												 FOR_INT(var2, y - ordem, y + ordem + 1, 1)
 
 double randomizarPercentual() {
 	double num = MAX_RAND * (rand() % (MAX_RAND + 1)) + (rand() % MAX_RAND);

@@ -418,8 +418,9 @@ private:
 			CoordenadaGeo coordenadaGeoDestino = POSICAO_LOTE(femea->idLoteAtual, femea->posicaoAtual.x, femea->posicaoAtual.y).coordenadaGeo;
 			double menorDistancia = POSICAO_LOTE(macho->idLoteAtual, macho->posicaoAtual.x, macho->posicaoAtual.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 			int xEscolhido = femea->posicaoAtual.x;
-			int yEscolhido = femea->posicaoAtual.y;				
-			VIZINHANCA_MOORE(i, j, femea->posicaoAtual.x, femea->posicaoAtual.y, 1) {
+			int yEscolhido = femea->posicaoAtual.y;
+			FOR_INT(i, femea->posicaoAtual.x - 1, femea->posicaoAtual.x + 1 + 1, 1) {
+					 FOR_INT(j, femea->posicaoAtual.y - 1, femea->posicaoAtual.y + 1 + 1, 1) {				
 				if (LIMITES_LOTE(femea->idLoteAtual, i, j)) {
 					distanciaCalculada = POSICAO_LOTE(femea->idLoteAtual, i, j).coordenadaGeo.distancia(coordenadaGeoDestino);	
 					if (distanciaCalculada < menorDistancia) {
@@ -438,7 +439,8 @@ private:
 
     void buscaMacho(Mosquito* femea) {
 		Lista<Conexao> lista;
-		VIZINHANCA_MOORE(i, j, femea->posicaoAtual.x, femea->posicaoAtual.y, RAIO_BUSCA_MACHO(femea->idLoteAtual)) {
+		FOR_INT(i, femea->posicaoAtual.x - RAIO_BUSCA_MACHO(femea->idLoteAtual), femea->posicaoAtual.x + RAIO_BUSCA_MACHO(femea->idLoteAtual) + 1, 1) {
+					 FOR_INT(j, femea->posicaoAtual.y - RAIO_BUSCA_MACHO(femea->idLoteAtual), femea->posicaoAtual.y + RAIO_BUSCA_MACHO(femea->idLoteAtual) + 1, 1) {
 			if (LIMITES_LOTE(femea->idLoteAtual, i, j) && (LISTA_MACHOS(femea->idLoteAtual, i, j).tamanhoLista > 0)) {
 				lista.insercaoLista(Conexao(Posicao(i, j), femea->idLoteAtual));
 			}
@@ -565,7 +567,8 @@ private:
 			}
 		} else {
 			Lista<Conexao> lista;
-			VIZINHANCA_MOORE(i, j, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, 1) {
+			FOR_INT(i, mosquito->posicaoAtual.x - 1, mosquito->posicaoAtual.x + 1 + 1, 1) {
+					 FOR_INT(j, mosquito->posicaoAtual.y - 1, mosquito->posicaoAtual.y + 1 + 1, 1) {
 				if (LIMITES_LOTE(mosquito->idLoteAtual, i, j)) {
 					lista.insercaoLista(Conexao(Posicao(i, j), mosquito->idLoteAtual));
 				}
@@ -665,7 +668,8 @@ private:
     Humano* buscaHumano(Mosquito* mosquito, int ordemVizinhancaBusca) {
         Lista<Humano*> lista;
         Humano* retorno = NULL;
-        VIZINHANCA_MOORE(i, j, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, ordemVizinhancaBusca) {
+	FOR_INT(i, mosquito->posicaoAtual.x - ordemVizinhancaBusca, mosquito->posicaoAtual.x + ordemVizinhancaBusca + 1, 1) {
+					 FOR_INT(j, mosquito->posicaoAtual.y - ordemVizinhancaBusca, mosquito->posicaoAtual.y + ordemVizinhancaBusca + 1, 1) {
 			if (LIMITES_LOTE(mosquito->idLoteAtual, i, j) && (LISTA_HUMANOS(mosquito->idLoteAtual, i, j).tamanhoLista > 0)) {
 				FOR2_HUMANO(LISTA_HUMANOS(mosquito->idLoteAtual, i, j), k) {
 					Humano* humano = k->elementoLista;
@@ -861,7 +865,8 @@ private:
 						double menorDistancia = POSICAO_LOTE(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).coordenadaGeo.distancia(coordenadaGeoDestino);
 						int xEscolhido = mosquito->posicaoAtual.x;
 						int yEscolhido = mosquito->posicaoAtual.y;	
-						VIZINHANCA_MOORE(i, j, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, raioVizinhancaBusca) {		
+						FOR_INT(i, mosquito->posicaoAtual.x - raioVizinhancaBusca, mosquito->posicaoAtual.x + raioVizinhancaBusca + 1, 1) {
+					 FOR_INT(j, mosquito->posicaoAtual.y - raioVizinhancaBusca, mosquito->posicaoAtual.y + raioVizinhancaBusca + 1, 1) {	
 							if (LIMITES_LOTE(mosquito->idLoteAtual, i, j)) {
 								distanciaCalculada = POSICAO_LOTE(mosquito->idLoteAtual, i, j).coordenadaGeo.distancia(coordenadaGeoDestino);	
 								if (distanciaCalculada < menorDistancia) {
