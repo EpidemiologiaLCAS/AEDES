@@ -8,11 +8,12 @@
 #include "MosquitoFemea.cpp"
 #include "Parametros.cpp"
 #include "Quadra.cpp"
+#include "ListaMosquitos.cpp"
 
 class ManipuladorMosquitos {
 public:
 
-	Lista<Mosquito*>* listaMosquitos;
+	ListaMosquitos* listaMosquitos;
     int contadorAcasalamentosCiclo, contadorAcasalamentosTotal, contadorIDs, quantLotes;
     Parametros* parametros;
     Quadra* quadra;
@@ -21,7 +22,7 @@ public:
         this->parametros = parametros;
         this->quadra = quadra;
         this->quantLotes = quantLotes;
-        this->listaMosquitos = new Lista<Mosquito*>();
+        this->listaMosquitos = new ListaMosquitos();
         this->contadorAcasalamentosCiclo = 0;
         this->contadorAcasalamentosTotal = 0;       
 		this->contadorIDs = 0;
@@ -29,7 +30,6 @@ public:
     }
 
     ~ManipuladorMosquitos() {
-		listaMosquitos->preDestrutor();
 		delete(listaMosquitos);
 	}
     
@@ -45,7 +45,7 @@ public:
 		} else {
 			mosquito = new MosquitoFemea(id, saudeWolbachia, saudeDengue, sorotipo, fase, idade, idLote, lx, ly);
 		}
-		listaMosquitos->insercaoLista(mosquito);
+		listaMosquitos->lista->insercaoLista(mosquito);
         switch (fase) {
            case OVO: {
 			   LISTA_OVOS(idLote, lx, ly).insercaoLista(mosquito);
@@ -162,7 +162,7 @@ public:
     }
 
     void movimentacaoDiurna() {
-        FOR_MOSQUITO(listaMosquitos, i) {
+        FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
             if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->vida)) {
                 movimentacao(mosquito);
@@ -174,14 +174,14 @@ public:
 		FOR_INT(idLote, 0, quantLotes, 1) {
 			int totalMosquitos = 0;
 			Lista<Mosquito*> lista;
-			FOR_MOSQUITO(listaMosquitos, i) {
+			FOR_MOSQUITO(listaMosquitos->lista, i) {
 				Mosquito* mosquito = i->elementoLista;
 				if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->idLoteAtual == idLote))
 					++totalMosquitos;
 			}
 			int quantidadeMosquitosMovimentacao = totalMosquitos * PORCENTAGEM_MOVIMENTACAO_NOTURNA_MOSQUITOS(idLote);
 			while (quantidadeMosquitosMovimentacao != 0) {
-				FOR_MOSQUITO(listaMosquitos, i) {
+				FOR_MOSQUITO(listaMosquitos->lista, i) {
 					Mosquito* mosquito = i->elementoLista;
 					if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->idLoteAtual == idLote)) {
 						if (randomizarPercentual() <= 0.5) {
@@ -203,7 +203,7 @@ public:
     }
 
     void voosLevy() {
-        FOR_MOSQUITO(listaMosquitos, i) {
+        FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->sexo == FEMEA) {
 				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
@@ -217,7 +217,7 @@ public:
     }
 
     void geracao() {
-        FOR_MOSQUITO(listaMosquitos, i) {
+        FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
             if (mosquito->sexo == FEMEA) {
 				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
@@ -273,7 +273,7 @@ public:
     }
 
     void conclusaoCiclo() {
-        FOR_MOSQUITO(listaMosquitos, i) {
+        FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
             mosquito->idade++;
             if (mosquito->sexo == FEMEA) {
@@ -920,13 +920,13 @@ private:
         quantidadeFemeas = (int) (quantidade - quantidadeMachos);
         FOR_INT(indice, 0, quantidadeFemeas, 1) {
             MosquitoFemea* mosquitoFemea = new MosquitoFemea(contadorIDs, saudeOvo, SAUDAVEL, 0, OVO, 0, mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y);
-            mosquitoNovo = listaMosquitos->insercaoLista(mosquitoFemea);            
+            mosquitoNovo = listaMosquitos->lista->insercaoLista(mosquitoFemea);            
             LISTA_OVOS(mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y).insercaoLista(mosquitoNovo);
             contadorIDs++;
         }
         FOR_INT(indice, 0, quantidadeMachos, 1) {
             MosquitoMacho* mosquitoMacho = new MosquitoMacho(contadorIDs, saudeOvo, OVO, 0, mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y);
-            mosquitoNovo = listaMosquitos->insercaoLista(mosquitoMacho);
+            mosquitoNovo = listaMosquitos->lista->insercaoLista(mosquitoMacho);
             LISTA_OVOS(mosquitoMae->idLoteAtual, mosquitoMae->posicaoAtual.x, mosquitoMae->posicaoAtual.y).insercaoLista(mosquitoNovo);
             contadorIDs++;
         }
@@ -965,7 +965,7 @@ private:
 			break;
         }
     }
-    
+
     void efetivacaoTransformacaoNaoAlados(Lista<Mosquito*>* lista, int transforma, int naoTransforma, char sexo, char fase) {
         FOR_MOSQUITO(lista, i) {
             Mosquito* mosquito = i->elementoLista;
@@ -1019,7 +1019,7 @@ private:
 		Lista<Mosquito*> listaMachosWolbachia;
 		Lista<Mosquito*> listaFemeasSaudaveis;
 		Lista<Mosquito*> listaFemeasWolbachia;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->idade > maxIdade) && (mosquito->fase == faseAtual) && (mosquito->idLoteAtual == idLote) && (mosquito->vida)) {
 				if (mosquito->sexo == MACHO) {
@@ -1100,7 +1100,7 @@ private:
         int transformadosSaudaveis = 0, naoTransformadosSaudaveis = 0, transformadosInfectados = 0, naoTransformadosInfectados = 0;
         switch (sexo) {
 			case MACHO: {
-				FOR_MOSQUITO(listaMosquitos, i) {
+				FOR_MOSQUITO(listaMosquitos->lista, i) {
 					Mosquito* mosquito = i->elementoLista;
 					if (mosquito->sexo == MACHO) {
 						MosquitoMacho* mosquitoMacho = (MosquitoMacho*) (mosquito);
@@ -1125,7 +1125,7 @@ private:
 			}
 			break;
 			case FEMEA: {
-				FOR_MOSQUITO(listaMosquitos, i) {
+				FOR_MOSQUITO(listaMosquitos->lista, i) {
 					Mosquito* mosquito = i->elementoLista;
 					if (mosquito->sexo == FEMEA) {
 						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
@@ -1156,7 +1156,7 @@ private:
 		FOR_INT(idLote, 0, quantLotes, 1) {
 			int naoTransformaSaudaveis, transformaSaudaveis, naoTransformaWolbachia, transformaWolbachia;
 			int contadorSaudaveis = 0, contadorWolbachia = 0;
-			FOR_MOSQUITO(listaMosquitos, i) {
+			FOR_MOSQUITO(listaMosquitos->lista, i) {
 				Mosquito* mosquito = i->elementoLista;
 				if (mosquito->sexo == MACHO) {
 					MosquitoMacho* mosquitoMacho = (MosquitoMacho*) (mosquito);
@@ -1176,7 +1176,7 @@ private:
 				testeTransformacaoAlados(MACHO, transformaSaudaveis, naoTransformaSaudaveis, transformaWolbachia, naoTransformaWolbachia);
 				contadorSaudaveis = 0, contadorWolbachia = 0;
 			}
-			FOR_MOSQUITO(listaMosquitos, i) {
+			FOR_MOSQUITO(listaMosquitos->lista, i) {
 				Mosquito* mosquito = i->elementoLista;
 				if (mosquito->sexo == FEMEA) {
 					MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (mosquito);
@@ -1216,7 +1216,7 @@ private:
 	void remocaoMosquitosControleNaturalNaoAlados(int idLote, char fase, char saude, double porcentagemMachos, double porcentagemFemeas) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->fase == fase)  && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote)){
 				if (mosquito->sexo == MACHO)
@@ -1228,7 +1228,7 @@ private:
 		quantidadeMachos = quantidadeMachos * porcentagemMachos;
 		quantidadeFemeas = quantidadeFemeas * porcentagemFemeas;
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == fase)) {
 				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
@@ -1239,7 +1239,7 @@ private:
 			if (quantidadeMachosRemovidos == quantidadeMachos)
 				break;
 		}
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && (mosquito->fase == fase)) {
 				LISTA_OVOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
@@ -1252,14 +1252,14 @@ private:
 		}
 		FORP2_MOSQUITO(listaMosquitosMortos, i) {
 			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
+			listaMosquitos->lista->remocaoLista(i->elementoLista);
 		}
     }
     
     void remocaoMosquitosControleNaturalAlados(int idLote, char saude, double porcentagemMachos, double porcentagemFemeas) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote)){
 				if (mosquito->sexo == MACHO)
@@ -1271,7 +1271,7 @@ private:
 		quantidadeMachos = quantidadeMachos * porcentagemMachos;
 		quantidadeFemeas = quantidadeFemeas * porcentagemFemeas;
 		int quantidadeMachosRemovidos = 0, quantidadeFemeasRemovidas = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->sexo == MACHO) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				LISTA_MACHOS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
@@ -1282,7 +1282,7 @@ private:
 			if (quantidadeMachosRemovidos == quantidadeMachos)
 				break;
 		}
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->sexo == FEMEA) && (mosquito->saudeWolbachia == saude) && (mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				LISTA_FEMEAS(idLote, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
@@ -1295,13 +1295,13 @@ private:
 		}
 		FORP2_MOSQUITO(listaMosquitosMortos, i) {
 			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
+			listaMosquitos->lista->remocaoLista(i->elementoLista);
 		}
     }
 
     void remocaoMosquitosIdade() {
         Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
-        FOR_MOSQUITO(listaMosquitos, i) {
+        FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
             if (mosquito->vida == false) {
                 listaMosquitosMortos.insercaoLista(i);
@@ -1321,14 +1321,14 @@ private:
         }
         FORP2_MOSQUITO(listaMosquitosMortos, i) {
 			delete(i->elementoLista->elementoLista);
-            listaMosquitos->remocaoLista(i->elementoLista);
+            listaMosquitos->lista->remocaoLista(i->elementoLista);
         }
     }
-    
+
     void remocaoMosquitosControleQuimicoEMecanicoNaoAlados(int idLote, double percentual, char fase) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->fase == fase)  && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
@@ -1336,7 +1336,7 @@ private:
 		}
 		quantidade = quantidade * percentual;
 		int quantidadeRemovidos = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->idLoteAtual == idLote) && (mosquito->fase == fase)) {
 				Mosquito* mosquito = i->elementoLista;
@@ -1350,7 +1350,7 @@ private:
 		}
 		FORP2_MOSQUITO(listaMosquitosMortos, i) {
 			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
+			listaMosquitos->lista->remocaoLista(i->elementoLista);
 		}
     }
 	
@@ -1386,7 +1386,7 @@ private:
 	void remocaoMosquitosControleQuimicoAlados(int idLote, double percentual) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE)) && (mosquito->idLoteAtual == idLote)){
 				quantidade++;
@@ -1394,7 +1394,7 @@ private:
 		}
 		quantidade = quantidade * percentual;
 		int quantidadeRemovidos = 0;
-		FOR_MOSQUITO(listaMosquitos, i) {
+		FOR_MOSQUITO(listaMosquitos->lista, i) {
 			Mosquito* mosquito = i->elementoLista;
 			if ((mosquito->idLoteAtual == idLote) && ((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				if (mosquito->sexo == MACHO) {
@@ -1413,7 +1413,7 @@ private:
 		}
 		FORP2_MOSQUITO(listaMosquitosMortos, i) {
 			delete(i->elementoLista->elementoLista);
-			listaMosquitos->remocaoLista(i->elementoLista);
+			listaMosquitos->lista->remocaoLista(i->elementoLista);
 		}
     }
 
