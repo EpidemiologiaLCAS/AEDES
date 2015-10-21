@@ -1,11 +1,12 @@
 #ifndef _VETOR_
 #define _VETOR_
 
+// Classe que representa um vetor genérico
 template<class T> class Vetor {
 public:
 
-	T* vetor;
-	int tamanhoVetor;
+	T* vetor; // vetor
+	int tamanhoVetor; // número máximo de elementos no vetor
 
 	Vetor(int tamanhoVetor) {
 		this->tamanhoVetor = tamanhoVetor;

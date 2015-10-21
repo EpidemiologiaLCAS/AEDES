@@ -9,20 +9,21 @@
 #include "Conexao.cpp"
 #include "CoordenadaGeo.cpp"
 
+// Classe que representa uma posição de um lote
 class ElementoLote {
 public:
 
-	Lista<Mosquito*> listaMosquitosMachos;
-	Lista<Mosquito*> listaMosquitosFemeas;
-	Lista<Mosquito*> listaOvos;
-	Lista<Humano*> listaHumanos;
-	Lista<Conexao*> listaVizinhancaMosquitos;
-	Lista<Conexao*> listaVizinhancaHumanos;
-	Lista<Conexao*> listaAreaPercepcaoHumanos;
-	Lista<Conexao*> listaAreaPercepcaoMosquitosMachos;
-	Lista<Conexao*> listaAreaPercepcaoCriadouros;
-	CoordenadaGeo coordenadaGeo;
-	bool criadouro;
+	Lista<Mosquito*> listaMosquitosMachos; // agentes mosquitos machos na posição
+	Lista<Mosquito*> listaMosquitosFemeas; // agentes mosquitos fêmeas na posição
+	Lista<Mosquito*> listaOvos; // agentes ovos na posição
+	Lista<Humano*> listaHumanos; // agentes humanos na posição
+	Lista<Conexao*> listaVizinhancaMosquitos; // vizinhança para agentes mosquitos da posição
+	Lista<Conexao*> listaVizinhancaHumanos; // vizinhança para agentes humanos da posição
+	Lista<Conexao*> listaAreaPercepcaoHumanos; // área de percepção de agentes humanos da posição
+	Lista<Conexao*> listaAreaPercepcaoMosquitosMachos; // área de percepção de agentes mosquitos machos da posição
+	Lista<Conexao*> listaAreaPercepcaoCriadouros; // área de percepção de criadouros da posição
+	CoordenadaGeo coordenadaGeo; // coordenada georeferenciada da posição
+	bool criadouro; // presença de criadouro na posição
 
 	ElementoLote() {
 		this->criadouro = false;
@@ -36,10 +37,12 @@ public:
 		listaAreaPercepcaoCriadouros.preDestrutor();
 	}
 
+	// Retorna a quantidade total de mosquitos na posição
 	int quantidadeTotalMosquitosPosicao() {
 		return (listaMosquitosMachos.tamanhoLista + listaMosquitosFemeas.tamanhoLista);
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente humano suscetível na posição
 	bool humanoSuscetivel() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -51,7 +54,7 @@ public:
 		}
 		return false;
 	}
-
+	// Retorna verdadeiro se existe pelo menos um agente humano latente na posição
 	bool humanoLatente() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -64,6 +67,7 @@ public:
 		return false;
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente humano infectante na posição
 	bool humanoInfectante() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -76,6 +80,7 @@ public:
 		return false;
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente humano imunizado na posição
 	bool humanoImunizado() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -88,6 +93,7 @@ public:
 		return false;
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente humano recuperado na posição
 	bool humanoRecuperado() {
 		ElementoLista<Humano*>* i = listaHumanos.cabecaLista;
 		while (i != NULL) {
@@ -100,6 +106,7 @@ public:
 		return false;
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente mosquito fêmea suscetível na posição
 	bool femeaSuscetivel() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
@@ -115,6 +122,7 @@ public:
 		return false;
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente mosquito fêmea latente na posição
 	bool femeaLatente() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
@@ -129,7 +137,8 @@ public:
 		}
 		return false;
 	}
-
+	
+	// Retorna verdadeiro se existe pelo menos um agente mosquito fêmea infectante na posição
 	bool femeaInfectante() {
 		ElementoLista<Mosquito*>* i = listaMosquitosFemeas.cabecaLista;
 		while (i != NULL) {
@@ -145,6 +154,7 @@ public:
 		return false;
 	}
 
+	// Retorna verdadeiro se existe pelo menos um agente mosquito não alado na posição
 	bool ovos() {
 		if (listaOvos.tamanhoLista > 0) {
 			return true;

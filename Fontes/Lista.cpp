@@ -3,12 +3,13 @@
 
 #include "ElementoLista.cpp"
 
+// Classe que representa uma lista de elementos genéricos
 template<class T> class Lista {
 public:
 
-	ElementoLista<T>* cabecaLista;
-	ElementoLista<T>* caudaLista;
-	int tamanhoLista;
+	ElementoLista<T>* cabecaLista; // cabeça da lista
+	ElementoLista<T>* caudaLista; // cauda da lista
+	int tamanhoLista; // quantidade de elementos na lista
 
 	Lista() {
 		this->cabecaLista = NULL;
@@ -16,6 +17,7 @@ public:
 		this->tamanhoLista = 0;
 	}
 
+	// Libera os elementos da lista caso forem ponteiros
 	void preDestrutor() {
 		for (ElementoLista<T>* i = cabecaLista; i != NULL; i = i->proximoLista) {
 			delete (i->elementoLista);
@@ -35,6 +37,7 @@ public:
 		tamanhoLista = 0;
 	}
 
+	// Insere um novo elemento na lista
 	T insercaoLista(T novo) {
 		ElementoLista<T>* novoElemento = new ElementoLista<T>(novo);
 		if (cabecaLista == NULL) {
@@ -52,6 +55,7 @@ public:
 		return novoElemento->elementoLista;
 	}
 
+	// Remove um elemento da lista
 	void remocaoLista(ElementoLista<T>* elemento) {
 		if (elemento->proximoLista != NULL) {
 			if (elemento->anteriorLista == NULL) {
@@ -81,6 +85,7 @@ public:
 		return;
 	}
 
+	// Busca e remove um elemento da lista
 	bool buscaRemocaoLista(T elemento) {
 		ElementoLista<T>* i = cabecaLista;
 		while (i != NULL) {
@@ -93,6 +98,7 @@ public:
 		return false;
 	}
 
+	// Verifica se um elemento está na lista
 	bool buscaLista(T elemento) {
 		ElementoLista<T>* i = cabecaLista;
 		while (i != NULL) {
@@ -103,6 +109,7 @@ public:
 		return false;
 	}
 
+	// Retorna um elemento da lista pela sua posição
 	ElementoLista<T>* buscaPosicao(int posicao) {
 		int contador = 0;
 		ElementoLista<T>* retorno = cabecaLista;
@@ -113,6 +120,7 @@ public:
 		return retorno;
 	}
 
+	// Mostra a lista
 	void exibicaoLista() {
 		for (ElementoLista<T>* i = cabecaLista; i != NULL; i = i->proximoLista)
 			cout << i->elementoLista << " ";

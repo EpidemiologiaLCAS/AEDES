@@ -10,13 +10,17 @@
 #include "Quadra.cpp"
 #include "ListaMosquitos.cpp"
 
+// Classe que contém métodos para a manipulação de agentes mosquitos
 class ManipuladorMosquitos {
 public:
 
-	ListaMosquitos* listaMosquitos;
-	int contadorAcasalamentosCiclo, contadorAcasalamentosTotal, contadorIDs, quantLotes;
-	Parametros* parametros;
-	Quadra* quadra;
+	ListaMosquitos* listaMosquitos; // lista de mosquitos
+	int contadorAcasalamentosCiclo; // contador de acasalamentos para cada ciclo
+	int contadorAcasalamentosTotal; // contador de acasalamentos geral
+	int contadorIDs; // contador de ids para mosquitos
+	int quantLotes; // quantidade de lotes
+	Parametros* parametros; // parâmetros
+	Quadra* quadra; // quadra
 
 	ManipuladorMosquitos(Parametros* parametros, Quadra* quadra, int quantLotes) {
 		this->parametros = parametros;
@@ -33,6 +37,7 @@ public:
 		delete (listaMosquitos);
 	}
 
+	// Insere agentes mosquitos na simulação de acordo com os parâmetros
 	void insercaoMosquitos(int id, char sexo, char saudeWolbachia, char saudeDengue, int sorotipo, char fase, int idLote, int idade) {
 		int lx, ly;
 		Mosquito* mosquito = NULL;
@@ -67,6 +72,7 @@ public:
 		}
 	}
 
+	// Insere agentes mosquitos na simulação de acordo com os parâmetros
 	void criacao() {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -163,6 +169,7 @@ public:
 		}
 	}
 
+	// Realiza a movimentação diurna para todos os agentes mosquitos alados
 	void movimentacaoDiurna() {
 		FOR_MOSQUITO(listaMosquitos->lista, i)
 		{
@@ -173,6 +180,7 @@ public:
 		}
 	}
 
+	// Realiza a movimentação noturna para uma porcentagem dos agentes mosquitos alados
 	void movimentacaoNoturna() {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -209,6 +217,7 @@ public:
 		}
 	}
 
+	// Realiza voos de levy para agentes mosquitos fêmeas acasaladas que não conseguiram alimento, de acordo com uma probabilidade
 	void voosLevy() {
 		FOR_MOSQUITO(listaMosquitos->lista, i)
 		{
@@ -224,6 +233,7 @@ public:
 		}
 	}
 
+	// Realiza a geração de agentes mosquitos ovos a partir de agentes mosquitos fêmeas gestantes e contagem de ciclos
 	void geracao() {
 		FOR_MOSQUITO(listaMosquitos->lista, i)
 		{
@@ -257,6 +267,7 @@ public:
 		}
 	}
 
+	// Realiza a transformação de agentes mosquitos não alados e de agentes mosquitos alados
 	void transformacoes() {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -267,20 +278,24 @@ public:
 		transformacaoAlados();
 	}
 
+	// Realiza o controle natural e a remoção por idade dos agentes mosquitos
 	void controleNatural(int cicloAtual) {
 		remocaoMosquitosIdade();
 		remocaoMosquitosControleNatural(cicloAtual);
 	}
 
+	// Realiza o controle químico para agentes mosquitos não alados e alados
 	void controleQuimico(int cicloAtual) {
 		remocaoMosquitosControleQuimicoNaoAlados(cicloAtual);
 		remocaoMosquitosControleQuimicoAlados(cicloAtual);
 	}
 
+	// Realiza o controle mecânico para agentes mosquitos não alados
 	void controleMecanico(int cicloAtual) {
 		remocaoMosquitosControleMecanicoNaoAlados(cicloAtual);
 	}
 
+	// Conclui um ciclo da simulação incrementando idade, ciclos de latência e mudando saúde da fêmea
 	void conclusaoCiclo() {
 		FOR_MOSQUITO(listaMosquitos->lista, i)
 		{
@@ -301,6 +316,7 @@ public:
 
 private:
 
+	// Realiza o voo de levy curto ou longo para um agente mosquito fêmea
 	void vooLevy(Mosquito* mosquito, int tipoVoo) {
 		int px, py;
 		switch (tipoVoo) {
@@ -332,6 +348,7 @@ private:
 		}
 	}
 
+	// Efetiva o acasalamento entre dois agentes mosquitos alados de acordo com uma taxa de fecundidade da fêmea
 	void efetivacaoAcasalamento(Mosquito* macho, Mosquito* femea, double probabilidadeAcasalamento, char tipoAcasalamento, char prole) {
 		if (randomizarPercentual() <= (TAXA_FECUNDIDADE(femea->idLoteAtual) * probabilidadeAcasalamento)) {
 			MosquitoFemea* mosquitoFemea = (MosquitoFemea*) femea;
@@ -344,6 +361,7 @@ private:
 		}
 	}
 
+	// Realiza o acasalamento entre agentes mosquitos, definindo a prole e o tipo de acasalamento de acordo com os atributos dos agentes
 	void acasalamento(Mosquito* macho, Mosquito* femea) {
 		MosquitoMacho* mosquitoMacho = (MosquitoMacho*) macho;
 		switch (mosquitoMacho->saudeWolbachia) {
@@ -411,6 +429,8 @@ private:
 		}
 	}
 
+	// Procura um macho para acasalamento em uma posição escolhida anteriormente. Realiza o acasalamento com o macho com menor número de acasalamentos 
+	// se o macho está na mesma posição da fêmea ou desloca a fêmea para a posição mais próxima do macho
 	void procuraMachoAcasalamento(Mosquito* femea, Conexao posicaoEscolhida) {
 		Mosquito* macho = NULL;
 		MosquitoMacho* mosquitoMacho = NULL;
@@ -451,6 +471,7 @@ private:
 		}
 	}
 
+	// Busca a posição mais próxima da fêmea que contenha um macho para acasalamento na vizinhança de Moore da fêmea e na área de percepção para machos
 	void buscaMacho(Mosquito* femea) {
 		Lista < Conexao > lista;
 		FOR_INT(i, femea->posicaoAtual.x - RAIO_BUSCA_MACHO(femea->idLoteAtual), femea->posicaoAtual.x + RAIO_BUSCA_MACHO(femea->idLoteAtual) + 1, 1)
@@ -487,6 +508,7 @@ private:
 		}
 	}
 
+	// Efetiva a movimentação do agente mosquito, verificando se a posição escolhida para o deslocamento é válida
 	bool efetivacaoMovimentaMosquito(Mosquito* mosquito, int variacaoX, int variacaoY) {
 		if (!LIMITES_LOTE_P(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y, variacaoX, variacaoY)) {
 			return false;
@@ -508,6 +530,7 @@ private:
 		return true;
 	}
 
+	// Realiza a movimentação de uma agente mosquito entre lotes, utilizando a lista de vizinhança visível para mosquitos
 	bool migrarLote(Mosquito* mosquito) {
 		if (LISTA_VIZINHANCA_MOSQUITOS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).tamanhoLista == 0) {
 			return false;
@@ -533,6 +556,8 @@ private:
 		return true;
 	}
 
+	// Movimenta um agente mosquito macho na vizinhança de Moore e um agente mosquito fêmea na busca por um criadouro, 
+	// considerando a área de percepção para criadouros, movendo-se para o criadouro mais próximo
 	void movimentaMosquito(Mosquito* mosquito) {
 		bool moveu = false;
 		int direcaoMovimentacao;
@@ -625,6 +650,8 @@ private:
 		}
 	}
 
+	// Efetiva a movimentação de um agente mosquito fêmea alimentada, validando se a posição para deslocamento é válida, dentro do lote e
+	// dentro do raio definido
 	bool efetivacaoMovimentaFemeaAlimentada(Mosquito* mosquito, int variacaoX, int variacaoY) {
 		MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
 		if (!LIMITES_LOTE_P(mosquitoFemea->idLoteAtual, mosquitoFemea->posicaoAtual.x, mosquitoFemea->posicaoAtual.y, variacaoX, variacaoY)) {
@@ -637,6 +664,7 @@ private:
 		return true;
 	}
 
+	// Movimenta um agente fêmea alimentada na vizinhança de Moore, considerando o raio definido
 	void movimentaFemeaAlimentada(Mosquito* mosquito) {
 		bool moveu = false;
 		int direcaoMovimentacao;
@@ -690,6 +718,7 @@ private:
 		}
 	}
 
+	// Busca o humano mais próximo considerando o raio de busca e a área de percepção para humanos
 	Humano* buscaHumano(Mosquito* mosquito, int ordemVizinhancaBusca) {
 		Lista<Humano*> lista;
 		Humano* retorno = NULL;
@@ -754,6 +783,7 @@ private:
 		return retorno;
 	}
 
+	// Realiza a infecção para dengue no agente mosquito de acordo com as taxas e o sorotipo de agente humano
 	void infeccaoMosquito(Mosquito* mosquito, Humano* humano) {
 		MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
 		if ((mosquitoFemea->saudeDengue == SAUDAVEL) && (humano->saude == INFECTADO) && (mosquitoFemea->saudeWolbachia == SAUDAVEL)) {
@@ -788,12 +818,14 @@ private:
 		}
 	}
 
+	// Efetiva a morte por dengue hemorrágica do agente humano
 	void efetivacaoMorteDengueHemorragica(Humano* humano) {
 		if (randomizarPercentual() <= PROBABILIDADE_MORTE(humano->idLoteAtual)) {
 			humano->saude = REMOVIDO;
 		}
 	}
-
+ 
+	// Efetiva a evolução para dengue hemorrágica do agente humano
 	void efetivacaoEvolucaoDengueHemorragica(Humano* humano, double probabilidadeEvolucao) {
 		if (randomizarPercentual() <= probabilidadeEvolucao) {
 			humano->saude = HEMORRAGICO;
@@ -801,6 +833,7 @@ private:
 		}
 	}
 
+	// Testa a evolução para dengue hemorrágica do humano de acordo com as taxas definidas
 	void evolucaoDengueHemorragica(Humano* humano) {
 		switch (humano->listaSorotiposContraidos.tamanhoLista) {
 		case 1:
@@ -821,6 +854,7 @@ private:
 		}
 	}
 
+	// Efetiva a infecção para dengue no agente humano, de acordo com as taxas e o sorotipo do agente mosquito
 	void efetivacaoInfeccaoHumana(Humano* humano, double probabilidadeInfeccaoHumana, int sorotipo) {
 		if (randomizarPercentual() <= (probabilidadeInfeccaoHumana * TAXA_SUCESSO_INFECCAO_HUMANO(humano->idLoteAtual))) {
 			humano->saude = LATENTE;
@@ -830,6 +864,7 @@ private:
 		}
 	}
 
+	// Testa a infecção para dengue no agente humano, de acordo com as taxas e o sorotipo do agente mosquito
 	void infeccaoHumano(Mosquito* mosquito, Humano* humano) {
 		MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquito;
 		if ((mosquitoFemea->saudeDengue == INFECTADO) && (humano->saude == SUSCETIVEL) && (!humano->listaSorotiposContraidos.buscaLista(mosquitoFemea->sorotipo))) {
@@ -874,6 +909,7 @@ private:
 		}
 	}
 
+	// Realiza a movimentação do agente fêmea gestante, que procurará um humano e se moverá para a posição mais próxima deste
 	bool movimentaFemeaGestante(Mosquito* mosquito) {
 		if (randomizarPercentual() <= (1.0 / FATOR_AMORTECIMENTO_PROCURA_HUMANO(mosquito->idLoteAtual))) {
 			int raioVizinhancaBusca = 1, variacaoX, variacaoY;
@@ -925,6 +961,7 @@ private:
 		return false;
 	}
 
+	// Testa a movimentação de um agente mosquito
 	void movimentacao(Mosquito* mosquito) {
 		switch (mosquito->sexo) {
 		case MACHO:
@@ -952,6 +989,7 @@ private:
 		}
 	}
 
+	// Realiza a inserção de agentes mosquitos ovos gerados por uma fêmea gestante
 	void insercaoOvos(Mosquito* mosquitoMae, int quantidade, double fracaoMachos, char saudeOvo) {
 		Mosquito* mosquitoNovo = NULL;
 		double quantidadeFemeas = 0, quantidadeMachos = 0;
@@ -973,6 +1011,7 @@ private:
 		}
 	}
 
+	// Testa o tipo de prole e quantidade para a geração de agentes mosquitos ovos
 	void geracao6Casos(Mosquito* mosquitoMae) {
 		MosquitoFemea* mosquitoFemea = (MosquitoFemea*) mosquitoMae;
 		switch (mosquitoFemea->saudeWolbachia) {
@@ -1007,6 +1046,7 @@ private:
 		}
 	}
 
+	// Efetiva a transformação de agentes mosquitos não alados
 	void efetivacaoTransformacaoNaoAlados(Lista<Mosquito*>* lista, int transforma, int naoTransforma, char sexo, char fase) {
 		FOR_MOSQUITO(lista, i)
 		{
@@ -1053,6 +1093,7 @@ private:
 		}
 	}
 
+	// Realiza a transformação de agentes mosquitos não alados de acordo com o sexo, fase, idade e taxas definidas
 	void transformacaoNaoAlados(char faseAtual, char faseSeguinte, int maxIdade, double bs, double cs, double bi, double ci, int idLote) {
 		int contadorMachosSaudaveis = 0, contadorFemeasSaudaveis = 0, contadorMachosWolbachia = 0, contadorFemeasWolbachia = 0;
 		int contadorFemeasSaudaveisTransformacao = 0, contadorFemeasSaudaveisNaoTransformacao = 0, contadorMachosSaudaveisTransformacao = 0, contadorMachosSaudaveisNaoTransformacao = 0, contadorFemeasWolbachiaTransformacao = 0, contadorFemeasWolbachiaNaoTransformacao = 0, contadorMachosWolbachiaTransformacao = 0, contadorMachosWolbachiaNaoTransformacao = 0;
@@ -1104,6 +1145,7 @@ private:
 		}
 	}
 
+	// Efetiva a transformação de agentes mosquitos alados
 	int efetivacaoTransformacaoAlados(Mosquito* mosquito, int enviados, int naoEnviados, int transformados, int naoTransformados) {
 		if (randomizarPercentual() <= 0.5) {
 			if (transformados < enviados) {
@@ -1138,7 +1180,8 @@ private:
 		}
 		return 0;
 	}
-
+	
+	// Testa a transformação de agentes mosquitos alados em relação ao sexo
 	void testeTransformacaoAlados(char sexo, int enviadosSaudaveis, int naoEnviadosSaudaveis, int enviadosInfectados, int naoEnviadosInfectados) {
 		int transformadosSaudaveis = 0, naoTransformadosSaudaveis = 0, transformadosInfectados = 0, naoTransformadosInfectados = 0;
 		switch (sexo) {
@@ -1197,6 +1240,7 @@ private:
 		}
 	}
 
+	// Realiza a transformação de agentes mosquitos alados de acordo com a saúde, idade, fase e taxas definidas
 	void transformacaoAlados() {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -1246,6 +1290,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos não alados e alados por controle natural, de acorde com a fase, saúde e taxas definidas
 	void remocaoMosquitosControleNatural(int ciclo) {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -1262,6 +1307,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos não alados por controle natural, de acordo com fase, saúde e porcentagens por sexo
 	void remocaoMosquitosControleNaturalNaoAlados(int idLote, char fase, char saude, double porcentagemMachos, double porcentagemFemeas) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
@@ -1309,6 +1355,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos alados de acordo com saúde e porcentagem por sexo
 	void remocaoMosquitosControleNaturalAlados(int idLote, char saude, double porcentagemMachos, double porcentagemFemeas) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidadeMachos = 0, quantidadeFemeas = 0;
@@ -1356,6 +1403,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos decadentes que ultrapassaram a idade máxima definida
 	void remocaoMosquitosIdade() {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		FOR_MOSQUITO(listaMosquitos->lista, i)
@@ -1384,6 +1432,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos não alados por controle químico considerando fase e taxas definidas
 	void remocaoMosquitosControleQuimicoEMecanicoNaoAlados(int idLote, double percentual, char fase) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
@@ -1416,6 +1465,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos não alados por controle químico
 	void remocaoMosquitosControleQuimicoNaoAlados(int ciclo) {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -1436,6 +1486,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos não alados por controle mecânico
 	void remocaoMosquitosControleMecanicoNaoAlados(int ciclo) {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -1447,6 +1498,7 @@ private:
 		}
 	}
 
+	// Remove agentes mosquitos alados por controle químíco
 	void remocaoMosquitosControleQuimicoAlados(int idLote, double percentual) {
 		Lista<ElementoLista<Mosquito*>*> listaMosquitosMortos;
 		int quantidade = 0;
@@ -1484,6 +1536,7 @@ private:
 		}
 	}
 
+	// Testa controle químíco para agentes mosquitos alados
 	void remocaoMosquitosControleQuimicoAlados(int ciclo) {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{

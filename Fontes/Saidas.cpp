@@ -1,20 +1,21 @@
 #ifndef _SAIDAS_
 #define _SAIDAS_
 
+// Classe que armazena as saídas das simulações
 class Saidas {
 public:
 
-	bool validade;
-	int quantLotes;
-	stringstream mosquitosMachos;
-	stringstream mosquitosFemeas;
-	stringstream* sdl;
-	stringstream* quantidadesDengueLote;
-	stringstream* quantidadesWolbachiaLote;
-	stringstream* quantidadesHumanosLote;
-	stringstream quantidadesDengueQuadra;
-	stringstream quantidadesWolbachiaQuadra;
-	stringstream quantidadesHumanosQuadra;
+	bool validade; // validade da saída armazenada
+	int quantLotes; // quantidade de lotes
+	stringstream mosquitosMachos; // saída para agentes mosquitos machos
+	stringstream mosquitosFemeas; // saída para agentes mosquitos fêmeas
+	stringstream* sdl; // saída espacial
+	stringstream* quantidadesDengueLote; // saída para quantidades de agentes mosquitos visão dengue por lote
+	stringstream* quantidadesWolbachiaLote; // saída para quantidades de agentes mosquitos visão Wolbachia por lote
+	stringstream* quantidadesHumanosLote; // saída para quantidades de agentes humanos por lote
+	stringstream quantidadesDengueQuadra; // saída para quantidades de agentes mosquitos visão dengue por quadra
+	stringstream quantidadesWolbachiaQuadra; // saída para quantidades de agentes mosquitos visão Wolbachia por quadra
+	stringstream quantidadesHumanosQuadra; // saída para quantidades de agentes humanos por quadra
 
 	Saidas() {
 	}

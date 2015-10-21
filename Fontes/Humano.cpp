@@ -4,18 +4,19 @@
 #include "Lista.cpp"
 #include "Posicao.cpp"
 
+// Classe que representa um agente humano
 class Humano {
 public:
 
-	int id;
+	int id; // id do agente humano
 	int saude; // suscetivel (s), latente (l), infectado (i), imunizado (m), hemorragico (h), removido (r)
 	int sorotipo; // tipo (1 - 5) ou ausente (0)
-	Lista<int> listaSorotiposContraidos;
-	int contagemCiclosPeriodos;
-	int idLoteAtual;
-	Posicao posicaoAtual;
-	int idLoteInicial;
-	Posicao posicaoInicial;
+	Lista<int> listaSorotiposContraidos; // lista de sorotipos já contraídos pelo agente humano
+	int contagemCiclosPeriodos; // contagem de ciclos entre períodos de saúde
+	int idLoteAtual; // id do lote atual do agente humano
+	Posicao posicaoAtual; // posição atual do agente humano
+	int idLoteInicial; // id do lote inicial do agente humano
+	Posicao posicaoInicial; // posição inicial do agente humano
 
 	Humano() {
 	}

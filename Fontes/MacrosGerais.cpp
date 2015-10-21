@@ -13,6 +13,7 @@
 	#define SEPARADOR "\\"
 #endif
 
+// Defines gerais das simulações
 #define NUMERO_ARGUMENTOS_PROGRAMA 4
 #define TAMANHO_STRINGS_AUXILIARES 10
 #define TAMANHO_BARRA_PROGRESSO 20
@@ -25,6 +26,7 @@
 #define COLUNAS_SAIDAS_DENGUE 13
 #define QUANTIDADE_CRIADOUROS_POR_LOTE 10
 
+// Defines sobre laços de iteração
 #define FOR_INT(indice, valorInicio, valorFinal, incremento) for (int indice = valorInicio; indice < valorFinal; indice += incremento)
 #define FOR_HUMANO(lista, indice) for (ElementoLista<Humano*>* indice = lista->cabecaLista; indice != NULL; indice = indice->proximoLista)
 #define FOR2_HUMANO(lista, indice) for (ElementoLista<Humano*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
@@ -37,6 +39,7 @@
 #define FOR_CONEXAO(lista, indice) for (ElementoLista<Conexao*>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
 #define FOR2_CONEXAO(lista, indice) for (ElementoLista<Conexao>* indice = lista.cabecaLista; indice != NULL; indice = indice->proximoLista)
 
+// Defines de estados de agentes e algoritmos
 #define CASA 0
 #define OUTRO 1
 #define CURTO 0
@@ -59,6 +62,7 @@
 #define REMOVIDO 'r'
 #define RECUPERADO 'r'
 
+// Defines sobre lotes e suas estruturas internas
 #define LOTE(idLote) quadra->lotes[idLote]
 #define LISTA_OVOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaOvos
 #define LISTA_MACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosMachos
@@ -75,11 +79,13 @@
 #define LIMITES_LOTE(idLote, x, y) ((x < LINHAS_LOTE(idLote)) && (x >= 0) && (y < COLUNAS_LOTE(idLote)) && (y >= 0) && (POSICAO_LOTE(idLote, x, y).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
 #define LIMITES_LOTE_P(idLote, x, y, px, py) (((x + px) < LINHAS_LOTE(idLote)) && ((x + px) >= 0) && ((y + py) < COLUNAS_LOTE(idLote)) && ((y + py) >= 0) && (POSICAO_LOTE(idLote, x + px, y + py).quantidadeTotalMosquitosPosicao() < CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote)))
 
+// Retorna um valor aleatório entre 0 e 1
 double randomizarPercentual() {
 	double num = MAX_RAND * (rand() % (MAX_RAND + 1)) + (rand() % MAX_RAND);
 	return abs(num / VALOR_MAXIMO);
 }
 
+// Retorna um valor aleatório dentro da faixa [min, max]
 double randomizarEntreFaixa(double min, double max) {
 	double percentual = randomizarPercentual();
 	return min + (max - min) * percentual;

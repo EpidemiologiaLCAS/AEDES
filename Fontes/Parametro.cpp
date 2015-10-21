@@ -1,11 +1,12 @@
 #ifndef _PARAMETRO_
 #define _PARAMETRO_
 
+// Classe que representa um parâmetro da simulação
 class Parametro {
 public:
 
-	double valorMinimo;
-	double valorMaximo;
+	double valorMinimo; // valor mínimo do parâmetro
+	double valorMaximo; // valor máximo do parâmetro
 
 	Parametro() {
 	}

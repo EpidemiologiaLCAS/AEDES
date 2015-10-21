@@ -8,17 +8,22 @@
 #include "Saidas.cpp"
 #include "Parametros.cpp"
 
+// Classe que gera as saídas das simulações individuais
 class SaidasSimulacao {
 public:
 
-	int idMonteCarlo, idSimulacao, quantLotes, contadorDeslocamentoSDLGeo, numLinhas;
-	string pastaSaida;
-	Saidas* saidasSimulacao;
-	Quadra* quadra;
-	ManipuladorMosquitos* manipuladorMosquitos;
-	ManipuladorHumanos* manipuladorHumanos;
-	Parametros* parametros;
-	Matriz<int>* matrizSDLgeo;
+	int idMonteCarlo; // id da simulação Monte Carlo
+	int idSimulacao; // id da simulação individuais
+	int quantLotes; // quantidade de lotes
+	int contadorDeslocamentoSDLGeo; // contador para deslocamento de linhas na saída sdl geo
+	int numLinhas; // número de linhas da matriz da saída sdl geo
+	string pastaSaida; // pasta de saída 
+	Saidas* saidasSimulacao; // saídas das simulações individuais
+	Quadra* quadra; // quadra
+	ManipuladorMosquitos* manipuladorMosquitos; // manipulador de agentes mosquitos
+	ManipuladorHumanos* manipuladorHumanos; // manipulador de agentes humanos
+	Parametros* parametros; // parâmetros
+	Matriz<int>* matrizSDLgeo; // matriz da saída sdl geo
 
 	SaidasSimulacao(ManipuladorMosquitos* manipuladorMosquitos, ManipuladorHumanos* manipuladorHumanos, Quadra* quadra, string pastaSaida, int idMonteCarlo, int idSimulacao, Saidas* saidasSimulacao, Parametros* parametros, int quantLotes) {
 		this->quadra = quadra;
@@ -81,6 +86,7 @@ public:
 		salvar("Quadra-Humanos.csv", &saidasSimulacao->quantidadesHumanosQuadra);
 	}
 
+	// Salva a saída sdl geo em arquivo
 	void salvarSDLGeo() {
 		string auxiliar = pastaSaida;
 		auxiliar += "SDL_Geo.csv";
@@ -102,6 +108,7 @@ public:
 		delete (matrizSDLgeo);
 	}
 
+	// Salvar uma saída em arquivo
 	void salvar(string nomeArquivo, stringstream* streamSaida) {
 		ofstream* streamArquivo = new ofstream();
 		abrirArquivo(nomeArquivo, streamArquivo);
@@ -110,6 +117,7 @@ public:
 		delete (streamArquivo);
 	}
 
+	// Abre um arquivo de saída
 	void abrirArquivo(string nomeArquivo, ofstream* streamArquivo) {
 		string auxiliar = pastaSaida;
 		auxiliar += nomeArquivo.c_str();
@@ -118,7 +126,8 @@ public:
 			cout << "SaidasSimulacao: Arquivo " << auxiliar << " nao foi aberto!" << endl;
 		}
 	}
-
+	
+	// Gera todas as saídas baseadas em texto
 	void gerarSaidas(int cicloAtual) {
 		FOR_INT(i, 0, quantLotes, 1)
 		{
@@ -136,6 +145,7 @@ public:
 		cout << (QUANTIDADE_SIMULACOES == 1 ? 100 : (int) (((double) idSimulacao) / (QUANTIDADE_SIMULACOES - 1) * 100)) << ";" << (int) (((double) cicloAtual) / NUMERO_CICLOS_SIMULACAO * 100) << endl;
 	}
 
+	// Gera saída de quantidades de agentes mosquitos visão Wolbachia para quadra
 	void saidaWolbachiaQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_WOLBACHIA - 1);
 		vetorAuxiliar->zero(0);
@@ -179,6 +189,7 @@ public:
 		delete (vetorAuxiliar);
 	}
 
+	// Gera saída de quantidades de agentes humanos para quadra
 	void saidaHumanosQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_HUMANOS - 1);
 		vetorAuxiliar->zero(0);
@@ -217,6 +228,7 @@ public:
 		delete (vetorAuxiliar);
 	}
 
+	// Gera saída de quantidades de agentes mosquitos visão dengue para quadra
 	void saidaDengueQuadra(int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_DENGUE - 1);
 		vetorAuxiliar->zero(0);
@@ -272,6 +284,7 @@ public:
 		delete (vetorAuxiliar);
 	}
 
+	// Gera saída de quantidades de agentes mosquitos visão Wolbachia para lotes
 	void saidaWolbachiaLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_WOLBACHIA - 1);
 		vetorAuxiliar->zero(0);
@@ -317,6 +330,7 @@ public:
 		delete (vetorAuxiliar);
 	}
 
+	// Gera saída de quantidades de agentes humanos para lotes
 	void saidaHumanosLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_HUMANOS - 1);
 		vetorAuxiliar->zero(0);
@@ -357,6 +371,7 @@ public:
 		delete (vetorAuxiliar);
 	}
 
+	// Gera saída de quantidades de agentes mosquitos visão dengue para lotes
 	void saidaDengueLote(int idLote, int ciclo) {
 		Vetor<int>* vetorAuxiliar = new Vetor<int>(COLUNAS_SAIDAS_DENGUE - 1);
 		vetorAuxiliar->zero(0);
@@ -414,7 +429,8 @@ public:
 		saidasSimulacao->quantidadesDengueLote[idLote] << ciclo << ";" << vetorAuxiliar->vetor[1] << ";" << vetorAuxiliar->vetor[2] << ";" << vetorAuxiliar->vetor[3] << ";" << vetorAuxiliar->vetor[4] << ";" << vetorAuxiliar->vetor[5] << ";" << vetorAuxiliar->vetor[6] << ";" << vetorAuxiliar->vetor[7] << ";" << vetorAuxiliar->vetor[8] << ";" << vetorAuxiliar->vetor[9] << ";" << vetorAuxiliar->vetor[10] << ";" << vetorAuxiliar->vetor[11] << ";" << vetorAuxiliar->vetor[0] << ";" << endl;
 		delete (vetorAuxiliar);
 	}
-
+	
+	// Gera códigos para agentes humanos na saída sdl geo
 	int sdlHumanos(int idLote, int i, int j) {
 		if (POSICAO_LOTE(idLote, i, j).humanoInfectante()) {
 			return 300;
@@ -434,6 +450,7 @@ public:
 		return 0;
 	}
 
+	// Gera códigos para agentes mosquitos na saída sdl geo
 	int sdlMosquitos(int idLote, int i, int j) {
 		if (POSICAO_LOTE(idLote, i, j).femeaInfectante()) {
 			return 30;
@@ -454,6 +471,7 @@ public:
 		return 0;
 	}
 
+	// Gera saída sdl geo
 	void saidaSDL(int idLote) {
 		Matriz<int>* m = new Matriz<int>(quadra->lotes[idLote]->lote->linhasMatriz, quadra->lotes[idLote]->lote->colunasMatriz);
 		m->zero(0);
@@ -492,6 +510,7 @@ public:
 		}
 	}
 
+	// Gera saída para agentes mosquitos
 	void saidaMosquitos(int ciclo, int periodo, int subciclo) {
 		FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i)
 		{
@@ -508,6 +527,7 @@ public:
 		}
 	}
 
+	// Imprime uma barra de progresso na tela
 	void barraProgresso(double percentual) {
 		int progresso = (percentual * TAMANHO_BARRA_PROGRESSO);
 		cout << "Monte Carlo:" << setw(ESPACAMENTO_COUT) << idMonteCarlo << " Simulacao:" << setw(ESPACAMENTO_COUT) << idSimulacao << ": [";

@@ -6,15 +6,17 @@
 #include "Simulacao.cpp"
 #include "Saidas.cpp"
 
+// Classe que representa uma simulação Monte Carlo
 class MonteCarlo {
 public:
 
-	int idMonteCarlo, quantLotes;
-	string pastaEntrada;
-	string pastaSaida;
-	SaidasMonteCarlo* saidas;
-	Parametros* parametros;
-	Saidas* saidasSimulacoes;
+	int idMonteCarlo; // id da simulação Monte Carlo
+	int quantLotes; // quantidade de lotes
+	string pastaEntrada; // pasta de entrada
+	string pastaSaida; // pasta de saída
+	SaidasMonteCarlo* saidas; // gerador de saídas Monte Carlo
+	Parametros* parametros; // parâmetros
+	Saidas* saidasSimulacoes; // saídas das simulações individuais
 
 	MonteCarlo(int idMonteCarlo, string pastaSaida, int quantLotes) {
 		this->quantLotes = quantLotes;
@@ -43,6 +45,7 @@ public:
 		delete (parametros);
 	}
 
+	// Inicia uma simulação Monte Carlo
 	void inicioMonteCarlo() {
 		Simulacao* simulacao;
 		int maxSimulacao = QUANTIDADE_SIMULACOES;

@@ -4,12 +4,17 @@
 #include "Matriz.cpp"
 #include "Saidas.cpp"
 
+// Classe que gera as saídas das simulações Monte Carlo
 class SaidasMonteCarlo {
 public:
 
-	string stringIdMonteCarlo, pastaSaida;
-	int numeroCiclosSimulacao, numeroSimulacoes, idMonteCarlo, quantLotes;
-	Saidas* saidasSimulacoes;
+	string stringIdMonteCarlo; // string com a id da simulação Monte Carlo
+	string pastaSaida; // pasta de saída
+	int numeroCiclosSimulacao; // número de ciclos das simulações individuais
+	int numeroSimulacoes; // quantidade de simulações individuais
+	int idMonteCarlo; // id da simulação Monte Carlo
+	int quantLotes; // quantidade de lotes
+	Saidas* saidasSimulacoes; // saídas das simulações individuais
 
 	SaidasMonteCarlo(int idMonteCarlo, string stringIdMonteCarlo, string pastaSaida, int numeroCiclosSimulacao, int numeroSimulacoes, Saidas* saidasSimulacoes, int quantLotes) {
 		this->idMonteCarlo = idMonteCarlo;
@@ -32,6 +37,7 @@ public:
 
 private:
 
+	// Verifica a quantidade de simulações individuais válidas geradas por uma simulação Monte Carlo
 	int verificacaoSimulacoesValidas() {
 		int numeroSimulacoesValidas = numeroSimulacoes;
 		FOR_INT(aux1, 0, numeroSimulacoes, 1)
@@ -47,6 +53,7 @@ private:
 		return numeroSimulacoesValidas;
 	}
 
+	// Gera as saídas dos lotes para simulações Monte Carlo
 	void geracaoSaidasLotes(int numVal, int idLote) {
 		if (numVal == 0) {
 			return;
@@ -210,6 +217,7 @@ private:
 		}
 	}
 
+	// Gera as saídas da quadra para simulações Monte Carlo
 	void geracaoSaidasQuadra(int numVal) {
 		if (numVal == 0) {
 			return;

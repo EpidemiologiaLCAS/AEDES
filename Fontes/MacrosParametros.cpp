@@ -1,6 +1,7 @@
 #ifndef _MACROSPARAMETROS_
 #define _MACROSPARAMETROS_
 
+// Defines sobre às quantidades de cada tipo de parâmetro
 #define QUANTIDADE_PARAMETROS_ACA 12
 #define QUANTIDADE_PARAMETROS_AMB 2
 #define QUANTIDADE_PARAMETROS_CNA 30
@@ -12,6 +13,7 @@
 #define QUANTIDADE_PARAMETROS_SMC 2
 #define QUANTIDADE_PARAMETROS_TRA 23
 
+// Defines sobre parâmetros do tipo ACA
 #define BETASS22(idLote) (double) parametros->pACA[idLote]->vetor[0].random()
 #define BETASS23(idLote) (double) parametros->pACA[idLote]->vetor[1].random()
 #define BETAII22(idLote) (double) parametros->pACA[idLote]->vetor[2].random()
@@ -25,9 +27,11 @@
 #define RAIO_BUSCA_MACHO(idLote) (int) parametros->pACA[idLote]->vetor[10].random()
 #define TAXA_FECUNDIDADE(idLote) (double) parametros->pACA[idLote]->vetor[11].random()
 
+// Defines sobre parâmetros do tipo AMB
 #define NUMERO_LINHAS_AMBIENTE(idLote) (int) parametros->pAMB[idLote]->vetor[0].random()
 #define NUMERO_COLUNAS_AMBIENTE(idLote) (int) parametros->pAMB[idLote]->vetor[1].random()
 
+// Defines sobre parâmetros do tipo CNA
 #define TAXA_CONTROLE_NATURAL_HUMANOS(idLote) (double) parametros->pCNA[idLote]->vetor[0].random()
 #define IDADE_MAXIMA_MOSQUITO_SAUDAVEL(idLote) (int) parametros->pCNA[idLote]->vetor[1].random()
 #define IDADE_MAXIMA_MOSQUITO_WOLBACHIA(idLote) (int) parametros->pCNA[idLote]->vetor[2].random()
@@ -59,6 +63,7 @@
 #define FREQUENCIA_CONTROLE_QUIMICO_ALADOS(idLote) (int) parametros->pCNA[idLote]->vetor[28].random()
 #define TAXA_CONTROLE_QUIMICO_ALADOS(idLote) (double) parametros->pCNA[idLote]->vetor[29].random()
 
+// Defines sobre parâmetros do tipo DEN
 #define CICLOS_LATENTE_MOSQUITO(idLote) (int) parametros->pDEN[idLote]->vetor[0].random()
 #define CICLOS_LATENTE_HUMANO(idLote) (int) parametros->pDEN[idLote]->vetor[1].random()
 #define CICLOS_INFECTANTE_HUMANO(idLote) (int) parametros->pDEN[idLote]->vetor[2].random()
@@ -87,6 +92,7 @@
 #define TAXA_SUCESSO_INFECCAO_HUMANO(idLote) (double) parametros->pDEN[idLote]->vetor[25].random()
 #define TAXA_SUCESSO_INFECCAO_MOSQUITO(idLote) (double) parametros->pDEN[idLote]->vetor[26].random()
 
+// Defines sobre parâmetros do tipo GER
 #define QUANTIDADE_MS1(idLote) (int) parametros->pGER[idLote]->vetor[0].random()
 #define QUANTIDADE_MS2(idLote) (int) parametros->pGER[idLote]->vetor[1].random()
 #define QUANTIDADE_MS3(idLote) (int) parametros->pGER[idLote]->vetor[2].random()
@@ -118,6 +124,7 @@
 #define PROBABILIDADE_VOO_LEVY_ANTES_POSTURA(idLote) (double) parametros->pGER[idLote]->vetor[28].random()
 #define PROBABILIDADE_VOO_LEVY_ANTES_PROCURA_ALIMENTO(idLote) (double) parametros->pGER[idLote]->vetor[29].random()
 
+// Defines sobre parâmetros do tipo INS
 #define CICLO_DE_ENTRADA_HUMANOS_1(idLote) (int) parametros->pINS[idLote]->vetor[0].random()
 #define QUANTIDADE_HUMANOS_1(idLote) (int) parametros->pINS[idLote]->vetor[1].random()
 #define CICLO_DE_ENTRADA_HUMANOS_2(idLote) (int) parametros->pINS[idLote]->vetor[2].random()
@@ -141,6 +148,7 @@
 #define CICLO_DE_ENTRADA_HUMANOS_RECUPERADOS_5(idLote) (int) parametros->pINS[idLote]->vetor[20].random()
 #define QUANTIDADE_HUMANOS_RECUPERADOS_5(idLote) (int) parametros->pINS[idLote]->vetor[21].random()
 
+// Defines sobre parâmetros do tipo MOV
 #define REGIAO_DE_POSTURA_X(idLote) (int) parametros->pMOV[idLote]->vetor[0].random()
 #define REGIAO_DE_POSTURA_Y(idLote) (int) parametros->pMOV[idLote]->vetor[1].random()
 #define AMPLITUDE_VOO_LEVY_CURTO(idLote) (int) parametros->pMOV[idLote]->vetor[2].random()
@@ -152,13 +160,16 @@
 #define CAPACIDADE_MAXIMA_POSICAO_MOSQUITOS(idLote) (int) parametros->pMOV[idLote]->vetor[8].random()
 #define CAPACIDADE_MAXIMA_POSICAO_HUMANOS(idLote) (int) parametros->pMOV[idLote]->vetor[9].random()
 
+// Defines sobre parâmetros do tipo SIM
 #define NUMERO_CICLOS_SIMULACAO (int) parametros->pSIM->vetor[0].random()
 #define NUMERO_SUBCICLOS (int) parametros->pSIM->vetor[1].random()
 #define MAXIMO_MOSQUITOS (int) parametros->pSIM->vetor[2].random()
 
+// Defines sobre parâmetros do tipo SMC
 #define QUANTIDADE_SIMULACOES (int) parametros->pSMC->vetor[0].random()
 #define MAXIMO_TENTATIVAS_SIMULACAO (int) parametros->pSMC->vetor[1].random()
 
+// Defines sobre parâmetros do tipo TRA
 #define CICLOS_CONVERSAO_OVOS(idLote) (int) parametros->pTRA[idLote]->vetor[0].random()
 #define BS12_OVOS(idLote) (double) parametros->pTRA[idLote]->vetor[1].random()
 #define CS12_OVOS(idLote) (double) parametros->pTRA[idLote]->vetor[2].random()
@@ -183,6 +194,7 @@
 #define BI12_PUPAS(idLote) (double) parametros->pTRA[idLote]->vetor[21].random()
 #define CI12_PUPAS(idLote) (double) parametros->pTRA[idLote]->vetor[22].random()
 
+// defines sobre paramêtros compostos de idade
 #define IDADE_OVOS(idLote) (int) rand() % CICLOS_CONVERSAO_OVOS(idLote)
 #define IDADE_MACHOS_ATIVOS_SAUDAVEIS(idLote) (int) (parametros->pTRA[idLote]->vetor[0].valorMinimo + (int) rand() % (int) (CICLOS_CONVERSAO_MACHOS_ATIVOS_SAUDAVEIS(idLote) - parametros->pTRA[idLote]->vetor[0].valorMinimo))
 #define IDADE_MACHOS_DECADENTES_SAUDAVEIS(idLote) (int) (parametros->pTRA[idLote]->vetor[5].valorMinimo + (rand() % (int) parametros->pTRA[idLote]->vetor[0].valorMinimo))

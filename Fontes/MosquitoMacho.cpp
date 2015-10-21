@@ -3,10 +3,14 @@
 
 #include "Mosquito.cpp"
 
+// Classe que representa um agente mosquito macho
 class MosquitoMacho: public Mosquito {
 public:
 
-	int contadorAcasalamentos;
+	int contadorAcasalamentos; // contador da quantidade de acasalamentos realizados pelo macho
+
+	MosquitoMacho() {
+	}
 
 	MosquitoMacho(int id, char saudeWolbachia, char fase, char idade, int idLoteAtual, int x, int y) {
 		this->id = id;
@@ -19,9 +23,6 @@ public:
 		this->posicaoAtual.y = y;
 		this->vida = true;
 		this->contadorAcasalamentos = 0;
-	}
-
-	MosquitoMacho() {
 	}
 
 	~MosquitoMacho() {

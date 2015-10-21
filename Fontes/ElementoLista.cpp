@@ -1,12 +1,13 @@
 #ifndef _ELEMENTOLISTA_
 #define _ELEMENTOLISTA_
 
+// Classe que representa o elemento genérico de uma lista
 template<class T> class ElementoLista {
 public:
 
-	T elementoLista;
-	ElementoLista<T>* proximoLista;
-	ElementoLista<T>* anteriorLista;
+	T elementoLista; // elemento da lista
+	ElementoLista<T>* proximoLista; // próximo elemento da lista
+	ElementoLista<T>* anteriorLista; // elemento anterior da lista
 
 	ElementoLista(T elementoLista) {
 		this->proximoLista = NULL;

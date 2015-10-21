@@ -9,12 +9,13 @@ using namespace std;
 #include "Parametros.cpp"
 #include "CoordenadaGeo.cpp"
 
+// Classe que representa uma quadra
 class Quadra {
 public:
 
-	int quantLotes;
-	Lote** lotes;
-	Parametros* parametros;
+	int quantLotes; // quantidade de lotes
+	Lote** lotes; // lotes da quadra
+	Parametros* parametros; // parâmetros
 
 	Quadra(int quantLotes, Parametros* parametros) {
 		this->quantLotes = quantLotes;
@@ -32,35 +33,42 @@ public:
 		delete[] (lotes);
 	}
 
+	// Adiciona um lote na quadra
 	void adicionarLote(int _id, int LINHAS_LOTE, int COLUNAS_LOTE) {
 		lotes[_id] = new Lote(_id, LINHAS_LOTE, COLUNAS_LOTE);
 	}
 
+	// Adiciona uma conexão entre lotes visível para os agentes mosquitos
 	void adicionarConexaoInternaEntreLotesMosquitos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaMosquitos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaMosquitos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
 	}
 
+	// Adiciona uma conexão entre lotes visível para os agentes humanos
 	void adicionarConexaoInternaEntreLotesHumanos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaVizinhancaHumanos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaVizinhancaHumanos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
 	}
 
+	// Adiciona uma posição no raio de percepção de agentes humanos
 	void adicionarPosicaoRaioPercepcaoHumanos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoHumanos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoHumanos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
 	}
 
+	// Adiciona uma posição no raio de percepção de agentes mosquitos machos
 	void adicionarPosicaoRaioPercepcaoMosquitosMachos(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new Conexao(posicao2, _idLoteDestino));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoMosquitosMachos.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
 	}
 
+	// Adiciona uma posição no raio de percepção de criadouros
 	void adicionarPosicaoRaioPercepcaoCriadouros(Posicao posicao1, int _idLoteOrigem, Posicao posicao2, int _idLoteDestino) {
 		lotes[_idLoteOrigem]->lote->matriz[posicao1.x][posicao1.y].listaAreaPercepcaoCriadouros.insercaoLista(new Conexao(posicao2, _idLoteDestino));
 		lotes[_idLoteDestino]->lote->matriz[posicao2.x][posicao2.y].listaAreaPercepcaoCriadouros.insercaoLista(new Conexao(posicao1, _idLoteOrigem));
 	}
 
+	// Lê o arquivo criando as conexões visíveis para agentes humanos
 	void criacaoConexoesHumanos() {
 		char caracter;
 		FOR_INT(i, 0, quantLotes, 1)
@@ -93,6 +101,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo criando as conexões visíveis para agentes mosquitos
 	void criacaoConexoesMosquitos() {
 		char caracter;
 		ifstream arquivoVizinhancas;
@@ -117,6 +126,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo definindo os lotes que terão controle químico para não alados
 	void definicaoControleQuimicoNaoAlados() {
 		char caracter;
 		ifstream arquivoControleQuimico;
@@ -138,6 +148,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo definindo os lotes que terão controle químico para alados
 	void definicaoControleQuimicoAlados() {
 		char caracter;
 		ifstream arquivoControleQuimico;
@@ -158,6 +169,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo definindo os lotes que terão controle mecânico para não alados
 	void definicaoControleMecanicoNaoAlados() {
 		char caracter;
 		ifstream arquivoControleMecanico;
@@ -178,6 +190,7 @@ public:
 		}
 	}
 
+	// Lê as coordenadas georeferenciadas do arquivo para cada posição de cada lote
 	void leituraCoordenadasGeo() {
 		char caracter = '-';
 		double x, y;
@@ -211,6 +224,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo criando os raios de percepção de agentes humanos
 	void criacaoRaiosPercepcaoHumanos() {
 		char caracter;
 		ifstream arquivoRaiosHumanos;
@@ -235,6 +249,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo criando os raios de percepção de agentes mosquitos machos
 	void criacaoRaiosPercepcaoMosquitosMachos() {
 		char caracter;
 		ifstream arquivoRaiosMosquitosMachos;
@@ -259,6 +274,7 @@ public:
 		}
 	}
 
+	// Lê o arquivo criando os raios de percepção de criadouros
 	void criacaoRaiosPercepcaoCriadouros() {
 		char caracter;
 		ifstream arquivoRaiosCriadouros;
@@ -283,6 +299,7 @@ public:
 		}
 	}
 
+	// Define criadouros em posições aleatórias em todos os lotes
 	void criacaoCriadouros() {
 		FOR_INT(i, 0, quantLotes, 1)
 		{

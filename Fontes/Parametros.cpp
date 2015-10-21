@@ -5,23 +5,25 @@
 #include "Parametro.cpp"
 #include "MacrosParametros.cpp"
 
+// Classe que armazena todos os parâmetros da simulação
 class Parametros {
 public:
 
-	int quantLotes;
-	string pastaEntrada;
-	Vetor<Parametro>* pSIM;
-	Vetor<Parametro>* pSMC;
+	int quantLotes; // quantidade de lotes 
+	string pastaEntrada; // pasta de entrada
+	Vetor<Parametro>* pSIM; // parâmetros SIM
+	Vetor<Parametro>* pSMC; // parâmetros SMC
 
-	Vetor<Parametro>** pACA;
-	Vetor<Parametro>** pAMB;
-	Vetor<Parametro>** pCNA;
-	Vetor<Parametro>** pDEN;
-	Vetor<Parametro>** pGER;
-	Vetor<Parametro>** pINS;
-	Vetor<Parametro>** pMOV;
-	Vetor<Parametro>** pTRA;
+	Vetor<Parametro>** pACA; // parâmetros ACA
+	Vetor<Parametro>** pAMB; // parâmetros AMB
+	Vetor<Parametro>** pCNA; // parâmetros CNA
+	Vetor<Parametro>** pDEN; // parâmetros DEN
+	Vetor<Parametro>** pGER; // parâmetros GER
+	Vetor<Parametro>** pINS; // parâmetros INS
+	Vetor<Parametro>** pMOV; // parâmetros MOV
+	Vetor<Parametro>** pTRA; // parâmetros TRA
 
+	// Realiza a alocação das estruturas de dados para os parâmetros e realiza a leitura dos arquivos de entrada
 	Parametros(string pastaEntrada, int quantLotes) {
 		this->pastaEntrada = pastaEntrada;
 		this->quantLotes = quantLotes;
@@ -93,6 +95,7 @@ public:
 		delete[] (pTRA);
 	}
 
+	// Lẽ os parâmetros dos arquivos de entrada
 	Vetor<Parametro>* lerParametros(int numeroParametros, string sufixo) {
 		Vetor < Parametro > *vetorParametros = new Vetor<Parametro>(numeroParametros);
 		string aux1 = pastaEntrada;

@@ -7,13 +7,15 @@
 #include "Quadra.cpp"
 #include "ListaHumanos.cpp"
 
+// Classe que contém métodos para a manipulação de agentes humanos
 class ManipuladorHumanos {
 public:
 
-	ListaHumanos* listaHumanos;
-	int contadorIDs, quantLotes;
-	Parametros* parametros;
-	Quadra* quadra;
+	ListaHumanos* listaHumanos; // lista de humanos
+	int contadorIDs; // contador de ids para humanos
+	int quantLotes;  // quantidade de lotes
+	Parametros* parametros; // parâmetros
+	Quadra* quadra; // quadra
 
 	ManipuladorHumanos(Parametros* parametros, Quadra* quadra, int quantLotes) {
 		this->contadorIDs = 0;
@@ -27,6 +29,7 @@ public:
 		delete (listaHumanos);
 	}
 
+	// Insere agentes humanos na simulação de acordo com os parâmetros
 	void insercaoHumanos(int cicloAtual) {
 		FOR_INT(idLote, 0, quantLotes, 1)
 		{
@@ -66,6 +69,7 @@ public:
 		}
 	}
 
+	// Realiza a movimentação dos agentes humanos de volta à sua casa ou para posições aleatórias
 	void movimentacao(int tipoMovimentacao) {
 		FOR_HUMANO(listaHumanos->lista, i)
 		{
@@ -101,6 +105,7 @@ public:
 		}
 	}
 
+	// Conclui o ciclo para os agentes humanos, realizando também passagem de saúde
 	void conclusaoCiclo() {
 		FOR_HUMANO(listaHumanos->lista, i)
 		{
@@ -132,6 +137,7 @@ public:
 		}
 	}
 
+	// Realiza o controle natural para agentes humanos, marcando agentes humanos como removidos de acordo com uma taxa estabelecida
 	void controleNatural() {
 		FOR_HUMANO(listaHumanos->lista, i)
 		{

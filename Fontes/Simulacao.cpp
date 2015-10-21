@@ -12,16 +12,19 @@
 #include "MosquitoMacho.cpp"
 #include "MosquitoFemea.cpp"
 
+// Classe que representa uma simulação individual
 class Simulacao {
 public:
 
-	int idMonteCarlo, idSimulacao, quantLotes;
-	ManipuladorMosquitos* manipuladorMosquitos;
-	ManipuladorHumanos* manipuladorHumanos;
-	string pastaSaida;
-	SaidasSimulacao* saidas;
-	Parametros* parametros;
-	Quadra* quadra;
+	int idMonteCarlo; // id da simulação Monte Carlo
+	int idSimulacao; // id da simulação individual
+	int quantLotes; // quantidade de lotes
+	ManipuladorMosquitos* manipuladorMosquitos; // manipulador de agentes mosquitos
+	ManipuladorHumanos* manipuladorHumanos; // manipulador de agentes humanos
+	string pastaSaida; // pasta de saída
+	SaidasSimulacao* saidas; // saídas das simulações individuais
+	Parametros* parametros; // parâmetros
+	Quadra* quadra; // quadra
 
 	Simulacao(int idMonteCarlo, int idSimulacao, Parametros* parametros, string pastaSaida, Saidas* saidaSimulacao, int quantLotes) {
 		this->idMonteCarlo = idMonteCarlo;
@@ -56,6 +59,7 @@ public:
 		delete (saidas);
 	}
 
+	// Inicia uma simulação individual
 	bool inicioSimulacao() {
 		int maxCiclos = NUMERO_CICLOS_SIMULACAO + 1;
 		saidas->gerarSaidas(0);
@@ -70,6 +74,7 @@ public:
 
 private:
 
+	// Inicia um ciclo de uma simulação individual
 	bool inicioCiclo(int cicloAtual) {
 		if (!verificacaoLimiteMosquitos()) {
 			return false;
@@ -90,6 +95,7 @@ private:
 		return true;
 	}
 
+	// Inicia um período de um ciclo de uma simulação individual
 	void inicioPeriodo(int cicloAtual, int periodo) {
 		manipuladorHumanos->movimentacao(OUTRO);
 		switch (periodo) {
@@ -119,6 +125,7 @@ private:
 		manipuladorMosquitos->voosLevy();
 	}
 
+	// Inicia um subciclo de um período de um ciclo de uma simulação individual
 	void inicioSubCiclo(int cicloAtual, int periodo, int subciclo) {
 		if (periodo != 3) {
 			manipuladorMosquitos->movimentacaoDiurna();
@@ -128,6 +135,7 @@ private:
 		//saidas->saidaMosquitos(cicloAtual, periodo, subciclo);
 	}
 
+	// Retorna verdadeiro se o número atual de agentes mosquitos é maior do que o máximo permitido
 	bool verificacaoLimiteMosquitos() {
 		if (manipuladorMosquitos->listaMosquitos->tamanhoLista > MAXIMO_MOSQUITOS) {
 			string comando = COMANDO_EXCLUIR_PASTA;

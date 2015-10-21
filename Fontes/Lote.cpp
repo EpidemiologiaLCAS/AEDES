@@ -8,13 +8,14 @@ using namespace std;
 #include "ElementoLote.cpp"
 #include "Lista.cpp"
 
+// Classe que representa um lote
 class Lote {
 public:
 
-	int id;
-	Matriz<ElementoLote>* lote;
-	double controleQuimicoLarvas, controleQuimicoPupas;
-	bool controleMecanicoNaoAlados, controleQuimicoAlados;
+	int id; // id do lote
+	Matriz<ElementoLote>* lote; // matriz que representa o lote
+	double controleQuimicoLarvas, controleQuimicoPupas; // efeito residual de controle químico em larvas e pupas
+	bool controleMecanicoNaoAlados, controleQuimicoAlados; // aplicação de controle mecânico e químico
 
 	Lote() {
 	}

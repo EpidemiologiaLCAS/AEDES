@@ -5,11 +5,12 @@ using namespace std;
 
 #include "Posicao.cpp"
 
+// Classe que representa as conexões entre as posições de lotes vizinhos
 class Conexao {
 public:
 
-	Posicao destino;
-	int idLoteDestino;
+	Posicao destino; // id do lote vizinho destino
+	int idLoteDestino; // posição do lote vizinho destino
 
 	Conexao() {
 	}
