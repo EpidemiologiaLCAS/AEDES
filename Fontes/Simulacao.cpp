@@ -80,9 +80,9 @@ private:
 			return false;
 		}
 		manipuladorHumanos->insercaoHumanos(cicloAtual);
-		inicioPeriodo(cicloAtual, 1);
-		inicioPeriodo(cicloAtual, 2);
-		inicioPeriodo(cicloAtual, 3);
+		inicioPeriodo(cicloAtual, MANHA);
+		inicioPeriodo(cicloAtual, TARDE);
+		inicioPeriodo(cicloAtual, NOITE);
 		manipuladorMosquitos->geracao();
 		manipuladorMosquitos->transformacoes();
 		manipuladorMosquitos->conclusaoCiclo();
@@ -96,27 +96,27 @@ private:
 	}
 
 	// Inicia um período de um ciclo de uma simulação individual
-	void inicioPeriodo(int cicloAtual, int periodo) {
+	void inicioPeriodo(int cicloAtual, char periodo) {
 		manipuladorHumanos->movimentacao(OUTRO);
 		switch (periodo) {
-		case 1: {
+		case MANHA: {
 			FOR_INT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1)
 			{
-				inicioSubCiclo(cicloAtual, 1, subciclo);
+				inicioSubCiclo(cicloAtual, MANHA, subciclo);
 			}
 		}
 			break;
-		case 2: {
+		case TARDE: {
 			FOR_INT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1)
 			{
-				inicioSubCiclo(cicloAtual, 2, subciclo);
+				inicioSubCiclo(cicloAtual, TARDE, subciclo);
 			}
 		}
 			break;
-		case 3: {
+		case NOITE: {
 			FOR_INT(subciclo, 1, NUMERO_SUBCICLOS + 1, 1)
 			{
-				inicioSubCiclo(cicloAtual, 3, subciclo);
+				inicioSubCiclo(cicloAtual, NOITE, subciclo);
 			}
 			manipuladorHumanos->movimentacao(CASA);
 		}
@@ -126,8 +126,8 @@ private:
 	}
 
 	// Inicia um subciclo de um período de um ciclo de uma simulação individual
-	void inicioSubCiclo(int cicloAtual, int periodo, int subciclo) {
-		if (periodo != 3) {
+	void inicioSubCiclo(int cicloAtual, char periodo, int subciclo) {
+		if (periodo != NOITE) {
 			manipuladorMosquitos->movimentacaoDiurna();
 		} else {
 			manipuladorMosquitos->movimentacaoNoturna();

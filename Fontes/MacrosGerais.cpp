@@ -61,6 +61,9 @@
 #define HEMORRAGICO 'h'
 #define REMOVIDO 'r'
 #define RECUPERADO 'r'
+#define MANHA 'm'
+#define TARDE 't'
+#define NOITE 'n'
 
 // Defines sobre lotes e suas estruturas internas
 #define LOTE(idLote) quadra->lotes[idLote]
