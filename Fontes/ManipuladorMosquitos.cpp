@@ -559,14 +559,14 @@ private:
 	// Movimenta um agente mosquito macho na vizinhança de Moore e um agente mosquito fêmea na busca por um criadouro, 
 	// considerando a área de percepção para criadouros, movendo-se para o criadouro mais próximo
 	void movimentaMosquito(Mosquito* mosquito) {
-		bool moveu = false;
-		int direcaoMovimentacao;
-		Lista<int> direcoes;
-		FOR_INT(i, 0, 9, 1)
-		{
-			direcoes.insercaoLista(i);
-		}
 		if (mosquito->sexo == MACHO) {
+			bool moveu = false;
+			int direcaoMovimentacao;
+			Lista<int> direcoes;
+			FOR_INT(i, 0, 9, 1)
+			{
+				direcoes.insercaoLista(i);
+			}
 			while ((!moveu) && (direcoes.tamanhoLista != 0)) {
 				direcaoMovimentacao = direcoes.buscaPosicao(rand() % direcoes.tamanhoLista)->elementoLista;
 				switch (direcaoMovimentacao) {
