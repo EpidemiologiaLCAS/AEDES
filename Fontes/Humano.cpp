@@ -9,7 +9,7 @@ class Humano {
 public:
 
 	int id; // id do agente humano
-	int saude; // suscetivel (s), latente (l), infectado (i), imunizado (m), hemorragico (h), removido (r)
+	char saude; // suscetivel (s), latente (l), infectado (i), imunizado (m), hemorragico (h), removido (r)
 	int sorotipo; // tipo (1 - 5) ou ausente (0)
 	Lista<int> listaSorotiposContraidos; // lista de sorotipos já contraídos pelo agente humano
 	int contagemCiclosPeriodos; // contagem de ciclos entre períodos de saúde
@@ -21,7 +21,7 @@ public:
 	Humano() {
 	}
 
-	Humano(int id, int saude, int sorotipo, int idLoteInicial, int x, int y) {
+	Humano(int id, char saude, int sorotipo, int idLoteInicial, int x, int y) {
 		this->id = id;
 		this->saude = saude;
 		this->sorotipo = sorotipo;

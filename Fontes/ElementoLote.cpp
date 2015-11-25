@@ -15,7 +15,7 @@ public:
 
 	Lista<Mosquito*> listaMosquitosMachos; // agentes mosquitos machos na posição
 	Lista<Mosquito*> listaMosquitosFemeas; // agentes mosquitos fêmeas na posição
-	Lista<Mosquito*> listaOvos; // agentes ovos na posição
+	Lista<Mosquito*> listaNaoAlados; // agentes ovos na posição
 	Lista<Humano*> listaHumanos; // agentes humanos na posição
 	Lista<Conexao*> listaVizinhancaMosquitos; // vizinhança para agentes mosquitos da posição
 	Lista<Conexao*> listaVizinhancaHumanos; // vizinhança para agentes humanos da posição
@@ -155,8 +155,8 @@ public:
 	}
 
 	// Retorna verdadeiro se existe pelo menos um agente mosquito não alado na posição
-	bool ovos() {
-		if (listaOvos.tamanhoLista > 0) {
+	bool naoAlado() {
+		if (listaNaoAlados.tamanhoLista > 0) {
 			return true;
 		}
 		return false;

@@ -12,7 +12,7 @@ public:
 	MosquitoMacho() {
 	}
 
-	MosquitoMacho(int id, char saudeWolbachia, char fase, char idade, int idLoteAtual, int x, int y) {
+	MosquitoMacho(int id, char saudeWolbachia, char fase, int idade, int idLoteAtual, int x, int y) {
 		this->id = id;
 		this->sexo = MACHO;
 		this->saudeWolbachia = saudeWolbachia;

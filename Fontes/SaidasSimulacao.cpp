@@ -23,7 +23,7 @@ public:
 	ManipuladorMosquitos* manipuladorMosquitos; // manipulador de agentes mosquitos
 	ManipuladorHumanos* manipuladorHumanos; // manipulador de agentes humanos
 	Parametros* parametros; // parâmetros
-	Matriz<int>* matrizSDLgeo; // matriz da saída sdl geo
+	Matriz<int>* matrizSDLGeo; // matriz da saída sdl geo
 
 	SaidasSimulacao(ManipuladorMosquitos* manipuladorMosquitos, ManipuladorHumanos* manipuladorHumanos, Quadra* quadra, string pastaSaida, int idMonteCarlo, int idSimulacao, Saidas* saidasSimulacao, Parametros* parametros, int quantLotes) {
 		this->quadra = quadra;
@@ -46,8 +46,8 @@ public:
 		{
 			numLinhas += (NUMERO_LINHAS_AMBIENTE(i) * NUMERO_COLUNAS_AMBIENTE(i));
 		}
-		matrizSDLgeo = new Matriz<int>(numLinhas, NUMERO_CICLOS_SIMULACAO + 1);
-		matrizSDLgeo->zero(0);
+		matrizSDLGeo = new Matriz<int>(numLinhas, NUMERO_CICLOS_SIMULACAO + 1);
+		matrizSDLGeo->zero(0);
 		contadorDeslocamentoSDLGeo = 0;
 	}
 
@@ -99,13 +99,13 @@ public:
 			{
 				FOR_INT(j, 0, NUMERO_CICLOS_SIMULACAO + 1, 1)
 				{
-					arquivo << matrizSDLgeo->matriz[i][j] << ";";
+					arquivo << matrizSDLGeo->matriz[i][j] << ";";
 				}
 				arquivo << endl;
 			}
 			arquivo.close();
 		}
-		delete (matrizSDLgeo);
+		delete (matrizSDLGeo);
 	}
 
 	// Salvar uma saída em arquivo
@@ -501,17 +501,17 @@ public:
 		{
 			FOR_INT(j, 0, COLUNAS_LOTE(idLote), 1)
 			{
-				matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] = 0;
-				matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlHumanos(idLote, i, j);
-				matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlMosquitos(idLote, i, j);
-				matrizSDLgeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlOvos(idLote, i, j);
+				matrizSDLGeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] = 0;
+				matrizSDLGeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlHumanos(idLote, i, j);
+				matrizSDLGeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlMosquitos(idLote, i, j);
+				matrizSDLGeo->matriz[contadorDeslocamentoSDLGeo][cicloAtual] += sdlOvos(idLote, i, j);
 				contadorDeslocamentoSDLGeo++;
 			}
 		}
 	}
 
 	// Gera saída para agentes mosquitos
-	void saidaMosquitos(int ciclo, int periodo, int subciclo) {
+	void saidaMosquitos(int ciclo, char periodo, int subciclo) {
 		FOR_MOSQUITO(manipuladorMosquitos->listaMosquitos->lista, i)
 		{
 			Mosquito* mosquito = i->elementoLista;

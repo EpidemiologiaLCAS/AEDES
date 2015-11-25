@@ -13,10 +13,10 @@ public:
 		vetor = new T[tamanhoVetor]();
 	}
 
-	void zero(T _zero) {
+	void zero(T zero) {
 		FOR_INT(i, 0, tamanhoVetor, 1)
 		{
-			vetor[i] = _zero;
+			vetor[i] = zero;
 		}
 	}
 
