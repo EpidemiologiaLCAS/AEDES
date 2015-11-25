@@ -67,7 +67,7 @@
 
 // Defines sobre lotes e suas estruturas internas
 #define LOTE(idLote) quadra->lotes[idLote]
-#define LISTA_OVOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaOvos
+#define LISTA_NAO_ALADOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaNaoAlados
 #define LISTA_MACHOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosMachos
 #define LISTA_FEMEAS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaMosquitosFemeas
 #define LISTA_HUMANOS(idLote, x, y) LOTE(idLote)->lote->matriz[x][y].listaHumanos

@@ -465,7 +465,7 @@ public:
 	}
 
 	int sdlOvos(int idLote, int i, int j) {
-		if (POSICAO_LOTE(idLote, i, j).ovos()) {
+		if (POSICAO_LOTE(idLote, i, j).naoAlado()) {
 			return 1;
 		}
 		return 0;
