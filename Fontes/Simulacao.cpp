@@ -76,7 +76,7 @@ private:
 
 	// Inicia um ciclo de uma simulação individual
 	bool inicioCiclo(int cicloAtual) {
-		if (!verificacaoLimiteMosquitos()) {
+		if (verificacaoLimiteMosquitos()) {
 			return false;
 		}
 		manipuladorHumanos->insercaoHumanos(cicloAtual);
@@ -141,9 +141,9 @@ private:
 			string comando = COMANDO_EXCLUIR_PASTA;
 			comando += pastaSaida;
 			system(comando.c_str());
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 };
