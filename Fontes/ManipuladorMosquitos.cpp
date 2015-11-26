@@ -564,7 +564,7 @@ private:
 			{
 				FOR_INT(j, mosquito->posicaoAtual.y - 1, mosquito->posicaoAtual.y + 1 + 1, 1)
 				{
-					if (LIMITES_LOTE(mosquito->idLoteAtual, i, j)) {
+					if (LIMITES_LOTE(mosquito->idLoteAtual, i, j) && (POSICAO_LOTE(mosquito->idLoteAtual, i, j).criadouro)) {
 						lista.insercaoLista(Conexao(Posicao(i, j), mosquito->idLoteAtual));
 					}
 				}
