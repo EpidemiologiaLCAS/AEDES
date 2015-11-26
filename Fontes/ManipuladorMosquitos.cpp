@@ -556,6 +556,47 @@ private:
 		return true;
 	}
 
+	// Realiza a movimentação da fêmea para o criadouro mais próximo
+	// em sua vizinhança de percepção para criadouros
+	void buscaCriadouro(Mosquito* mosquito) {
+		Lista < Conexao > lista;
+			FOR_INT(i, mosquito->posicaoAtual.x - 1, mosquito->posicaoAtual.x + 1 + 1, 1)
+			{
+				FOR_INT(j, mosquito->posicaoAtual.y - 1, mosquito->posicaoAtual.y + 1 + 1, 1)
+				{
+					if (LIMITES_LOTE(mosquito->idLoteAtual, i, j)) {
+						lista.insercaoLista(Conexao(Posicao(i, j), mosquito->idLoteAtual));
+					}
+				}
+			}
+			FOR_CONEXAO(LISTA_PERCEPCAO_CRIADOUROS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y), i)
+			{
+				Conexao* conexao = i->elementoLista;
+				if (POSICAO_LOTE(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y).criadouro) {
+					lista.insercaoLista(Conexao(Posicao(conexao->destino.x, conexao->destino.y), conexao->idLoteDestino));
+				}
+			}
+			if (lista.tamanhoLista != 0) {
+				Conexao escolhido;
+				double distanciaCalculada;
+				escolhido = lista.cabecaLista->elementoLista;
+				CoordenadaGeo coordenadaGeoDestino = POSICAO_LOTE(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).coordenadaGeo;
+				double menorDistancia = POSICAO_LOTE(lista.cabecaLista->elementoLista.idLoteDestino, lista.cabecaLista->elementoLista.destino.x, lista.cabecaLista->elementoLista.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
+				FOR2_CONEXAO(lista, i)
+				{
+					Conexao conexao = i->elementoLista;
+					distanciaCalculada = POSICAO_LOTE(conexao.idLoteDestino, conexao.destino.x, conexao.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
+					if (distanciaCalculada < menorDistancia) {
+						menorDistancia = distanciaCalculada;
+						escolhido = conexao;
+					}
+				}
+				LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
+				mosquito->setLoteAtualPosicaoAtual(escolhido.idLoteDestino, escolhido.destino.x, escolhido.destino.y);
+				LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
+			}
+	}
+
 	// Movimenta um agente mosquito macho na vizinhança de Moore e um agente mosquito fêmea na busca por um criadouro, 
 	// considerando a área de percepção para criadouros, movendo-se para o criadouro mais próximo
 	void movimentaMosquito(Mosquito* mosquito) {
@@ -611,42 +652,7 @@ private:
 				}
 			}
 		} else {
-			Lista < Conexao > lista;
-			FOR_INT(i, mosquito->posicaoAtual.x - 1, mosquito->posicaoAtual.x + 1 + 1, 1)
-			{
-				FOR_INT(j, mosquito->posicaoAtual.y - 1, mosquito->posicaoAtual.y + 1 + 1, 1)
-				{
-					if (LIMITES_LOTE(mosquito->idLoteAtual, i, j)) {
-						lista.insercaoLista(Conexao(Posicao(i, j), mosquito->idLoteAtual));
-					}
-				}
-			}
-			FOR_CONEXAO(LISTA_PERCEPCAO_CRIADOUROS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y), i)
-			{
-				Conexao* conexao = i->elementoLista;
-				if (POSICAO_LOTE(conexao->idLoteDestino, conexao->destino.x, conexao->destino.y).criadouro) {
-					lista.insercaoLista(Conexao(Posicao(conexao->destino.x, conexao->destino.y), conexao->idLoteDestino));
-				}
-			}
-			if (lista.tamanhoLista != 0) {
-				Conexao escolhido;
-				double distanciaCalculada;
-				escolhido = lista.cabecaLista->elementoLista;
-				CoordenadaGeo coordenadaGeoDestino = POSICAO_LOTE(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).coordenadaGeo;
-				double menorDistancia = POSICAO_LOTE(lista.cabecaLista->elementoLista.idLoteDestino, lista.cabecaLista->elementoLista.destino.x, lista.cabecaLista->elementoLista.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
-				FOR2_CONEXAO(lista, i)
-				{
-					Conexao conexao = i->elementoLista;
-					distanciaCalculada = POSICAO_LOTE(conexao.idLoteDestino, conexao.destino.x, conexao.destino.y).coordenadaGeo.distancia(coordenadaGeoDestino);
-					if (distanciaCalculada < menorDistancia) {
-						menorDistancia = distanciaCalculada;
-						escolhido = conexao;
-					}
-				}
-				LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).buscaRemocaoLista(mosquito);
-				mosquito->setLoteAtualPosicaoAtual(escolhido.idLoteDestino, escolhido.destino.x, escolhido.destino.y);
-				LISTA_FEMEAS(mosquito->idLoteAtual, mosquito->posicaoAtual.x, mosquito->posicaoAtual.y).insercaoLista(mosquito);
-			}
+			buscaCriadouro(mosquito);
 		}
 	}
 
