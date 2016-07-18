@@ -112,7 +112,7 @@ public:
 		while (i != NULL) {
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->sexo == FEMEA) {
-				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i;
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i->elementoLista;
 				if (mosquitoFemea->saudeDengue == SAUDAVEL) {
 					return true;
 				}
@@ -128,7 +128,7 @@ public:
 		while (i != NULL) {
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->sexo == FEMEA) {
-				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i;
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i->elementoLista;
 				if (mosquitoFemea->saudeDengue == LATENTE) {
 					return true;
 				}
@@ -144,7 +144,7 @@ public:
 		while (i != NULL) {
 			Mosquito* mosquito = i->elementoLista;
 			if (mosquito->sexo == FEMEA) {
-				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i;
+				MosquitoFemea* mosquitoFemea = (MosquitoFemea*) i->elementoLista;
 				if (mosquitoFemea->saudeDengue == INFECTADO) {
 					return true;
 				}

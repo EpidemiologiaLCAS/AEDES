@@ -238,7 +238,7 @@ public:
 			Mosquito* mosquito = i->elementoLista;
 			if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 				if (mosquito->sexo == FEMEA) {
-					MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (i);
+					MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (i->elementoLista);
 					if (mosquitoFemea->saudeDengue == SAUDAVEL) {
 						vetorAuxiliar->vetor[2] += 1;
 						continue;
@@ -383,7 +383,7 @@ public:
 				Mosquito* mosquito = i->elementoLista;
 				if (((mosquito->fase == ATIVO) || (mosquito->fase == DECADENTE))) {
 					if (mosquito->sexo == FEMEA) {
-						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (i);
+						MosquitoFemea* mosquitoFemea = (MosquitoFemea*) (i->elementoLista);
 						if (mosquitoFemea->saudeDengue == SAUDAVEL) {
 							vetorAuxiliar->vetor[2] += 1;
 							continue;

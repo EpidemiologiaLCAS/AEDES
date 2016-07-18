@@ -1,9 +1,9 @@
 Codigo;Min;Max;Descricao
 GER001;10.0;10.0;Quantidade de Agentes Machos Saudaveis Fase 1
-GER002;0.0;0.0;Quantidade de Agentes Machos Saudaveis Fase 2
+GER002;10.0;10.0;Quantidade de Agentes Machos Saudaveis Fase 2
 GER003;0.0;0.0;Quantidade de Agentes Machos Saudaveis Fase 3
 GER004;10.0;10.0;Quantidade de Agentes Femeas Saudaveis Fase 1
-GER005;0.0;0.0;Quantidade de Agentes Femeas Saudaveis Fase 2
+GER005;10.0;10.0;Quantidade de Agentes Femeas Saudaveis Fase 2
 GER006;0.0;0.0;Quantidade de Agentes Femeas Saudaveis Fase 3
 GER007;0.0;0.0;Quantidade de Agentes Machos com Wolbachia Fase 1
 GER008;0.0;0.0;Quantidade de Agentes Machos com Wolbachia Fase 2
